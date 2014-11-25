@@ -12,13 +12,8 @@ import java.util.Set;
 import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.decorators.DirectionalEdgeArrowFunction;
-import edu.uci.ics.jung.graph.decorators.NumberVertexValueStringer;
-import edu.uci.ics.jung.graph.decorators.StringLabeller;
-import edu.uci.ics.jung.graph.decorators.UserDatumNumberVertexValue;
 import edu.uci.ics.jung.visualization.Layout;
-import edu.uci.ics.jung.visualization.Renderer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.VisualizationViewer.Paintable;
 
 public class RNVisualizationViewer extends VisualizationViewer {
 
@@ -32,8 +27,9 @@ public class RNVisualizationViewer extends VisualizationViewer {
 
 	protected RNRenderer renderer;
 
-	public RNVisualizationViewer(Layout layout, RNRenderer renderer) {
-		super(layout, renderer);
+	public RNVisualizationViewer(Layout layout, RNRenderer renderer,
+			Dimension dimension) {
+		super(layout, renderer, dimension);
 		this.renderer = renderer;
 		renderer.setEdgeStrokeFunction(new RNEdgeStrokeFunction());
 		renderer.setVertexPaintFunction(new RNVertexPaintFunction());
@@ -43,6 +39,7 @@ public class RNVisualizationViewer extends VisualizationViewer {
 		// TODO Auto-generated constructor stub
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void renderGraph(Graphics2D g2d) {
 
@@ -66,7 +63,7 @@ public class RNVisualizationViewer extends VisualizationViewer {
 		g2d.setTransform(newXform);
 
 		// if there are preRenderers set, paint them
-		for (Iterator iterator = preRenderers.iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = preRenderers.iterator(); iterator.hasNext();) {
 			Paintable paintable = (Paintable) iterator.next();
 			if (paintable.useTransform()) {
 				paintable.paint(g2d);
@@ -79,12 +76,12 @@ public class RNVisualizationViewer extends VisualizationViewer {
 
 		locationMap.clear();
 
-		Set renderedEdge = new HashSet<Edge>();
+		Set<Edge> renderedEdge = new HashSet<Edge>();
 
 		// paint all the inhibition edges
 		try {
 			RNGraph graph = (RNGraph) layout.getGraph();
-			for (Iterator iter = graph.getInhibitionEdges().iterator(); iter
+			for (Iterator<?> iter = graph.getInhibitionEdges().iterator(); iter
 					.hasNext();) {
 				InhibitionEdge i = (InhibitionEdge) iter.next();
 				Vertex v = (Vertex) i.getEndpoints().getFirst();
@@ -130,7 +127,7 @@ public class RNVisualizationViewer extends VisualizationViewer {
 
 		// paint all the edges
 		try {
-			for (Iterator iter = layout.getGraph().getEdges().iterator(); iter
+			for (Iterator<?> iter = layout.getGraph().getEdges().iterator(); iter
 					.hasNext();) {
 				Edge e = (Edge) iter.next();
 				if (renderedEdge.contains(e))
@@ -163,7 +160,7 @@ public class RNVisualizationViewer extends VisualizationViewer {
 
 		// paint all the vertices
 		try {
-			for (Iterator iter = layout.getGraph().getVertices().iterator(); iter
+			for (Iterator<?> iter = layout.getGraph().getVertices().iterator(); iter
 					.hasNext();) {
 
 				Vertex v = (Vertex) iter.next();
@@ -187,7 +184,8 @@ public class RNVisualizationViewer extends VisualizationViewer {
 		paintfps = average(paintTimes);
 
 		// if there are postRenderers set, do it
-		for (Iterator iterator = postRenderers.iterator(); iterator.hasNext();) {
+		for (Iterator<?> iterator = postRenderers.iterator(); iterator
+				.hasNext();) {
 			Paintable paintable = (Paintable) iterator.next();
 			if (paintable.useTransform()) {
 				paintable.paint(g2d);

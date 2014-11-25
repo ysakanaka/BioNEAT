@@ -21,7 +21,9 @@ dependencies {
 	compile 'net.sf.jung:jung-graph-impl:2.0.1'
 	compile 'net.sf.jung:jung-samples:2.0.1'
 	compile 'com.google.code.gson:gson:2.3'
+	compile 'org.jfree:jfreechart:1.0.19'
 	runtime 'org.codehaus.janino:janino:2.7.6'
+	testCompile 'junit:junit:4.11'
 }
 
 task wrapper(type: Wrapper) {

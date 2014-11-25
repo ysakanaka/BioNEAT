@@ -3,18 +3,20 @@ package reactionnetwork.visual;
 import java.awt.Color;
 import java.awt.Paint;
 
-import model.Constants;
 import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.decorators.VertexPaintFunction;
 
 public class RNVertexPaintFunction implements VertexPaintFunction {
 
+	public static final double Kmin = 0.15;
+	public static final double Kmax = 100;
+
 	public Paint getFillPaint(Vertex v) {
 		if (v instanceof RNVertex) {
 			RNVertex vertex = (RNVertex) v;
 			double seqK = vertex.node.parameter;
-			double min = Math.log(Constants.simpleKmin * 100);
-			double max = Math.log(Constants.simpleKmax / 100);
+			double min = Math.log(Kmin);
+			double max = Math.log(Kmax);
 			double i = (Math.log(seqK) - min) / (max - min);
 			double k = 3.6;
 			int red = (int) (255 - 255 * Math.exp(-k * i));

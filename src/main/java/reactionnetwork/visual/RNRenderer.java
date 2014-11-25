@@ -26,7 +26,6 @@ public class RNRenderer extends PluggableRenderer {
 			int x, int y, int x1, int y1, int x2, int y2) {
 
 		Pair endpoints = i.getEndpoints();
-		Vertex v = (Vertex) endpoints.getFirst();
 		Edge e = (Edge) endpoints.getSecond();
 		Vertex v1 = (Vertex) e.getEndpoints().getFirst();
 		Shape s2 = vertexShapeFunction.getShape(v1);
@@ -258,6 +257,9 @@ public class RNRenderer extends PluggableRenderer {
 					g.setPaint(edgePaintFunction.getFillPaint(e));
 					g.draw(arrow);
 				}
+				if (old_stroke != null) {
+					g.setStroke(old_stroke);
+				}
 			}
 			// use existing paint for text if no draw paint specified
 			if (draw_paint == null)
@@ -316,7 +318,6 @@ public class RNRenderer extends PluggableRenderer {
 	private void drawSimpleInhibitionEdge(Graphics2D g, InhibitionEdge i,
 			int x, int y, int x1, int y1, int x2, int y2) {
 		Pair endpoints = i.getEndpoints();
-		Vertex v = (Vertex) endpoints.getFirst();
 		Edge e = (Edge) endpoints.getSecond();
 		Vertex v1 = (Vertex) e.getEndpoints().getFirst();
 		Vertex v2 = (Vertex) e.getEndpoints().getSecond();

@@ -13,7 +13,7 @@ import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 
 public class RNGraph extends DirectedSparseGraph {
-	protected Set mInhibitionEdges;
+	protected Set<InhibitionEdge> mInhibitionEdges;
 
 	public RNGraph() {
 		super();
@@ -22,20 +22,20 @@ public class RNGraph extends DirectedSparseGraph {
 	public RNGraph(ReactionNetwork network) {
 		super();
 		for (Node node : network.nodes) {
-			Vertex v = this.addVertex(new RNVertex(node));
+			this.addVertex(new RNVertex(node));
 		}
 		for (Connection connection : network.connections) {
-			Edge e = this.addEdge(connection);
+			this.addEdge(connection);
 		}
 		for (Node node : network.nodes) {
 			if (node.type == Node.INHIBITING_SEQUENCE) {
-				InhibitionEdge i = this.addInhibitionEdge(node);
+				this.addInhibitionEdge(node);
 			}
 		}
 	}
 
 	private InhibitionEdge addInhibitionEdge(Node node) {
-		for (Iterator iter = this.getEdges().iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = this.getEdges().iterator(); iter.hasNext();) {
 			Edge edge = (Edge) iter.next();
 			RNVertex v1 = (RNVertex) edge.getEndpoints().getFirst();
 			RNVertex v2 = (RNVertex) edge.getEndpoints().getSecond();
@@ -58,7 +58,7 @@ public class RNGraph extends DirectedSparseGraph {
 	}
 
 	public Vertex getVertex(Node node) {
-		for (Iterator iter = this.getVertices().iterator(); iter.hasNext();) {
+		for (Iterator<?> iter = this.getVertices().iterator(); iter.hasNext();) {
 			RNVertex v = (RNVertex) iter.next();
 			if (v.node.equals(node)) {
 				return v;
@@ -69,7 +69,7 @@ public class RNGraph extends DirectedSparseGraph {
 
 	@Override
 	protected void initialize() {
-		mInhibitionEdges = new HashSet();
+		mInhibitionEdges = new HashSet<InhibitionEdge>();
 		super.initialize();
 	}
 
@@ -78,7 +78,7 @@ public class RNGraph extends DirectedSparseGraph {
 		return i;
 	}
 
-	public Set getInhibitionEdges() {
+	public Set<InhibitionEdge> getInhibitionEdges() {
 		return Collections.unmodifiableSet(mInhibitionEdges);
 	}
 

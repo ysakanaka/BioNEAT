@@ -1,57 +1,40 @@
-package reactionnetwork.visual;
+package demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
 
+import oligomodel.OligoSystemComplex;
+import oligomodel.PlotFactory;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
+import reactionnetwork.visual.RNVisualizationViewer;
+import reactionnetwork.visual.RNVisualizationViewerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.uci.ics.jung.graph.Edge;
-import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.graph.decorators.UserDatumNumberEdgeValue;
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import edu.uci.ics.jung.graph.impl.SparseVertex;
-import edu.uci.ics.jung.utils.TestGraphs;
-import edu.uci.ics.jung.visualization.ISOMLayout;
-import edu.uci.ics.jung.visualization.PluggableRenderer;
-import edu.uci.ics.jung.visualization.ShapePickSupport;
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse.Mode;
-import edu.uci.ics.jung.visualization.control.ScalingControl;
-
-public class Demo extends JApplet {
+public class Oligator extends JApplet {
 	private static JPanel getGraphPanel() {
 
+		// Manually creaet a ReactionNetwork object
 		ReactionNetwork network = new ReactionNetwork();
 		network.nodes = new ArrayList<Node>();
 		Node node1 = new Node("a");
 		node1.parameter = 100;
+		node1.initialConcentration = 10;
 		Node node2 = new Node("b");
 		node2.parameter = 50;
+		node2.initialConcentration = 5;
 		Node node3 = new Node("Iaa");
 		node3.type = Node.INHIBITING_SEQUENCE;
 		network.nodes.add(node1);
@@ -70,7 +53,10 @@ public class Demo extends JApplet {
 		network.parameters.put("exo", 10.0);
 		network.parameters.put("pol", 10.0);
 		network.parameters.put("nick", 10.0);
+
+		// Testing the Json serializer
 		Gson gson = new GsonBuilder()
+				.setPrettyPrinting()
 				.registerTypeAdapter(ReactionNetwork.class,
 						new ReactionNetworkDeserializer())
 				.registerTypeAdapter(Connection.class,
@@ -78,29 +64,32 @@ public class Demo extends JApplet {
 		String json = gson.toJson(network);
 		System.out.println(json);
 
+		// Testing the Json deserializer
 		ReactionNetwork newNetwork = gson.fromJson(json, ReactionNetwork.class);
 		System.out.println(newNetwork);
 
-		RNGraph g = new RNGraph(newNetwork); // initial graph
+		// Testing the clone
+		ReactionNetwork clone = newNetwork.clone();
+		System.out.println(newNetwork);
 
-		final RNVisualizationViewer vv = new RNVisualizationViewer(
-				new ISOMLayout(g), new RNRenderer());
+		// create visualization from a reaction network
+		RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
+		RNVisualizationViewer vv = factory.createVisualizationViewer(clone);
 
-		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
-		graphMouse.setMode(Mode.PICKING);
-		vv.setGraphMouse(graphMouse);
-		vv.setPickSupport(new ShapePickSupport());
+		// display reaction network
 		JPanel jp = new JPanel();
 		jp.setBackground(Color.WHITE);
 		jp.setLayout(new BorderLayout());
 		jp.add(vv, BorderLayout.CENTER);
 
-		JPanel control_panel = new JPanel(new GridLayout(2, 1));
-		JPanel topControls = new JPanel();
-		JPanel bottomControls = new JPanel();
-		control_panel.add(topControls);
-		control_panel.add(bottomControls);
-		jp.add(control_panel, BorderLayout.NORTH);
+		// generate time series chart from a reaction network using
+		// OligoSystemComplex
+		OligoSystemComplex oligoSystem = new OligoSystemComplex(clone);
+		Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries();
+		PlotFactory plotFactory = new PlotFactory();
+		JPanel timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
+		jp.add(timeSeriesPanel, BorderLayout.SOUTH);
+
 		return jp;
 	}
 
