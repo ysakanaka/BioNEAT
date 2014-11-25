@@ -24,6 +24,10 @@ dependencies {
 	runtime 'org.codehaus.janino:janino:2.7.6'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
+
 test {
     systemProperties 'property': 'value'
 }
