@@ -58,7 +58,7 @@ public class ReactionNetwork {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Nodes: <name> <parameter> <initialConcentration> <DNA String>\n");
+		builder.append("Nodes:\n");
 		for (Node node : nodes) {
 			builder.append(" " + node.name + " "
 					+ common.Static.df4.format(node.parameter) + " "
@@ -66,7 +66,7 @@ public class ReactionNetwork {
 					+ node.DNAString + "\n");
 		}
 
-		builder.append("Connections: <innovation number> <source node>-><destination node> <enabled> <parameter>\n");
+		builder.append("Connections:\n");
 		for (Connection connection : connections) {
 			builder.append(" " + connection.innovation + " "
 					+ connection.from.name + "->" + connection.to.name + " "

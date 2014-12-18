@@ -1,29 +1,78 @@
 package reactionnetwork.visual;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Paint;
+import java.awt.Shape;
+import java.awt.Stroke;
 
-import edu.uci.ics.jung.visualization.ISOMLayout;
-import edu.uci.ics.jung.visualization.ShapePickSupport;
+import javax.swing.border.LineBorder;
+
+import org.apache.commons.collections15.Transformer;
+
+import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Context;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse.Mode;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+import edu.uci.ics.jung.visualization.util.ArrowFactory;
 import reactionnetwork.ReactionNetwork;
 
 public class RNVisualizationViewerFactory {
-	public RNVisualizationViewer createVisualizationViewer(
+	public VisualizationViewer<String, String> createVisualizationViewer(
 			ReactionNetwork newNetwork) {
 		RNGraph g = new RNGraph(newNetwork); // initial graph
 
-		ISOMLayout layout = new ISOMLayout(g);
+		ISOMLayout<String, String> layout = new ISOMLayout<String, String>(g);
+		layout.setSize(new Dimension(250, 250));
+		VisualizationViewer<String, String> vv = new VisualizationViewer<String, String>(
+				layout);
+		vv.setPreferredSize(new Dimension(250, 250));
+		vv.setBorder(new LineBorder(new Color(0, 0, 0)));
+		// Setup up a new vertex to paint transformer...
+		Transformer<String, Paint> vertexPaint = new Transformer<String, Paint>() {
+			public Paint transform(String i) {
+				return Color.GREEN;
+			}
+		};
 
-		RNVisualizationViewer vv = new RNVisualizationViewer(layout,
-				new RNRenderer(), new Dimension(300, 300));
+		final Stroke edgeStroke = new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_MITER, 10.0f);
 		vv.setBackground(Color.WHITE);
+		vv.setRenderer(new RNRenderer());
+		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 
-		final DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
-		graphMouse.setMode(Mode.PICKING);
-		vv.setGraphMouse(graphMouse);
-		vv.setPickSupport(new ShapePickSupport());
+		vv.getRenderContext()
+				.setEdgeArrowTransformer(
+						new Transformer<Context<Graph<String, String>, String>, Shape>() {
+
+							@Override
+							public Shape transform(
+									Context<Graph<String, String>, String> input) {
+								// TODO Auto-generated method stub
+								return ArrowFactory.getWedgeArrow(10, 8);
+							}
+						});
+		vv.getRenderContext().setVertexLabelTransformer(
+				new Transformer<String, String>() {
+
+					@Override
+					public String transform(String input) {
+						// TODO Auto-generated method stub
+						return input;
+					}
+				});
+
+		vv.getRenderContext().setVertexFillPaintTransformer(
+				new RNVertexFillPaintTransformer(g));
+
+		vv.getRenderer().getVertexLabelRenderer().setPosition(Position.CNTR);
+		DefaultModalGraphMouse<String, String> gm = new DefaultModalGraphMouse<String, String>();
+		gm.setMode(ModalGraphMouse.Mode.PICKING);
+		vv.setGraphMouse(gm);
 		return vv;
 	}
 }

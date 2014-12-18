@@ -2,6 +2,7 @@ package demo;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,23 +18,24 @@ import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
-import reactionnetwork.visual.RNVisualizationViewer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class Oligator extends JApplet {
-	private static JPanel getGraphPanel() {
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import gui.Test;
 
-		// Manually creaet a ReactionNetwork object
+public class Oligator extends JApplet {
+
+	public static ReactionNetwork getInitNetwork() {
 		ReactionNetwork network = new ReactionNetwork();
 		network.nodes = new ArrayList<Node>();
 		Node node1 = new Node("a");
 		node1.parameter = 100;
 		node1.initialConcentration = 10;
 		Node node2 = new Node("b");
-		node2.parameter = 50;
+		node2.parameter = 1;
 		node2.initialConcentration = 5;
 		Node node3 = new Node("Iaa");
 		node3.type = Node.INHIBITING_SEQUENCE;
@@ -71,39 +73,38 @@ public class Oligator extends JApplet {
 		// Testing the clone
 		ReactionNetwork clone = newNetwork.clone();
 		System.out.println(newNetwork);
-
-		// create visualization from a reaction network
-		RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
-		RNVisualizationViewer vv = factory.createVisualizationViewer(clone);
-
-		// display reaction network
-		JPanel jp = new JPanel();
-		jp.setBackground(Color.WHITE);
-		jp.setLayout(new BorderLayout());
-		jp.add(vv, BorderLayout.CENTER);
-
-		// generate time series chart from a reaction network using
-		// OligoSystemComplex
-		OligoSystemComplex oligoSystem = new OligoSystemComplex(clone);
-		Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries();
-		PlotFactory plotFactory = new PlotFactory();
-		JPanel timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
-		jp.add(timeSeriesPanel, BorderLayout.SOUTH);
-
-		return jp;
-	}
-
-	public void start() {
-		this.getContentPane().add(getGraphPanel());
+		return clone;
 	}
 
 	public static void main(String[] args) {
-		JPanel jp = getGraphPanel();
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Test window = new Test();
+					window.frame.setVisible(true);
 
-		JFrame jf = new JFrame();
-		jf.getContentPane().add(jp);
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.pack();
-		jf.setVisible(true);
+					ReactionNetwork network = getInitNetwork();
+
+					RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
+					VisualizationViewer vv = factory
+							.createVisualizationViewer(network);
+					window.panelTopology.add(vv, BorderLayout.CENTER);
+
+					window.txtrTest.setText(network.toString());
+
+					OligoSystemComplex oligoSystem = new OligoSystemComplex(
+							network);
+					Map<String, double[]> timeSeries = oligoSystem
+							.calculateTimeSeries();
+					PlotFactory plotFactory = new PlotFactory();
+					JPanel timeSeriesPanel = plotFactory
+							.createTimeSeriesPanel(timeSeries);
+					window.panelBehavior.add(timeSeriesPanel,
+							BorderLayout.CENTER);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

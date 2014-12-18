@@ -1,85 +1,93 @@
 package reactionnetwork.visual;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import edu.uci.ics.jung.graph.Edge;
-import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 
-public class RNGraph extends DirectedSparseGraph {
-	protected Set<InhibitionEdge> mInhibitionEdges;
+public class RNGraph extends DirectedSparseGraph<String, String> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected Map<String, MyPair<String, String>> inhibitions;
+	protected Map<String, Double> edgesConcentration;
+	protected Map<String, Double> verticesK;
 
 	public RNGraph() {
 		super();
+		inhibitions = new HashMap<String, MyPair<String, String>>();
+		edgesConcentration = new HashMap<String, Double>();
+		verticesK = new HashMap<String, Double>();
 	}
 
 	public RNGraph(ReactionNetwork network) {
-		super();
+		this();
 		for (Node node : network.nodes) {
-			this.addVertex(new RNVertex(node));
+			this.addVertex(node.name);
+			this.addVertexK(node.name, node.parameter);
 		}
 		for (Connection connection : network.connections) {
-			this.addEdge(connection);
+			this.addEdge(connection.from.name + connection.to.name,
+					connection.from.name, connection.to.name);
+			this.addEdgeConcentration(
+					connection.from.name + connection.to.name,
+					connection.parameter);
 		}
 		for (Node node : network.nodes) {
 			if (node.type == Node.INHIBITING_SEQUENCE) {
-				this.addInhibitionEdge(node);
+				MyPair<String, String> inhib = new MyPair<String, String>(
+						node.name, node.name.replace("I", ""));
+				this.addInhibition(node.name, inhib);
 			}
 		}
 	}
 
-	private InhibitionEdge addInhibitionEdge(Node node) {
-		for (Iterator<?> iter = this.getEdges().iterator(); iter.hasNext();) {
-			Edge edge = (Edge) iter.next();
-			RNVertex v1 = (RNVertex) edge.getEndpoints().getFirst();
-			RNVertex v2 = (RNVertex) edge.getEndpoints().getSecond();
-			if (node.name.equals("I" + v1.node.name + v2.node.name)) {
-				return this.addInhibitionEdge(new InhibitionEdge(
-						getVertex(node), edge));
-			}
+	public Collection<String> getInhibitions() {
+		return Collections.unmodifiableCollection(inhibitions.keySet());
+	}
+
+	public boolean containsInhibition(String inhibition) {
+		return inhibitions.keySet().contains(inhibition);
+	}
+
+	public boolean addInhibition(String inhibition,
+			MyPair<String, String> myPair) {
+		inhibitions.put(inhibition, myPair);
+		return true;
+	}
+
+	public boolean addVertexK(String vertex, double K) {
+		verticesK.put(vertex, K);
+		return true;
+	}
+
+	public double getVertexK(String vertex) {
+		try {
+			return verticesK.get(vertex);
+		} catch (Exception e) {
+			return 0;
 		}
-		return null;
 	}
 
-	public Edge addEdge(Connection connection) {
-		Vertex from = getVertex(connection.from);
-		Vertex to = getVertex(connection.to);
-		if (from != null && to != null) {
-			return this.addEdge(new RNEdge(from, to, connection));
-		} else {
-			return null;
+	public boolean addEdgeConcentration(String edge, double concentration) {
+		edgesConcentration.put(edge, concentration);
+		return true;
+	}
+
+	public double getEdgeConcentration(String edge) {
+		if (!edgesConcentration.containsKey(edge)) {
+			return 0;
 		}
+		return edgesConcentration.get(edge);
 	}
 
-	public Vertex getVertex(Node node) {
-		for (Iterator<?> iter = this.getVertices().iterator(); iter.hasNext();) {
-			RNVertex v = (RNVertex) iter.next();
-			if (v.node.equals(node)) {
-				return v;
-			}
-		}
-		return null;
+	public MyPair<String, String> getInhibition(String inh) {
+		return inhibitions.get(inh);
 	}
-
-	@Override
-	protected void initialize() {
-		mInhibitionEdges = new HashSet<InhibitionEdge>();
-		super.initialize();
-	}
-
-	public InhibitionEdge addInhibitionEdge(InhibitionEdge i) {
-		mInhibitionEdges.add(i);
-		return i;
-	}
-
-	public Set<InhibitionEdge> getInhibitionEdges() {
-		return Collections.unmodifiableSet(mInhibitionEdges);
-	}
-
 }
