@@ -13,7 +13,6 @@ public class RNVertexFillPaintTransformer implements Transformer<String, Paint> 
 		this.graph = graph;
 	}
 
-	@Override
 	public Paint transform(String input) {
 		double seqK = graph.getVertexK(input);
 		double min = Math.log(3e-4 / 0.2 * 100);

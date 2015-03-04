@@ -49,7 +49,6 @@ public class RNVisualizationViewerFactory {
 				.setEdgeArrowTransformer(
 						new Transformer<Context<Graph<String, String>, String>, Shape>() {
 
-							@Override
 							public Shape transform(
 									Context<Graph<String, String>, String> input) {
 								// TODO Auto-generated method stub
@@ -59,7 +58,6 @@ public class RNVisualizationViewerFactory {
 		vv.getRenderContext().setVertexLabelTransformer(
 				new Transformer<String, String>() {
 
-					@Override
 					public String transform(String input) {
 						// TODO Auto-generated method stub
 						return input;
