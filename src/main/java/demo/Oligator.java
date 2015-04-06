@@ -1,14 +1,11 @@
 package demo;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JApplet;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import oligomodel.OligoSystemComplex;
@@ -27,6 +24,11 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import gui.Test;
 
 public class Oligator extends JApplet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public static ReactionNetwork getInitNetwork() {
 		ReactionNetwork network = new ReactionNetwork();
@@ -83,7 +85,7 @@ public class Oligator extends JApplet {
 					ReactionNetwork network = getInitNetwork();
 
 					RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
-					VisualizationViewer vv = factory
+					VisualizationViewer<String, String> vv = factory
 							.createVisualizationViewer(network);
 					window.panelTopology.add(vv, BorderLayout.CENTER);
 

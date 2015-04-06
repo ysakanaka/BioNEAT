@@ -257,6 +257,7 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			float dy = y2 - y1;
 			int index = 0;
 			if (rc.getEdgeShapeTransformer() instanceof IndexedRendering) {
+				@SuppressWarnings("unchecked")
 				EdgeIndexFunction<String, String> peif = ((IndexedRendering<String, String>) rc
 						.getEdgeShapeTransformer()).getEdgeIndexFunction();
 				index = peif.getIndex(graph, e);

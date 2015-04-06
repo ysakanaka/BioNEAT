@@ -16,13 +16,11 @@ import javax.swing.JTextArea;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
-import reactionnetwork.visual.RNVisualizationViewerFactory;
 
 public class Test {
 
