@@ -26,12 +26,10 @@ public class Test {
 				.registerTypeAdapter(Connection.class,
 						new ConnectionSerializer()).create();
 		String json = gson.toJson(network);
-		System.out.println(json);
 
 		ReactionNetwork newNetwork = gson
 				.fromJson(
 						"{\"nodes\":[{\"name\":\"a\",\"parameter\":0.0,\"initialConcentration\":0.0,\"type\":0},{\"name\":\"b\",\"parameter\":0.0,\"initialConcentration\":0.0,\"type\":0}],\"connections\":[{\"innovation\":0,\"enabled\":true,\"parameter\":0.0,\"from\":\"a\",\"to\":\"b\"}],\"parameters\":{\"nick\":10.0,\"pol\":10.0,\"exo\":10.0}}\n",
 						ReactionNetwork.class);
-		System.out.println(newNetwork);
 	}
 }

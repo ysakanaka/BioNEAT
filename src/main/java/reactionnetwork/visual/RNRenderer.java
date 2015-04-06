@@ -57,10 +57,8 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			Collection<String> collection = graph.getInhibitions();
 			for (String inh : collection) {
 				renderInhibition(renderContext, layout, inh);
-				// System.out.println(inh.toString());
 			}
 		} catch (ConcurrentModificationException cme) {
-			// renderContext.getScreenDevice().repaint();
 		}
 
 		// paint all the vertices
@@ -173,9 +171,6 @@ public class RNRenderer extends BasicRenderer<String, String> {
 
 			// restore old paint
 			g.setPaint(oldPaint);
-		} else {
-			// System.out.print("fail ");
-			// System.out.println(inh.toString());
 		}
 	}
 
@@ -375,15 +370,7 @@ public class RNRenderer extends BasicRenderer<String, String> {
 							.transform(
 									Context.<Graph<String, String>, String> getInstance(
 											graph, e));
-					if (e.equals("aa")) {
-						System.out.println(arrow.getBounds());
-						System.out.println(edgeShape.getBounds());
-					}
 					arrow = at.createTransformedShape(arrow);
-					if (e.equals("aa")) {
-						System.out.println(arrow.getBounds());
-						System.out.println(edgeShape.getBounds());
-					}
 					g.setPaint(rc.getArrowFillPaintTransformer().transform(e));
 					g.fill(arrow);
 					g.setPaint(rc.getArrowDrawPaintTransformer().transform(e));

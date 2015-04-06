@@ -64,15 +64,12 @@ public class Oligator extends JApplet {
 				.registerTypeAdapter(Connection.class,
 						new ConnectionSerializer()).create();
 		String json = gson.toJson(network);
-		System.out.println(json);
 
 		// Testing the Json deserializer
 		ReactionNetwork newNetwork = gson.fromJson(json, ReactionNetwork.class);
-		System.out.println(newNetwork);
 
 		// Testing the clone
 		ReactionNetwork clone = newNetwork.clone();
-		System.out.println(newNetwork);
 		return clone;
 	}
 
