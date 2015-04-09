@@ -8,14 +8,14 @@ import java.util.Map;
 import javax.swing.JApplet;
 import javax.swing.JPanel;
 
-import oligomodel.OligoSystemComplex;
-import oligomodel.PlotFactory;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
+import use.oligomodel.OligoSystemComplex;
+import use.oligomodel.PlotFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

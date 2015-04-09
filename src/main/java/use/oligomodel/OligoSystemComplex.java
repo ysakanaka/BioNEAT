@@ -1,4 +1,4 @@
-package oligomodel;
+package use.oligomodel;
 
 import java.util.HashMap;
 import java.util.Map;

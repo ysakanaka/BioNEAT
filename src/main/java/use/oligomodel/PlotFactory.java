@@ -1,4 +1,4 @@
-package oligomodel;
+package use.oligomodel;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,7 +19,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class PlotFactory {
 	public JPanel createTimeSeriesPanel(Map<String, double[]> timeSeries) {
 
-		XYDataset dataset = createSampleDataset(timeSeries);
+		XYDataset dataset = createDataset(timeSeries);
 		JFreeChart chart = ChartFactory.createXYLineChart("", "Time",
 				"Concentration", dataset, PlotOrientation.VERTICAL, true,
 				false, false);
@@ -40,7 +40,7 @@ public class PlotFactory {
 		return ret;
 	}
 
-	private XYDataset createSampleDataset(Map<String, double[]> timeSeries) {
+	private XYDataset createDataset(Map<String, double[]> timeSeries) {
 		XYSeriesCollection dataset = new XYSeriesCollection();
 		for (String seriesName : timeSeries.keySet()) {
 			XYSeries series = new XYSeries(seriesName);
