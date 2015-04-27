@@ -1,24 +1,21 @@
 package demo;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JApplet;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import oligomodel.OligoSystemComplex;
-import oligomodel.PlotFactory;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
+import use.oligomodel.OligoSystemComplex;
+import use.oligomodel.PlotFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +24,11 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import gui.Test;
 
 public class Oligator extends JApplet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public static ReactionNetwork getInitNetwork() {
 		ReactionNetwork network = new ReactionNetwork();
@@ -65,15 +67,12 @@ public class Oligator extends JApplet {
 				.registerTypeAdapter(Connection.class,
 						new ConnectionSerializer()).create();
 		String json = gson.toJson(network);
-		System.out.println(json);
 
 		// Testing the Json deserializer
 		ReactionNetwork newNetwork = gson.fromJson(json, ReactionNetwork.class);
-		System.out.println(newNetwork);
 
 		// Testing the clone
 		ReactionNetwork clone = newNetwork.clone();
-		System.out.println(newNetwork);
 		return clone;
 	}
 
@@ -87,7 +86,7 @@ public class Oligator extends JApplet {
 					ReactionNetwork network = getInitNetwork();
 
 					RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
-					VisualizationViewer vv = factory
+					VisualizationViewer<String, String> vv = factory
 							.createVisualizationViewer(network);
 					window.panelTopology.add(vv, BorderLayout.CENTER);
 

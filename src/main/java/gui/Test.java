@@ -16,13 +16,11 @@ import javax.swing.JTextArea;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import edu.uci.ics.jung.visualization.VisualizationViewer;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
-import reactionnetwork.visual.RNVisualizationViewerFactory;
 
 public class Test {
 
@@ -124,15 +122,12 @@ public class Test {
 				.registerTypeAdapter(Connection.class,
 						new ConnectionSerializer()).create();
 		String json = gson.toJson(network);
-		System.out.println(json);
 
 		// Testing the Json deserializer
 		ReactionNetwork newNetwork = gson.fromJson(json, ReactionNetwork.class);
-		System.out.println(newNetwork);
 
 		// Testing the clone
 		ReactionNetwork clone = newNetwork.clone();
-		System.out.println(newNetwork);
 
 		return clone;
 	}

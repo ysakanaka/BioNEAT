@@ -29,7 +29,8 @@ public class MyPair<L, R> {
 			return false;
 		if (!(o instanceof MyPair))
 			return false;
-		MyPair pairo = (MyPair) o;
+		@SuppressWarnings("unchecked")
+		MyPair<L,R> pairo = (MyPair<L,R>) o;
 		return this.left.equals(pairo.getLeft())
 				&& this.right.equals(pairo.getRight());
 	}

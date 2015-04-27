@@ -1,11 +1,9 @@
 package reactionnetwork.visual;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.Shape;
-import java.awt.Stroke;
 
 import javax.swing.border.LineBorder;
 
@@ -39,8 +37,6 @@ public class RNVisualizationViewerFactory {
 			}
 		};
 
-		final Stroke edgeStroke = new BasicStroke(1.0f, BasicStroke.CAP_ROUND,
-				BasicStroke.JOIN_MITER, 10.0f);
 		vv.setBackground(Color.WHITE);
 		vv.setRenderer(new RNRenderer());
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
@@ -49,7 +45,6 @@ public class RNVisualizationViewerFactory {
 				.setEdgeArrowTransformer(
 						new Transformer<Context<Graph<String, String>, String>, Shape>() {
 
-							@Override
 							public Shape transform(
 									Context<Graph<String, String>, String> input) {
 								// TODO Auto-generated method stub
@@ -59,7 +54,6 @@ public class RNVisualizationViewerFactory {
 		vv.getRenderContext().setVertexLabelTransformer(
 				new Transformer<String, String>() {
 
-					@Override
 					public String transform(String input) {
 						// TODO Auto-generated method stub
 						return input;
