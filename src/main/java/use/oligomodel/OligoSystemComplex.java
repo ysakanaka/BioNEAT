@@ -5,7 +5,7 @@ import java.util.Map;
 
 import model.Constants;
 import model.OligoGraph;
-import model.OligoSystem;
+import model.OligoSystemAllSats;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
@@ -62,6 +62,7 @@ public class OligoSystemComplex {
 
 	}
 	
+	@Deprecated
 	public void setUsageOfCustomExoKm(boolean value){
 		//TODO: we will have to add getter/setter for the Kms
 		graph.exoUseCustomKm = value;
@@ -100,7 +101,7 @@ public class OligoSystemComplex {
 
 	public Map<String, double[]> calculateTimeSeries() {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		OligoSystem<String> myOligo = new OligoSystem<String>(graph);
+		OligoSystemAllSats<String> myOligo = new OligoSystemAllSats<String>(graph);
 		double[][] timeTrace = myOligo.calculateTimeSeries(null);
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
