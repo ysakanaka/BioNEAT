@@ -1,6 +1,7 @@
 package use.oligomodel;
 
 import model.chemicals.SequenceVertex;
+import model.input.AbstractInput;
 
 public class ProtectedSequenceVertex extends SequenceVertex {
 	
@@ -18,8 +19,30 @@ public class ProtectedSequenceVertex extends SequenceVertex {
 	}
 
 	public double getProtectedConcentration(){
-		return Math.max(this.concentration - unprotected,0);
+		return Math.max(this.concentration,0);
 	}
 	
+	public void setProtectedConcentration(double value){
+		this.concentration = value; // Does that make sense?
+	}
+	
+	@Override
+	public double getConcentration(){
+		return unprotected;
+	}
+	
+	@Override
+	public void setConcentration(double value){
+		unprotected = value;
+	}
+	
+	@Override
+	public void reset(){
+		this.concentration = this.initialConcentration;
+		this.unprotected = 0;
+		for(AbstractInput ai : this.inputs){
+			ai.reset();
+		}
+	}
 
 }
