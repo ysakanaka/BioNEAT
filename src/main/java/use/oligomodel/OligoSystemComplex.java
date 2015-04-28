@@ -18,6 +18,9 @@ public class OligoSystemComplex {
 	protected OligoGraph<SequenceVertex,String> graph;
 	protected ReactionNetwork network; //redundant?
 	protected HashMap<String,SequenceVertex> equiv = new HashMap<String,SequenceVertex>();
+	protected double[] polKm = {0.0, Constants.polKm, 0.0, Constants.polKmBoth, 0.0,0.0,0.0,0.0};
+    protected double[] nickKm = {0.0, 0.0, 0.0, 0.0, Constants.nickKm,0.0,0.0,0.0};
+    protected double[] exoKm = {0.0, 0.0, 0.0, 0.0, 0.0,0.0,Constants.exoKmSimple,Constants.exoKmInhib};
 	
 	public OligoSystemComplex(ReactionNetwork network) {
 		
@@ -59,6 +62,7 @@ public class OligoSystemComplex {
 		}
 		
 		//Fifth step: other parameters? TODO
+		//Specifically, we should change the kms above...
 
 	}
 	
@@ -101,7 +105,7 @@ public class OligoSystemComplex {
 
 	public Map<String, double[]> calculateTimeSeries() {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		OligoSystemAllSats<String> myOligo = new OligoSystemAllSats<String>(graph);
+		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
 		double[][] timeTrace = myOligo.calculateTimeSeries(null);
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
