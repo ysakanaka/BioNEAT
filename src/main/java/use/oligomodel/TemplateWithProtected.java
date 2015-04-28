@@ -48,8 +48,8 @@ public class TemplateWithProtected<E> extends Template<E>{
 		this.to = to;
 		this.inhib = inhib;
 		
-		this.protectedInput = from.getClass().isAssignableFrom(SequenceVertex.class);
-		this.protectedOutput = to.getClass().isAssignableFrom(SequenceVertex.class);
+		this.protectedInput = ProtectedSequenceVertex.class.isAssignableFrom(from.getClass());
+		this.protectedOutput = ProtectedSequenceVertex.class.isAssignableFrom(to.getClass());
 	}
 
 	public TemplateWithProtected(OligoGraph<SequenceVertex, E> parent, double totalConcentration, double stackSlowdown, double dangleL, double dangleR, SequenceVertex from, SequenceVertex to, SequenceVertex inhib)
@@ -64,14 +64,15 @@ public class TemplateWithProtected<E> extends Template<E>{
 		this.from = from;
 		this.to = to;
 		this.inhib = inhib;
-		this.protectedInput = from.getClass().isAssignableFrom(SequenceVertex.class);
+		this.protectedInput = ProtectedSequenceVertex.class.isAssignableFrom(from.getClass());
 		if(to!=null){
-		this.protectedOutput = to.getClass().isAssignableFrom(SequenceVertex.class);
+			this.protectedOutput = ProtectedSequenceVertex.class.isAssignableFrom(to.getClass());
 		} else {
 			this.protectedOutput = false;
 		}
 		
 	}
+	
 
 	public double[] flux() {
 		double[] ans = { aloneFlux(), inputFlux(), outputFlux(), bothFlux(),

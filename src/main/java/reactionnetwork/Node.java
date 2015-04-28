@@ -9,6 +9,7 @@ public class Node {
 	public double parameter;
 	public double initialConcentration;
 	public int type;
+	public boolean protectedSequence = false;
 	public String DNAString;
 
 	public Node(String name) {

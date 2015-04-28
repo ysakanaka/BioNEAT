@@ -25,15 +25,15 @@ public class SaturationEvaluatorProtected<E> extends SaturationEvaluator<E> {
 				}
 				if (kms[TIN] > 0.0){
 					value += t.concentrationWithInput/kms[TIN];
-					if(t.getClass().isAssignableFrom(TemplateWithProtected.class)) value+= ((TemplateWithProtected<E>)t).concentrationWithProtecteInput/kms[TIN];
+					if(TemplateWithProtected.class.isAssignableFrom(t.getClass())) value+= ((TemplateWithProtected<E>)t).concentrationWithProtecteInput/kms[TIN];
 				}
 				if (kms[TOUT] > 0.0){
 					value += t.concentrationWithOutput/kms[TOUT];
-					if(t.getClass().isAssignableFrom(TemplateWithProtected.class)) value+= ((TemplateWithProtected<E>)t).concentrationWithProtectedOutput/kms[TOUT];
+					if(TemplateWithProtected.class.isAssignableFrom(t.getClass())) value+= ((TemplateWithProtected<E>)t).concentrationWithProtectedOutput/kms[TOUT];
 				}
 				if (kms[TBOTH] > 0.0){
 					value += t.concentrationWithBoth/kms[TBOTH];
-					if(t.getClass().isAssignableFrom(TemplateWithProtected.class)) {
+					if(TemplateWithProtected.class.isAssignableFrom(t.getClass())) {
 						value+= ((TemplateWithProtected<E>)t).concentrationWithBothProtectedInput/kms[TBOTH];
 						value+= ((TemplateWithProtected<E>)t).concentrationWithBothProtectedOutput/kms[TBOTH];
 						value+= ((TemplateWithProtected<E>)t).concentrationWithBothProtectedBoth/kms[TBOTH];
@@ -41,7 +41,7 @@ public class SaturationEvaluatorProtected<E> extends SaturationEvaluator<E> {
 				}	
 				if (kms[TEXT] > 0.0){
 					value += t.concentrationExtended/kms[TEXT];
-					if(t.getClass().isAssignableFrom(TemplateWithProtected.class)) value+= ((TemplateWithProtected<E>)t).concentrationExtendedProtectedInput/kms[TEXT];
+					if(TemplateWithProtected.class.isAssignableFrom(t.getClass())) value+= ((TemplateWithProtected<E>)t).concentrationExtendedProtectedInput/kms[TEXT];
 				}
 				if (kms[TINHIB] > 0.0){
 					value += t.concentrationInhibited/kms[TINHIB];
@@ -52,8 +52,10 @@ public class SaturationEvaluatorProtected<E> extends SaturationEvaluator<E> {
 			for(SequenceVertex s : os.getSequences()){
 				if(!s.isInhib() && kms[SIGNAL] >0.0){
 					value+= s.getConcentration()/kms[SIGNAL];
+					if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())) value+= ((ProtectedSequenceVertex) s).getProtectedConcentration()/kms[SIGNAL];
 				} else if (s.isInhib() && kms[INHIB] >0.0){
 					value+= s.getConcentration()/kms[INHIB];
+					if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())) value+= ((ProtectedSequenceVertex) s).getProtectedConcentration()/kms[INHIB];
 				}
 			}
 		}

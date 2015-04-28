@@ -44,5 +44,13 @@ public class ProtectedSequenceVertex extends SequenceVertex {
 			ai.reset();
 		}
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(ProtectedSequenceVertex.class.isAssignableFrom(o.getClass())){
+			return ((ProtectedSequenceVertex)o).ID == this.ID;
+		} 
+		return false;
+	}
 
 }

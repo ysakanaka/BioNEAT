@@ -1,5 +1,6 @@
 package use.oligomodel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,8 +33,11 @@ public class OligoSystemComplex {
 		//Second step: populate with all sequences ("nodes") from the network
 		for(Node n : network.nodes){
 			SequenceVertex s = graph.getVertexFactory().create();
-			equiv.put(n.name, s);
 			s.initialConcentration = n.initialConcentration;
+			if(n.protectedSequence){
+				s = new ProtectedSequenceVertex(s.ID,s.initialConcentration);
+			}
+			equiv.put(n.name, s);
 			s.setInhib(n.type == Node.INHIBITING_SEQUENCE);
 			graph.addSpecies(s,n.parameter,n.initialConcentration);
 			//custom exonuclease inhibition
@@ -102,6 +106,31 @@ public class OligoSystemComplex {
 	    });
 	    this.graph = g;
 	}
+	
+	protected int getTrueIndex(ArrayList<SequenceVertex> list,SequenceVertex s){
+		 int where = 0;
+		if (s == null) {
+            return -1;
+        } else {
+            for (int i = 0; i < list.size(); i++){
+                if (s.equals(list.get(i))){
+                    return where;
+                }
+            where++;
+            if(ProtectedSequenceVertex.class.isAssignableFrom(list.get(i).getClass())) where++;
+            }
+           
+        }
+		return -1;
+	}
+	
+	protected double[] arraySum(double[] a1, double[] a2){
+		double[] a = new double[Math.min(a1.length, a2.length)];
+		for (int i=0; i<a.length;i++){
+			a[i] = a1[i] + a2[i];
+		}
+		return a;
+	}
 
 	public Map<String, double[]> calculateTimeSeries() {
 		Map<String, double[]> result = new HashMap<String, double[]>();
@@ -109,8 +138,12 @@ public class OligoSystemComplex {
 		double[][] timeTrace = myOligo.calculateTimeSeries(null);
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
-			int index = myOligo.getSequences().indexOf(s);
-			result.put(n.name, timeTrace[index]);
+			int index = getTrueIndex(myOligo.getSequences(),s);
+			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
+				result.put(n.name, arraySum(timeTrace[index],timeTrace[index+1]));
+			} else {
+				result.put(n.name, timeTrace[index]);
+			}
 		}
 		return result;
 	}

@@ -16,7 +16,24 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 	public OligoSystemWithProtectedSequences(OligoGraph<SequenceVertex, E> graph) {
 		super(graph);
 		for(SequenceVertex s : graph.getVertices()){
-			if(s.getClass().isAssignableFrom(ProtectedSequenceVertex.class)) this.total++; //Those sequences need two slots
+			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
+				this.total++; //Those sequences need two slots
+				for(E e: graph.getInEdges(s)){
+					Template<E> temp = this.templates.get(e);
+					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
+					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
+					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
+					this.templates.put(e, newTemp);
+				}
+				for(E e: graph.getOutEdges(s)){
+					Template<E> temp = this.templates.get(e);
+					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
+					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
+					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
+					this.templates.put(e, newTemp);
+				}
+			}
+			
 		}
 		// TODO Auto-generated constructor stub
 	}
@@ -25,7 +42,23 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			OligoGraph<SequenceVertex, E> graph, SaturationEvaluator<E> se) {
 		super(graph, se);
 		for(SequenceVertex s : graph.getVertices()){
-			if(s.getClass().isAssignableFrom(ProtectedSequenceVertex.class)) this.total++;//Those sequences need two slots
+			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
+				this.total++; //Those sequences need two slots
+				for(E e: graph.getInEdges(s)){
+					Template<E> temp = this.templates.get(e);
+					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
+					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
+					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
+					this.templates.put(e, newTemp);
+				}
+				for(E e: graph.getOutEdges(s)){
+					Template<E> temp = this.templates.get(e);
+					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
+					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
+					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
+					this.templates.put(e, newTemp);
+				}
+			}
 		}
 		// TODO Auto-generated constructor stub
 	}
@@ -124,7 +157,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			SequenceVertex s = it.next();
 					concentration[i] = s.getConcentration();
 					i++;
-					if(s.getClass().isAssignableFrom(ProtectedSequenceVertex.class)){
+					if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
 						concentration[i] = ((ProtectedSequenceVertex) s).getProtectedConcentration();
 						i++;
 					}
@@ -145,7 +178,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			SequenceVertex s = it.next();
 						s.setConcentration(y[where]);
 						where++;
-						if(s.getClass().isAssignableFrom(ProtectedSequenceVertex.class)){
+						if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
 							((ProtectedSequenceVertex) s).setProtectedConcentration(y[where]);
 							where++;
 						}
@@ -183,9 +216,9 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			//System.out.println("New pol activity: "+time+" "+this.templates.values().iterator().next().poly+" values:"+y[0]+" "+y[1]);
 			this.savedActivity[0][time] = graph.saturableExo?Constants.exoKmSimple/ this.computeExoKm(Constants.exoKmSimple):1;
 			//ret[where] = graph.saturablePoly?this.templates.values().iterator().next().poly:1;
-			this.savedActivity[1][time] = graph.saturablePoly?this.templates.values().iterator().next().getCurrentPoly()/(Constants.polVm/Constants.polKm):1;
+			this.savedActivity[1][0] = (graph.saturablePoly && !this.templates.isEmpty())?this.templates.values().iterator().next().getCurrentPoly()/(Constants.polVm/Constants.polKm):1;
 			//ret[where] = graph.saturablePoly?this.templates.values().iterator().next().nick:1;
-			this.savedActivity[2][time] = graph.saturablePoly?this.templates.values().iterator().next().getCurrentNick()/(Constants.nickVm/Constants.nickKm):1;
+			this.savedActivity[2][0] = (graph.saturableNick && !this.templates.isEmpty())?this.templates.values().iterator().next().getCurrentNick()/(Constants.nickVm/Constants.nickKm):1;
 		}
 		
 		where = 0;
@@ -194,6 +227,11 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		while(it.hasNext()){
 					seq = it.next();
 					ydot[where] = this.getTotalCurrentFlux(seq);
+					if(ProtectedSequenceVertex.class.isAssignableFrom(seq.getClass())){
+						where++; //The inputs goes on the protected seq
+						ydot[where] = this.getTotalCurrentProtectedFlux(((ProtectedSequenceVertex) seq));
+						
+					}
 					for(AbstractInput inp : seq.inputs){
 						ydot[where]+=inp.f(t);
 					}
