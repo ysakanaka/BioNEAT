@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -21,6 +22,13 @@ import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
+import use.oligomodel.OligoSystemComplex;
+import use.oligomodel.PlotFactory;
+
+import javax.swing.JButton;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Test {
 
@@ -28,6 +36,7 @@ public class Test {
 	public JPanel panelTopology;
 	public JTextArea txtrTest;
 	public JPanel panelBehavior;
+	private JButton btnSimulate;
 
 	/**
 	 * Launch the application.
@@ -73,8 +82,7 @@ public class Test {
 
 		JScrollPane panelInformation = new JScrollPane();
 		panelInformation.setPreferredSize(new Dimension(250, 250));
-		panelInformation
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		panelInformation.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel.add(panelInformation, BorderLayout.CENTER);
 
 		txtrTest = new JTextArea();
@@ -84,6 +92,25 @@ public class Test {
 		panelBehavior = new JPanel();
 		frame.getContentPane().add(panelBehavior, BorderLayout.CENTER);
 		panelBehavior.setLayout(new BorderLayout(0, 0));
+
+		btnSimulate = new JButton("Simulate");
+		btnSimulate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				panelBehavior.removeAll();
+				String json = txtrTest.getText();
+				Gson gson = new GsonBuilder().setPrettyPrinting()
+						.registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
+						.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
+				ReactionNetwork network = gson.fromJson(json, ReactionNetwork.class);
+				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
+				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries();
+				PlotFactory plotFactory = new PlotFactory();
+				JPanel timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
+				panelBehavior.add(timeSeriesPanel, BorderLayout.CENTER);
+				panelBehavior.revalidate();
+			}
+		});
+		frame.getContentPane().add(btnSimulate, BorderLayout.SOUTH);
 	}
 
 	ReactionNetwork initReactionNetwork() {
@@ -115,12 +142,8 @@ public class Test {
 		network.parameters.put("nick", 10.0);
 
 		// Testing the Json serializer
-		Gson gson = new GsonBuilder()
-				.setPrettyPrinting()
-				.registerTypeAdapter(ReactionNetwork.class,
-						new ReactionNetworkDeserializer())
-				.registerTypeAdapter(Connection.class,
-						new ConnectionSerializer()).create();
+		Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
+				.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
 		String json = gson.toJson(network);
 
 		// Testing the Json deserializer

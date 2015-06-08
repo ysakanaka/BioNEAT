@@ -19,6 +19,7 @@ import use.oligomodel.PlotFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import common.Static;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import gui.Test;
@@ -81,7 +82,7 @@ public class ProtectedSeq extends JApplet {
 							.createVisualizationViewer(network);
 					window.panelTopology.add(vv, BorderLayout.CENTER);
 
-					window.txtrTest.setText(network.toString());
+					window.txtrTest.setText(Static.gson.toJson(network));
 
 					OligoSystemComplex oligoSystem = new OligoSystemComplex(
 							network);

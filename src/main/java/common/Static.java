@@ -5,6 +5,14 @@ import java.util.Set;
 
 import org.reflections.Reflections;
 
+import reactionnetwork.Connection;
+import reactionnetwork.ConnectionSerializer;
+import reactionnetwork.ReactionNetwork;
+import reactionnetwork.ReactionNetworkDeserializer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import erne.AbstractFitnessFunction;
 
 public class Static {
@@ -18,6 +26,10 @@ public class Static {
 	//	Class<? extends FitnessFunction> f = it.next();
 	//	f.newInstance().evaluate(null);
 	//}
+	
+	public static Gson gson = new GsonBuilder().setPrettyPrinting()
+			.registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
+			.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
 	
 	static {
 		Reflections reflections = new Reflections("");
