@@ -21,9 +21,13 @@ public class SaturationEvaluatorProtected<E> extends SaturationEvaluator<E> {
 		if(kms[TALONE]> 0.0 ||kms[TIN]> 0.0 ||kms[TOUT]> 0.0 ||kms[TBOTH]> 0.0 ||kms[TEXT]> 0.0 ||kms[TINHIB]> 0.0 ){
 			for(Template<E> t : os.templates.values()){ //we take all the current templates
 				if (kms[TALONE] > 0.0){
-					value += t.concentrationAlone/kms[TALONE];
+					if(Reporter.class.isAssignableFrom(t.getClass()) && kms[SIGNAL] >0.0){
+						value += t.concentrationAlone/kms[SIGNAL];
+					} else {
+						value += t.concentrationAlone/kms[TALONE];
+					}
 				}
-				if (kms[TIN] > 0.0){
+				if (kms[TIN] > 0.0 && !Reporter.class.isAssignableFrom(t.getClass())){
 					value += t.concentrationWithInput/kms[TIN];
 					if(TemplateWithProtected.class.isAssignableFrom(t.getClass())) value+= ((TemplateWithProtected<E>)t).concentrationWithProtecteInput/kms[TIN];
 				}

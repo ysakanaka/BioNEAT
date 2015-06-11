@@ -11,6 +11,7 @@ public class Node {
 	public int type;
 	public boolean protectedSequence = false;
 	public String DNAString;
+	public boolean reporter = false;
 
 	public Node(String name) {
 		this.name = name;

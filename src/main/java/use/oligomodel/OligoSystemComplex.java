@@ -37,6 +37,9 @@ public class OligoSystemComplex {
 			if(n.protectedSequence){
 				s = new ProtectedSequenceVertex(s.ID,s.initialConcentration);
 			}
+			if(n.reporter){
+				graph.addActivation("r"+s.ID,s,ReporterIndicator.indicator,200);
+			}
 			equiv.put(n.name, s);
 			s.setInhib(n.type == Node.INHIBITING_SEQUENCE);
 			graph.addSpecies(s,n.parameter,n.initialConcentration);
@@ -143,6 +146,9 @@ public class OligoSystemComplex {
 				result.put(n.name, arraySum(timeTrace[index],timeTrace[index+1]));
 			} else {
 				result.put(n.name, timeTrace[index]);
+			}
+			if(n.reporter){
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)]);
 			}
 		}
 		return result;

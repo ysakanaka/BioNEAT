@@ -1,5 +1,6 @@
 package use.oligomodel;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import model.Constants;
@@ -14,50 +15,21 @@ import model.input.AbstractInput;
 public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> {
 
 	public OligoSystemWithProtectedSequences(OligoGraph<SequenceVertex, E> graph) {
-		super(graph);
+		super(graph,new ECFRNTemplateFactory<E>(graph));
 		for(SequenceVertex s : graph.getVertices()){
 			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
-				this.total++; //Those sequences need two slots
-				for(E e: graph.getInEdges(s)){
-					Template<E> temp = this.templates.get(e);
-					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
-					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
-					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
-					this.templates.put(e, newTemp);
-				}
-				for(E e: graph.getOutEdges(s)){
-					Template<E> temp = this.templates.get(e);
-					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
-					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
-					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
-					this.templates.put(e, newTemp);
-				}
+				this.total++;//Those sequences need two slots
 			}
-			
 		}
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public OligoSystemWithProtectedSequences(
 			OligoGraph<SequenceVertex, E> graph, SaturationEvaluator<E> se) {
-		super(graph, se);
+		super(graph, new ECFRNTemplateFactory<E>(graph), se);
 		for(SequenceVertex s : graph.getVertices()){
 			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
 				this.total++; //Those sequences need two slots
-				for(E e: graph.getInEdges(s)){
-					Template<E> temp = this.templates.get(e);
-					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
-					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
-					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
-					this.templates.put(e, newTemp);
-				}
-				for(E e: graph.getOutEdges(s)){
-					Template<E> temp = this.templates.get(e);
-					double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
-					double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
-					TemplateWithProtected<E> newTemp = new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));
-					this.templates.put(e, newTemp);
-				}
 			}
 		}
 		// TODO Auto-generated constructor stub
@@ -66,6 +38,9 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 	@Override
 	protected double getTotalCurrentFluxSimple(SequenceVertex s) {
 		// As Input
+		if(s == ReporterIndicator.indicator){
+			return 0;
+		}
 		double flux = 0;
 		Template<E> temp;
 
@@ -146,6 +121,18 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			return flux;
 		}
 		return 0;
+	}
+	
+	public int getReporterIndex(SequenceVertex s){
+		ArrayList<Template<E>> arrs = new ArrayList<Template<E>>(templates.values());
+		int soFar = 0;
+		for(int i = 0; i<arrs.size(); i++){
+			if(arrs.get(i).getFrom().equals(s) && arrs.get(i).getTo() == null){
+				return soFar;
+			}
+			soFar += arrs.get(i).getStates().length;
+		}
+		return -1;
 	}
 	
 	@Override
