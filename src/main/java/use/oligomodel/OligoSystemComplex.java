@@ -3,6 +3,9 @@ package use.oligomodel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import model.Constants;
 import model.OligoGraph;
@@ -84,7 +87,7 @@ public class OligoSystemComplex {
 	    }
 		//Do the toggle here TODO
 		if(true){
-			//toggleExoSaturationByAll();
+			toggleExoSaturationByAll();
 		}
 
 	}
@@ -167,6 +170,37 @@ public class OligoSystemComplex {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
 		double[][] timeTrace = myOligo.calculateTimeSeries(null);
+		for(Node n : this.network.nodes){
+			SequenceVertex s = equiv.get(n.name);
+			int index = getTrueIndex(myOligo.getSequences(),s);
+			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
+				result.put(n.name, arraySum(timeTrace[index],timeTrace[index+1]));
+			} else {
+				result.put(n.name, timeTrace[index]);
+			}
+			if(n.reporter){
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+1]);
+			}
+		}
+		return result;
+	}
+	
+	public Map<String, double[]> calculateTimeSeries(int timeOut) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
+		MyCancellableWorker mcw = new MyCancellableWorker(myOligo,timeOut);
+		mcw.execute();
+
+		double[][] timeTrace = {};
+		try {
+			timeTrace = (double[][]) mcw.get(timeOut,TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			
+		} catch (ExecutionException e) {
+			
+		} catch (TimeoutException e) {
+			return result;
+		}
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
 			int index = getTrueIndex(myOligo.getSequences(),s);
