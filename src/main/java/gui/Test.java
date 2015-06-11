@@ -17,11 +17,13 @@ import javax.swing.JTextArea;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
+import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.oligomodel.OligoSystemComplex;
 import use.oligomodel.PlotFactory;
 
@@ -108,6 +110,13 @@ public class Test {
 				JPanel timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
 				panelBehavior.add(timeSeriesPanel, BorderLayout.CENTER);
 				panelBehavior.revalidate();
+				
+				RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
+				VisualizationViewer<String, String> vv = factory
+						.createVisualizationViewer(network);
+				panelTopology.removeAll();
+				panelTopology.add(vv, BorderLayout.CENTER);
+				panelTopology.revalidate();
 			}
 		});
 		frame.getContentPane().add(btnSimulate, BorderLayout.SOUTH);
