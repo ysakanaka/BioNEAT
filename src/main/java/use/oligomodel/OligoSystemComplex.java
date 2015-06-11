@@ -7,6 +7,7 @@ import java.util.Map;
 import model.Constants;
 import model.OligoGraph;
 import model.OligoSystemAllSats;
+import model.SaturationEvaluator;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
@@ -50,14 +51,18 @@ public class OligoSystemComplex {
 		//Third step: add connections
 		for(Connection c : network.connections){
 			String name = c.from.name+c.to.name;
-			//custom exonuclease inhibition. Reference all the sub species of a template
-			String[] subspecies = new String[]{"alone", "in", "out", "both", "ext", "inhib"};
 			
-			graph.addActivation(name, equiv.get(c.from.name), equiv.get(c.to.name), c.parameter, subspecies);
 			
-			//custom exonuclease inhibition. Defaults are: alone, in, out and inhib inhibits the exo.
-			//We remove out for now
-			graph.getCustomExoKm().put(name+" out", -1.0);
+			graph.addActivation(name, equiv.get(c.from.name), equiv.get(c.to.name), c.parameter);
+			if(!c.from.DNAString.equals("")&!c.to.DNAString.equals("")){
+				String atTheNick = ""+c.from.DNAString.charAt(c.from.DNAString.length()-1);
+				atTheNick += c.to.DNAString.charAt(0);
+				System.out.println(atTheNick);
+				double[] slow = model.SlowdownConstants.getSlowdown(atTheNick);
+				graph.stackSlowdown.put(name,slow[0]);
+				graph.dangleLSlowdown.put(name,slow[1]);
+				graph.dangleRSlowdown.put(name,slow[2]);
+			}
 		}
 		
 		//Fourth step: add inhibitions
@@ -71,6 +76,18 @@ public class OligoSystemComplex {
 		//Fifth step: other parameters? TODO
 		//Specifically, we should change the kms above...
 
+	}
+	
+	public void toggleExoSaturationByAll(){
+		if(exoKm[1]==0.0){
+			for(int i=1; i<SaturationEvaluator.SIGNAL; i++ ){
+				exoKm[i] = exoKm[0];
+			}
+		} else {
+			for(int i=1; i<SaturationEvaluator.SIGNAL; i++ ){
+				exoKm[i] = 0.0;
+			}
+		}
 	}
 	
 	@Deprecated

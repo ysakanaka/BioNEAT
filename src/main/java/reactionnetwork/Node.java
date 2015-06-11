@@ -10,7 +10,7 @@ public class Node {
 	public double initialConcentration;
 	public int type;
 	public boolean protectedSequence = false;
-	public String DNAString;
+	public String DNAString="";
 	public boolean reporter = false;
 
 	public Node(String name) {
