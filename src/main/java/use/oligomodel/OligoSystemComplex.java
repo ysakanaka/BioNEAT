@@ -75,6 +75,17 @@ public class OligoSystemComplex {
 		
 		//Fifth step: other parameters? TODO
 		//Specifically, we should change the kms above...
+		graph.saturableExo = true;
+		graph.saturableNick = true;
+		graph.saturablePoly = true;
+		graph.dangle = true;
+		if(this.graph.exoSaturationByFreeTemplates){
+	    	exoKm[SaturationEvaluator.TALONE] = Constants.exoKmTemplate;
+	    }
+		//Do the toggle here TODO
+		if(true){
+			//toggleExoSaturationByAll();
+		}
 
 	}
 	
@@ -165,7 +176,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)]);
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+1]);
 			}
 		}
 		return result;
