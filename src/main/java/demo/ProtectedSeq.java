@@ -32,7 +32,7 @@ public class ProtectedSeq extends JApplet {
 	private static final long serialVersionUID = 1L;
 
 	public static ReactionNetwork getInitNetwork() {
-		model.Constants.numberOfPoints = 1000000;
+		model.Constants.numberOfPoints = 1000;
 		ReactionNetwork network = new ReactionNetwork();
 		network.nodes = new ArrayList<Node>();
 		Node node1 = new Node("a");

@@ -3,8 +3,14 @@ package use.oligomodel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.commons.math3.ode.nonstiff.GraggBulirschStoerIntegrator;
+
+import utils.MyStepHandler;
+import utils.PluggableWorker;
+
 import model.Constants;
 import model.OligoGraph;
+import model.OligoSystem;
 import model.OligoSystemAllSats;
 import model.SaturationEvaluator;
 import model.chemicals.InvalidConcentrationException;
@@ -239,4 +245,30 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		where++;
 	}
 	
+	@Override
+	public double[][] calculateTimeSeries(PluggableWorker myWorker) {
+		final GraggBulirschStoerIntegrator myIntegrator = new GraggBulirschStoerIntegrator(
+				1e-14, 1, Constants.absprec, Constants.relprec);
+		
+		this.reinitializeOiligoSystem();
+		
+		final double[] placeholder = this.initialConditions();
+		final OligoSystem<E> syst = this;
+		final MyStepHandler handler = new MyStepHandler(); //TODO: put your own handler here
+		
+		handler.registerWorker(myWorker);
+		
+		
+		myIntegrator.addStepHandler(handler);
+		try{
+		myIntegrator.integrate(syst, 0, placeholder, Constants.numberOfPoints,
+				placeholder);
+		} catch ( org.apache.commons.math3.exception.NumberIsTooSmallException e){
+			System.out.println("Integration error: min possible value is "+e.getMin());
+		}
+		//syst.displayProfiling();
+		
+		return handler.getTimeSerie();
+		
+	}
 }
