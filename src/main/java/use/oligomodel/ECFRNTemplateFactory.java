@@ -18,7 +18,7 @@ public class ECFRNTemplateFactory<E> extends DefaultTemplateFactory<E> {
 		SequenceVertex origin = graph.getSource(e);
 		SequenceVertex dest = graph.getDest(e);
 		if(dest == ReporterIndicator.indicator){
-			System.out.println("This is a reporter");
+			//System.out.println("This is a reporter");
 			return new Reporter<E>(graph,graph.getTemplateConcentration(e),origin);
 		}
 		double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;

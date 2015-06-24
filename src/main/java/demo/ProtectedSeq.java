@@ -43,6 +43,7 @@ public class ProtectedSeq extends JApplet {
 		Node node2 = new Node("b");
 		node2.parameter = 50;
 		node2.initialConcentration = 5;
+		node2.reporter = true;
 		network.nodes.add(node2);
 		Connection conn1 = new Connection(node1, node2);
 		conn1.parameter =1;

@@ -60,7 +60,7 @@ public class OligoSystemComplex {
 			if(!c.from.DNAString.equals("")&!c.to.DNAString.equals("")){
 				String atTheNick = ""+c.from.DNAString.charAt(c.from.DNAString.length()-1);
 				atTheNick += c.to.DNAString.charAt(0);
-				System.out.println(atTheNick);
+				//System.out.println(atTheNick);
 				double[] slow = model.SlowdownConstants.getSlowdown(atTheNick);
 				graph.stackSlowdown.put(name,slow[0]);
 				graph.dangleLSlowdown.put(name,slow[1]);

@@ -1,15 +1,16 @@
 package erne;
 
-import java.util.HashMap;
+import java.io.Serializable;
 
 import reactionnetwork.ReactionNetwork;
 
-public abstract class AbstractFitnessFunction {
+public abstract class AbstractFitnessFunction implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public abstract AbstractFitnessResult evaluate(ReactionNetwork network);
 
-	public abstract HashMap<String, String> getDefaultParameters();
-
-	public abstract void setParameters(HashMap<String, String> parameters);
-	
 	public abstract AbstractFitnessResult minFitness();
 }

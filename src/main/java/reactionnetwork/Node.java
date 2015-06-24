@@ -1,7 +1,13 @@
 package reactionnetwork;
 
-public class Node {
+import java.io.Serializable;
 
+public class Node implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static int SIMPLE_SEQUENCE = 1;
 	public static int INHIBITING_SEQUENCE = 2;
 
@@ -10,7 +16,7 @@ public class Node {
 	public double initialConcentration;
 	public int type;
 	public boolean protectedSequence = false;
-	public String DNAString="";
+	public String DNAString = "";
 	public boolean reporter = false;
 
 	public Node(String name) {

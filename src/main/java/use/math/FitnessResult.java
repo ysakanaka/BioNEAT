@@ -1,36 +1,43 @@
 package use.math;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import common.Static;
-
 import erne.AbstractFitnessResult;
 
 public class FitnessResult extends AbstractFitnessResult {
-	public HashMap<String, Double> errors;
-	public double target_max;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public double[] targetOutputs;
+	public double[] actualOutputs;
+	public double[] targetFittingParams;
+	public double[] actualFittingParams;
+	public ArrayList<double[]> tests;
 
-	public HashMap<String, Double> targets = new HashMap<String, Double>();
-	public HashMap<String, Double> actuals = new HashMap<String, Double>();
-	public double scale = 1;
+	public boolean minFitness = false;
 
-	public double[] targetFittedParams;
-	public double[] actualFittedParams;
+	public FitnessResult(boolean minFitness) {
+		this.minFitness = minFitness;
+	}
 
 	@Override
 	public double getFitness() {
+		if (minFitness)
+			return 0;
 		double result = 0;
-		for (double error : errors.values()) {
-			result += Math.pow(error, 2);// modified to square by YR
+		for (int i = 0; i < actualOutputs.length; i++) {
+			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
+			result += Math.pow(error, 2);
 		}
 		result = 10000 / Math.max(result, 0.01);
-		if (targetFittedParams != null) {
-			for (int i = 0; i < targetFittedParams.length; i++) {
+
+		if (targetFittingParams != null) {
+			for (int i = 0; i < targetFittingParams.length; i++) {
 				result = result
-						* Math.exp(-(actualFittedParams[i] - targetFittedParams[i])
-								* (actualFittedParams[i] - targetFittedParams[i])
-								/ (targetFittedParams[i]
-										* targetFittedParams[i] / 100));
+						* Math.exp(-(actualFittingParams[i] - targetFittingParams[i]) * (actualFittingParams[i] - targetFittingParams[i])
+								/ (actualFittingParams[i] * targetFittingParams[i] / 100));
 			}
 		}
 		return result;
@@ -38,43 +45,26 @@ public class FitnessResult extends AbstractFitnessResult {
 
 	@Override
 	public String toString() {
+		if (minFitness)
+			return "MIN_FITNESS";
 		StringBuilder builder = new StringBuilder();
 		builder.append(Static.df4.format(getFitness()));
-		builder.append("(scale=" + Static.df4.format(scale) + ")");
 
 		builder.append("=10000/(");
-		int i = 0;
-		for (double error : errors.values()) {
-			builder.append("("
-					+ (error == Double.MAX_VALUE ? "MAX_VALUE" : Static.df4
-							.format(error)) + ")^2 ");// mod YR
-			i++;
-			if (i < errors.size() - 1) {
+		for (int i = 0; i < actualOutputs.length; i++) {
+			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
+			builder.append("(" + (error == Double.MAX_VALUE ? "MAX_VALUE" : Static.df4.format(error)) + ")^2 ");
+			if (i < actualOutputs.length - 1) {
 				builder.append(" + ");
 			}
 		}
 		builder.append(") ");
-		if (targetFittedParams != null) {
-			for (int j = 0; j < targetFittedParams.length; j++) {
-				builder.append(actualFittedParams[j] + " ");
+		if (targetFittingParams != null) {
+			builder.append("Fitting params [target]: ");
+			for (int j = 0; j < targetFittingParams.length; j++) {
+				builder.append(Static.df4.format(actualFittingParams[j]) + "[" + Static.df4.format(targetFittingParams[j]) + "] ");
 			}
 		}
 		return builder.toString();
-	}
-
-	@Override
-	public boolean isSatisfied() {
-		for (double error : errors.values()) {
-			if (Math.abs(error / target_max) > FitnessFunction.stoppingError) {
-				return false;
-			}
-		}
-		for (int i = 0; i < targetFittedParams.length; i++) {
-			if (Math.abs(targetFittedParams[i] - actualFittedParams[i])
-					/ targetFittedParams[i] > FitnessFunction.stoppingError) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

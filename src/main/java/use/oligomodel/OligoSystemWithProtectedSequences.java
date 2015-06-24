@@ -134,7 +134,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		int soFar = 0;
 		for(int i = 0; i<arrs.size(); i++){
 			if(arrs.get(i).getFrom().equals(s) && arrs.get(i).getTo() == null){
-				System.out.println(soFar);
+				//System.out.println(soFar);
 				return soFar;
 			}
 			soFar += arrs.get(i).getStates().length;

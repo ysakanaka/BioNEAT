@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JScrollPane;
@@ -105,7 +106,7 @@ public class Test {
 						.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
 				ReactionNetwork network = gson.fromJson(json, ReactionNetwork.class);
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
-				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries();
+				Map<String, double[]> timeSeries = new HashMap<String, double[]>();
 				PlotFactory plotFactory = new PlotFactory();
 				JPanel timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
 				panelBehavior.add(timeSeriesPanel, BorderLayout.CENTER);
