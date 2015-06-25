@@ -1,7 +1,11 @@
+apply plugin: 'application'
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 version = '1.0'
 jar {
     manifest {
@@ -15,6 +19,8 @@ repositories {
    		dirs 'libs'
    	}    
 }
+
+mainClassName = 'cluster.Cluster'
 
 dependencies {
 	compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -30,9 +36,45 @@ dependencies {
 	compile 'org.reflections:reflections:0.9.9'
 	compile 'com.hazelcast:hazelcast:3.5'
 	compile 'ch.qos.logback:logback-classic:1.1.3'
+	compile 'org.apache.commons:commons-lang3:3.4'
+	runtime files('config')
 	runtime 'org.codehaus.janino:janino:2.7.6'
 	testCompile 'junit:junit:4.11'
 }
+
+def gitVersion() {
+    ext.gitHash = 'git rev-parse --short HEAD'.execute().text.trim()
+    ext.dirty   = 'git status --porcelain'.execute().text.trim()
+    dirty.empty ? gitHash : gitHash + '-dirty'
+}
+
+task dist(type: Copy) {
+    // http://www.gradle.org/docs/current/userguide/working_with_files.html
+
+    dependsOn compileJava, jar
+
+    file("$buildDir/dist").deleteDir()
+
+    into "$buildDir/dist"
+
+    into('config') {
+        from "$projectDir/config"
+    }
+
+    into("lib") {
+        from(jar) {
+            rename { String fileName ->
+                fileName.replace('SNAPSHOT', gitVersion())
+            }
+        }
+        from(configurations.runtime) {
+            exclude '*.conf', '*.xml', '*.p12'  // Files in config directory
+        }
+    }
+
+    from "$projectDir/dist"
+}
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.1'
