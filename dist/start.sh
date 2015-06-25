@@ -18,4 +18,8 @@ CLASS_PATH="$ROOT_DIR/lib/*:config"
 
 # Use exec to be compatible with daemontools:
 # http://cr.yp.to/daemontools.html
-exec java $JAVA_OPTS -cp $CLASS_PATH cluster.Cluster
+if [ -n "$1" ]
+then
+  exec java $JAVA_OPTS -cp $CLASS_PATH $1
+else
+  exec java $JAVA_OPTS -cp $CLASS_PATH cluster.Cluster

@@ -11,7 +11,7 @@ public class Connection implements Serializable{
 	public Node from;
 	public Node to;
 	public boolean enabled = true;
-	public double parameter;
+	public double parameter = 0;
 
 	public Connection(Node from, Node to) {
 		this.from = from;

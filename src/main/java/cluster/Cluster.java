@@ -20,6 +20,7 @@ import com.hazelcast.core.IExecutorService;
 import com.hazelcast.core.Member;
 
 import demo.ProtectedSeq;
+import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 
 public class Cluster {
@@ -72,11 +73,11 @@ public class Cluster {
 		for (int i = 0; i < 100; i++) {
 			networks.add(ProtectedSeq.getInitNetwork());
 		}
-		evaluateFitness(networks);
+		evaluateFitness(new SquareFitnessFunction(), networks);
 	}
 
-	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(List<ReactionNetwork> networks) throws InterruptedException,
-			ExecutionException {
+	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,
+			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
 		Map<ReactionNetwork, AbstractFitnessResult> results = new HashMap<ReactionNetwork, AbstractFitnessResult>();
 		Map<Future<AbstractFitnessResult>, Member> futureToMember = new HashMap<Future<AbstractFitnessResult>, Member>();
 		Map<Future<AbstractFitnessResult>, ReactionNetwork> futureToNetwork = new HashMap<Future<AbstractFitnessResult>, ReactionNetwork>();
@@ -93,8 +94,7 @@ public class Cluster {
 					taskCount = taskCountObject.intValue();
 				}
 				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
-					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(new SquareFitnessFunction(),
-							network), m);
+					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(fitnessFunction, network), m);
 					taskCount++;
 					System.out.println("Submitted to <" + m + ">. Task count: " + taskCount);
 					futureToMember.put(future, m);

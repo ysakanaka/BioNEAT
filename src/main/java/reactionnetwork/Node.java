@@ -13,8 +13,8 @@ public class Node implements Serializable {
 
 	public String name;
 	public double parameter;
-	public double initialConcentration;
-	public int type;
+	public double initialConcentration = 0;
+	public int type = SIMPLE_SEQUENCE;
 	public boolean protectedSequence = false;
 	public String DNAString = "";
 	public boolean reporter = false;

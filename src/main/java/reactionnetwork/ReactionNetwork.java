@@ -97,4 +97,30 @@ public class ReactionNetwork implements Serializable {
 		ReactionNetwork clone = gson.fromJson(json, ReactionNetwork.class);
 		return clone;
 	}
+
+	public int getNSimpleSequences() {
+		int ret = 0;
+		for (Node node : nodes) {
+			if (node.type == Node.SIMPLE_SEQUENCE)
+				ret++;
+		}
+		return ret;
+	}
+
+	public int getNEnabledConnections() {
+		int ret = 0;
+		for (Connection connection : connections) {
+			if (connection.enabled)
+				ret++;
+		}
+		return ret;
+	}
+
+	public Connection getConnectionByIN(int innovationNumber) {
+		for (Connection connection : connections) {
+			if (connection.innovation == innovationNumber)
+				return connection;
+		}
+		return null;
+	}
 }
