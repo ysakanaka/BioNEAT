@@ -11,7 +11,15 @@
 
 		<join>
 			<tcp-ip enabled="true">
-				<interface>127.0.0.1</interface>
+				<member>192.168.11.222</member>
+				<member>192.168.11.100</member>
+				<member>192.168.11.101</member>
+				<member>192.168.11.102</member>
+				<member>192.168.11.103</member>
+				<member>192.168.11.104</member>
+				<member>192.168.11.105</member>
+				<member>192.168.11.106</member>
+				<member>192.168.11.107</member>
 			</tcp-ip>
 
 			<multicast enabled="false">
