@@ -23,3 +23,4 @@ then
   exec java $JAVA_OPTS -cp $CLASS_PATH $1
 else
   exec java $JAVA_OPTS -cp $CLASS_PATH cluster.Cluster
+fi
