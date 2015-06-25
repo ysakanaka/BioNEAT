@@ -96,7 +96,7 @@ public class Cluster {
 				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
 					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(fitnessFunction, network), m);
 					taskCount++;
-					System.out.println("Submitted to <" + m + ">. Task count: " + taskCount);
+					//System.out.println("Submitted to <" + m + ">. Task count: " + taskCount);
 					futureToMember.put(future, m);
 					futureToNetwork.put(future, network);
 					activeTaskCounts.put(m, taskCount);

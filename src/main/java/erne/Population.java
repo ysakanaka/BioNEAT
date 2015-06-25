@@ -61,6 +61,16 @@ public class Population {
 		return individuals;
 	}
 
+	public Individual getBestIndividual() {
+		Individual bestIndividual = individuals[0];
+		for (Individual individual : individuals) {
+			if (bestIndividual.getFitnessResult().getFitness() < individual.getFitnessResult().getFitness()) {
+				bestIndividual = individual;
+			}
+		}
+		return bestIndividual;
+	}
+
 	public Individual[] reproduction(Species[] species) {
 		int i = 0;
 		for (Species sp : species) {

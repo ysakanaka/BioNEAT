@@ -20,8 +20,11 @@ public class Run {
 		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
 				new MutateParameter(1), new AddNode(1) }))));
 		population.resetPopulation();
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 100; i++) {
 			population.evolve();
+			System.out.println("Best fitness = " + population.getBestIndividual().getFitnessResult().getFitness());
+			System.out.println(population.getBestIndividual());
+		}
 	}
 
 }
