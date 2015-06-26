@@ -37,13 +37,15 @@ public class Run {
 			}
 		});
 
+		ReflectionUI reflectionUI = new ReflectionUI();
+
 		Population population = new Population(200, Library.startingMath);
 		population.setFitnessFunction(new SquareFitnessFunction());
 		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
 				new MutateParameter(1), new AddNode(1), new AddActivation(1), new AddInhibition(1) }))));
 		population.resetPopulation();
-		ReflectionUI reflectionUI = new ReflectionUI();
-		for (int i = 0; i < 100; i++) {
+		window.getTabHistory().addTab("Gen " + 0, null, reflectionUI.createObjectForm(population.getPopulationInfo(0)), null);
+		for (int i = 1; i < 100; i++) {
 			population.evolve();
 			window.getTabHistory().addTab("Gen " + i, null, reflectionUI.createObjectForm(population.getPopulationInfo(i)), null);
 		}
