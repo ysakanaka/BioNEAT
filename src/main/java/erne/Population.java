@@ -42,6 +42,7 @@ public class Population {
 	public PopulationInfo getPopulationInfo(int i) {
 		PopulationInfo info = new PopulationInfo();
 		info.setIndividuals(populations.get(i));
+		info.setSpecies(speciationSolver.speciesByGeneration.get(i));
 		return info;
 	}
 
@@ -61,14 +62,15 @@ public class Population {
 			individuals[i].parentIds.add(initIndividual.getId());
 		}
 		evaluateFitness();
+		speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
 	public Individual[] evolve() throws InterruptedException, ExecutionException {
-		Individual[] individuals = populations.get(populations.size() - 1);
-		Species[] species = speciationSolver.speciate(individuals);
-		reproduction(species);
+		reproduction(speciationSolver.speciesByGeneration.get(speciationSolver.speciesByGeneration.size()));
 		evaluateFitness();
+		Individual[] individuals = populations.get(populations.size() - 1);
+		speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
