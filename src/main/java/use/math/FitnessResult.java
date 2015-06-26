@@ -37,7 +37,7 @@ public class FitnessResult extends AbstractFitnessResult {
 			for (int i = 0; i < targetFittingParams.length; i++) {
 				result = result
 						* Math.exp(-(actualFittingParams[i] - targetFittingParams[i]) * (actualFittingParams[i] - targetFittingParams[i])
-								/ (actualFittingParams[i] * targetFittingParams[i] / 100));
+								/ (targetFittingParams[i] * targetFittingParams[i] / 100));
 			}
 		}
 		return result;
