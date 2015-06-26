@@ -23,7 +23,7 @@ public class Population {
 	public static Map<String, String> nodeNameOrigins = new HashMap<String, String>();
 
 	private Individual initIndividual;
-	private Individual[] individuals;
+	public Individual[] individuals;
 	private AbstractFitnessFunction fitnessFunction;
 	private SpeciationSolver speciationSolver;
 
