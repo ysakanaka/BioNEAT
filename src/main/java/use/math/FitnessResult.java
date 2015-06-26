@@ -50,12 +50,12 @@ public class FitnessResult extends AbstractFitnessResult {
 		StringBuilder builder = new StringBuilder();
 		builder.append(Static.df4.format(getFitness()));
 
-		builder.append(" Outputs [target]:");
+		builder.append(" Outputs[target]:");
 		for (int i = 0; i < actualOutputs.length; i++) {
 			builder.append(Static.df2.format(actualOutputs[i]) + "[" + Static.df2.format(targetOutputs[i]) + "] ");
 		}
 		if (targetFittingParams != null) {
-			builder.append("Fitting params [target]: ");
+			builder.append("Fitting params[target]: ");
 			for (int j = 0; j < targetFittingParams.length; j++) {
 				builder.append(Static.df4.format(actualFittingParams[j]) + "[" + Static.df4.format(targetFittingParams[j]) + "] ");
 			}

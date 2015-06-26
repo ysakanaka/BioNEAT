@@ -88,6 +88,7 @@ public class Cluster {
 			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
 		int totalJobCount = networks.size();
 		int completedJobCount = 0;
+		progressBar.setValue(completedJobCount * 100 / totalJobCount);
 		Map<ReactionNetwork, AbstractFitnessResult> results = new HashMap<ReactionNetwork, AbstractFitnessResult>();
 		Map<Future<AbstractFitnessResult>, Member> futureToMember = new HashMap<Future<AbstractFitnessResult>, Member>();
 		Map<Future<AbstractFitnessResult>, ReactionNetwork> futureToNetwork = new HashMap<Future<AbstractFitnessResult>, ReactionNetwork>();

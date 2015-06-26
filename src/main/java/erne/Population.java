@@ -159,7 +159,7 @@ public class Population {
 		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
 		for (int i = 0; i < individuals.length; i++) {
 			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));
-			System.out.println("Indiv " + i + " Fitness: " + individuals[i].getFitnessResult());
+			//System.out.println("Indiv " + i + " Fitness: " + individuals[i].getFitnessResult());
 		}
 	}
 }

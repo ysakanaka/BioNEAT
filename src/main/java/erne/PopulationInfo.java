@@ -21,4 +21,14 @@ public class PopulationInfo {
 	public Species[] getSpecies() {
 		return species;
 	}
+
+	public Individual getBestIndividual() {
+		Individual best = individuals[0];
+		for (int i = 1; i < individuals.length; i++) {
+			if (best.getFitnessResult().getFitness() < individuals[i].getFitnessResult().getFitness()) {
+				best = individuals[i];
+			}
+		}
+		return best;
+	}
 }
