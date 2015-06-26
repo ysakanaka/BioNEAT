@@ -9,7 +9,6 @@ import java.util.concurrent.TimeoutException;
 
 import model.Constants;
 import model.OligoGraph;
-import model.OligoSystemAllSats;
 import model.SaturationEvaluator;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
@@ -53,18 +52,20 @@ public class OligoSystemComplex {
 		
 		//Third step: add connections
 		for(Connection c : network.connections){
-			String name = c.from.name+c.to.name;
-			
-			
-			graph.addActivation(name, equiv.get(c.from.name), equiv.get(c.to.name), c.parameter);
-			if(!c.from.DNAString.equals("")&!c.to.DNAString.equals("")){
-				String atTheNick = ""+c.from.DNAString.charAt(c.from.DNAString.length()-1);
-				atTheNick += c.to.DNAString.charAt(0);
-				//System.out.println(atTheNick);
-				double[] slow = model.SlowdownConstants.getSlowdown(atTheNick);
-				graph.stackSlowdown.put(name,slow[0]);
-				graph.dangleLSlowdown.put(name,slow[1]);
-				graph.dangleRSlowdown.put(name,slow[2]);
+			if (c.enabled) {
+				String name = c.from.name+c.to.name;
+				
+				
+				graph.addActivation(name, equiv.get(c.from.name), equiv.get(c.to.name), c.parameter);
+				if(!c.from.DNAString.equals("")&!c.to.DNAString.equals("")){
+					String atTheNick = ""+c.from.DNAString.charAt(c.from.DNAString.length()-1);
+					atTheNick += c.to.DNAString.charAt(0);
+					//System.out.println(atTheNick);
+					double[] slow = model.SlowdownConstants.getSlowdown(atTheNick);
+					graph.stackSlowdown.put(name,slow[0]);
+					graph.dangleLSlowdown.put(name,slow[1]);
+					graph.dangleRSlowdown.put(name,slow[2]);
+				}	
 			}
 		}
 		

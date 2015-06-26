@@ -123,4 +123,13 @@ public class ReactionNetwork implements Serializable {
 		}
 		return null;
 	}
+
+	public Connection getConnectionByEnds(Node from, Node to) {
+		for (Connection connection : connections) {
+			if (connection.from.name.equals(from.name) && connection.to.name.equals(to.name)) {
+				return connection;
+			}
+		}
+		return null;
+	}
 }

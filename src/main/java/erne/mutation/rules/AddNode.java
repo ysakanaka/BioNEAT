@@ -10,10 +10,6 @@ import erne.mutation.MutationRule;
 
 public class AddNode extends MutationRule {
 	public double probGeneMutation = 0.8;
-	public double minNodeValue = 0.1;
-	public double maxNodeValue = 100;
-	public double minTemplateValue = 0.1;
-	public double maxTemplateValue = 60;
 
 	public AddNode(int weight) {
 		super(weight);
@@ -33,9 +29,9 @@ public class AddNode extends MutationRule {
 
 				Node newNode = indiv.addNodeByOrigin("null->" + to.name);
 
-				indiv.addConnection(newNode, newNode, (minTemplateValue + maxTemplateValue) / 2);
+				indiv.addConnection(newNode, newNode, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
 
-				indiv.addConnection(newNode, to, (minTemplateValue + maxTemplateValue) / 2);
+				indiv.addConnection(newNode, to, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
 
 			} else {
 				// new node connect to inhibiting sequence node
@@ -56,9 +52,9 @@ public class AddNode extends MutationRule {
 					}
 					Node newNode = indiv.addNodeByOrigin("null->" + inhibitionNode.name);
 
-					indiv.addConnection(newNode, newNode, (minTemplateValue + maxTemplateValue) / 2);
+					indiv.addConnection(newNode, newNode, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
 
-					indiv.addConnection(newNode, inhibitionNode, (minTemplateValue + maxTemplateValue) / 2);
+					indiv.addConnection(newNode, inhibitionNode, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
 
 				}
 			}
@@ -80,7 +76,8 @@ public class AddNode extends MutationRule {
 				Node newNode = indiv.addNodeByOrigin(connection.from.name + "->" + connection.to.name);
 
 				indiv.addConnection(connection.from, newNode,
-						(connection.to.type == Node.INHIBITING_SEQUENCE) ? (minTemplateValue + maxTemplateValue) / 2 : connection.parameter);
+						(connection.to.type == Node.INHIBITING_SEQUENCE) ? (Individual.minTemplateValue + Individual.maxTemplateValue) / 2
+								: connection.parameter);
 
 				indiv.addConnection(newNode, connection.to, connection.parameter);
 

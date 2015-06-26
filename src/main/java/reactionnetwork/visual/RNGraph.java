@@ -33,16 +33,14 @@ public class RNGraph extends DirectedSparseGraph<String, String> {
 			this.addVertexK(node.name, node.parameter);
 		}
 		for (Connection connection : network.connections) {
-			this.addEdge(connection.from.name + connection.to.name,
-					connection.from.name, connection.to.name);
-			this.addEdgeConcentration(
-					connection.from.name + connection.to.name,
-					connection.parameter);
+			if (connection.enabled) {
+				this.addEdge(connection.from.name + connection.to.name, connection.from.name, connection.to.name);
+				this.addEdgeConcentration(connection.from.name + connection.to.name, connection.parameter);
+			}
 		}
 		for (Node node : network.nodes) {
 			if (node.type == Node.INHIBITING_SEQUENCE) {
-				MyPair<String, String> inhib = new MyPair<String, String>(
-						node.name, node.name.replace("I", ""));
+				MyPair<String, String> inhib = new MyPair<String, String>(node.name, node.name.replace("I", ""));
 				this.addInhibition(node.name, inhib);
 			}
 		}
@@ -56,8 +54,7 @@ public class RNGraph extends DirectedSparseGraph<String, String> {
 		return inhibitions.keySet().contains(inhibition);
 	}
 
-	public boolean addInhibition(String inhibition,
-			MyPair<String, String> myPair) {
+	public boolean addInhibition(String inhibition, MyPair<String, String> myPair) {
 		inhibitions.put(inhibition, myPair);
 		return true;
 	}
