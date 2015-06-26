@@ -50,15 +50,10 @@ public class FitnessResult extends AbstractFitnessResult {
 		StringBuilder builder = new StringBuilder();
 		builder.append(Static.df4.format(getFitness()));
 
-		builder.append("=10000/(");
+		builder.append(" Outputs [target]:");
 		for (int i = 0; i < actualOutputs.length; i++) {
-			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
-			builder.append("(" + (error == Double.MAX_VALUE ? "MAX_VALUE" : Static.df4.format(error)) + ")^2 ");
-			if (i < actualOutputs.length - 1) {
-				builder.append(" + ");
-			}
+			builder.append(Static.df2.format(actualOutputs[i]) + "[" + Static.df2.format(targetOutputs[i]) + "] ");
 		}
-		builder.append(") ");
 		if (targetFittingParams != null) {
 			builder.append("Fitting params [target]: ");
 			for (int j = 0; j < targetFittingParams.length; j++) {
