@@ -12,7 +12,7 @@ public class Library {
 				"      \"name\": \"a\",\n" + 
 				"      \"parameter\": 40.0,\n" + 
 				"      \"initialConcentration\": 10.0,\n" + 
-				"      \"type\": 0,\n" + 
+				"      \"type\": 1,\n" + 
 				"      \"protectedSequence\": true,\n" + 
 				"      \"DNAString\": \"\",\n" + 
 				"      \"reporter\": false\n" + 
@@ -21,7 +21,7 @@ public class Library {
 				"      \"name\": \"b\",\n" + 
 				"      \"parameter\": 50.0,\n" + 
 				"      \"initialConcentration\": 5.0,\n" + 
-				"      \"type\": 0,\n" + 
+				"      \"type\": 1,\n" + 
 				"      \"protectedSequence\": false,\n" + 
 				"      \"DNAString\": \"\",\n" + 
 				"      \"reporter\": true\n" + 

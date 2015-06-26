@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.swing.JProgressBar;
+
 import reactionnetwork.ReactionNetwork;
 import use.math.SquareFitnessFunction;
 
@@ -41,7 +43,13 @@ public class Cluster {
 
 	private static final Map<Member, Integer> activeTaskCounts = new HashMap<Member, Integer>();
 
+	private static JProgressBar progressBar;
+
 	public static void start() {
+	}
+
+	public static void bindProgressBar(JProgressBar progressBar) {
+		Cluster.progressBar = progressBar;
 	}
 
 	public static String echoOnTheMember(String input, Member member) throws Exception {
@@ -78,6 +86,8 @@ public class Cluster {
 
 	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,
 			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
+		int totalJobCount = networks.size();
+		int completedJobCount = 0;
 		Map<ReactionNetwork, AbstractFitnessResult> results = new HashMap<ReactionNetwork, AbstractFitnessResult>();
 		Map<Future<AbstractFitnessResult>, Member> futureToMember = new HashMap<Future<AbstractFitnessResult>, Member>();
 		Map<Future<AbstractFitnessResult>, ReactionNetwork> futureToNetwork = new HashMap<Future<AbstractFitnessResult>, ReactionNetwork>();
@@ -96,7 +106,8 @@ public class Cluster {
 				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
 					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(fitnessFunction, network), m);
 					taskCount++;
-					//System.out.println("Submitted to <" + m + ">. Task count: " + taskCount);
+					// System.out.println("Submitted to <" + m +
+					// ">. Task count: " + taskCount);
 					futureToMember.put(future, m);
 					futureToNetwork.put(future, network);
 					activeTaskCounts.put(m, taskCount);
@@ -111,6 +122,8 @@ public class Cluster {
 							AbstractFitnessResult fitnessResult = future.get();
 							Member m = futureToMember.get(future);
 							int taskCount = activeTaskCounts.get(m) - 1;
+							completedJobCount++;
+							progressBar.setValue(completedJobCount * 100 / totalJobCount);
 							System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
 							activeTaskCounts.put(m, taskCount);
 							ReactionNetwork n = futureToNetwork.get(future);
@@ -133,6 +146,8 @@ public class Cluster {
 					AbstractFitnessResult fitnessResult = future.get();
 					Member m = entry.getValue();
 					int taskCount = activeTaskCounts.get(m) - 1;
+					completedJobCount++;
+					progressBar.setValue(completedJobCount * 100 / totalJobCount);
 					System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
 					activeTaskCounts.put(m, taskCount);
 					ReactionNetwork n = futureToNetwork.get(future);
