@@ -12,8 +12,8 @@ public class PopulationInfo {
 		this.species = species;
 	}
 
-	public void setSpecies(Species[] species) {
-		this.species = species;
+	public Individual[] getIndividuals() {
+		return individuals;
 	}
 
 	public Species[] getSpecies() {

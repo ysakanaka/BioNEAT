@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+
 import org.apache.commons.lang3.SerializationUtils;
 
 import cluster.Cluster;
@@ -47,7 +51,11 @@ public class Run {
 		window.getTabHistory().addTab("Gen " + 0, null, reflectionUI.createObjectForm(population.getPopulationInfo(0)), null);
 		for (int i = 1; i < 100; i++) {
 			population.evolve();
-			window.getTabHistory().addTab("Gen " + i, null, reflectionUI.createObjectForm(population.getPopulationInfo(i)), null);
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			window.getTabHistory().addTab("Gen " + i, null, scrollPane, null);
+			scrollPane.setViewportView(reflectionUI.createObjectForm(population.getPopulationInfo(i)));
 		}
 
 	}
