@@ -67,7 +67,7 @@ public class Population {
 	}
 
 	public Individual[] evolve() throws InterruptedException, ExecutionException {
-		reproduction(speciationSolver.speciesByGeneration.get(speciationSolver.speciesByGeneration.size()));
+		reproduction(speciationSolver.speciesByGeneration.get(speciationSolver.speciesByGeneration.size() - 1));
 		evaluateFitness();
 		Individual[] individuals = populations.get(populations.size() - 1);
 		speciationSolver.speciate(individuals);
