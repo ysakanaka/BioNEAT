@@ -158,6 +158,6 @@ public class SpeciationSolver {
 				nMatches++;
 			}
 		}
-		return (N - nMatches) / N;
+		return (double) (N - nMatches) / N;
 	}
 }
