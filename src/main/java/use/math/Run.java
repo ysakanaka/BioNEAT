@@ -47,10 +47,12 @@ public class Run {
 		population.setFitnessFunction(new SquareFitnessFunction());
 		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
 				new MutateParameter(1), new AddNode(1), new AddActivation(1), new AddInhibition(1) }))));
-		population.resetPopulation();
-		window.getTabHistory().addTab("Gen " + 0, null, reflectionUI.createObjectForm(population.getPopulationInfo(0)), null);
-		for (int i = 1; i < 100; i++) {
-			population.evolve();
+		for (int i = 0; i < 100; i++) {
+			if (i == 0) {
+				population.resetPopulation();
+			} else {
+				population.evolve();
+			}
 			JScrollPane scrollPane = new JScrollPane();
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
