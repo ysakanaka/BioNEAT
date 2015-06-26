@@ -44,15 +44,12 @@ public class Cluster {
 	private static final Map<Member, Integer> activeTaskCounts = new HashMap<Member, Integer>();
 
 	private static JProgressBar progressBar;
-	
-	public static boolean ready = false;
 
 	public static void start() {
 	}
 
 	public static void bindProgressBar(JProgressBar progressBar) {
 		Cluster.progressBar = progressBar;
-		ready = true;
 	}
 
 	public static String echoOnTheMember(String input, Member member) throws Exception {
@@ -91,7 +88,8 @@ public class Cluster {
 			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
 		int totalJobCount = networks.size();
 		int completedJobCount = 0;
-		progressBar.setValue(completedJobCount * 100 / totalJobCount);
+		if (progressBar != null)
+			progressBar.setValue(0);
 		Map<ReactionNetwork, AbstractFitnessResult> results = new HashMap<ReactionNetwork, AbstractFitnessResult>();
 		Map<Future<AbstractFitnessResult>, Member> futureToMember = new HashMap<Future<AbstractFitnessResult>, Member>();
 		Map<Future<AbstractFitnessResult>, ReactionNetwork> futureToNetwork = new HashMap<Future<AbstractFitnessResult>, ReactionNetwork>();
