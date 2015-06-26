@@ -13,7 +13,6 @@ import utils.PluggableWorker;
 public class StopableStepHandler implements StepHandler {
 	private ArrayList<double[]> timeSerie;
 	private int time = 0;
-	private PluggableWorker worker;
 	private int minTimeStable = 100;
 	private int timeToCheckStability = 50;
 	private double changeThresholdStable = 5E-3;
@@ -31,9 +30,6 @@ public class StopableStepHandler implements StepHandler {
 			// while(time<step.getCurrentTime()&&
 			// time<Constants.numberOfPoints-1){
 			time++;
-			if (worker != null) {
-				worker.setCustomProgress((100 * time) / Constants.numberOfPoints);
-			}
 			// worker.firePropertyChange("progress", time-1, time);
 
 			// Thread.yield();
@@ -92,10 +88,5 @@ public class StopableStepHandler implements StepHandler {
 			}
 		}
 		return timeSeries;
-	}
-
-	public void registerWorker(PluggableWorker worker) {
-		this.worker = worker;
-		// this.worker.setCustomProgress(0);
 	}
 }

@@ -189,19 +189,10 @@ public class OligoSystemComplex {
 	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
-		MyCancellableWorker mcw = new MyCancellableWorker(myOligo,timeOut);
-		mcw.execute();
-
 		double[][] timeTrace = {};
-		try {
-			timeTrace = (double[][]) mcw.get(timeOut,TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			
-		} catch (ExecutionException e) {
-			
-		} catch (TimeoutException e) {
-			return result;
-		}
+		
+		timeTrace = (double[][]) myOligo.calculateTimeSeries();
+		
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
 			int index = getTrueIndex(myOligo.getSequences(),s);
