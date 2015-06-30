@@ -46,7 +46,7 @@ public class Run {
 		Population population = new Population(200, Library.startingMath);
 		population.setFitnessFunction(new SquareFitnessFunction());
 		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
-				new MutateParameter(1), new AddNode(1), new AddActivation(1), new AddInhibition(1) }))));
+				new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5) }))));
 		for (int i = 0; i < 100; i++) {
 			if (i == 0) {
 				population.resetPopulation();
