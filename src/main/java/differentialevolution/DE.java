@@ -167,7 +167,7 @@ public class DE {
 			}
 			fitnesses = Cluster.evaluateFitness(new SquareFitnessFunction(), networks);
 			for (int i = 0; i < nextGen.length; i++) {
-				curFitness[i] = fitnesses.get(nextGen[i]).getFitness();
+				nextFitness[i] = fitnesses.get(nextGen[i]).getFitness();
 				this.NextGen[i].setFitnessScore(curFitness[i]);
 			}
 
