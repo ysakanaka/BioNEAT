@@ -64,11 +64,14 @@ public class SpeciationSolver {
 				}
 			}
 		} while (capping);
-		
-		for (Species sp:tempNextGenPop.keySet()) {
-			int nextGenPop = tempNextGenPop.get(sp);
-			popSizeLeft -= nextGenPop;
-			sp.setNextGenPopulation(nextGenPop);
+
+		for (Species sp : tempNextGenPop.keySet()) {
+			if (!processedSpecies.contains(sp)) {
+				int nextGenPop = tempNextGenPop.get(sp);
+				popSizeLeft -= nextGenPop;
+				sp.setNextGenPopulation(nextGenPop);
+			}
+
 		}
 
 		// if there is still spaces left, randomly assign them to each species
