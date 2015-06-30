@@ -2,8 +2,6 @@ package erne;
 
 public class Constants {
 
-	public static final boolean removeNonImprovingSpecies = true;
-	public static final int nNonInprovingGenerations = 15;
 	public static final boolean autoSpeciationThreshold = true;
 	public static final int targetNSpecies = 10;
 	public static final double speciationThresholdMod = 0.1;

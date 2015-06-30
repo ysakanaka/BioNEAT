@@ -1,6 +1,8 @@
 package erne.speciation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import erne.Constants;
@@ -32,30 +34,12 @@ public class SpeciationSolver {
 	}
 
 	private ArrayList<Species> decideSpeciesPopulation(ArrayList<Species> nextGenSpecies, int popSize) {
-		System.out.println(popSize);
 		// calculate next gen population for each species
 		ArrayList<Species> processedSpecies = new ArrayList<Species>();
-		if (Constants.removeNonImprovingSpecies && speciesByGeneration.size() > Constants.nNonInprovingGenerations) {
-			Species[] previousSpecies = speciesByGeneration.get(speciesByGeneration.size() - Constants.nNonInprovingGenerations);
-			for (Species sp : nextGenSpecies) {
-				for (Species prevSp : previousSpecies) {
-					if (sp.representative == prevSp.representative) {
-						try {
-							if (sp.getBestIndividual().getFitnessResult().getFitness() <= prevSp.getBestIndividual().getFitnessResult()
-									.getFitness()) {
-								processedSpecies.add(sp);
-							}
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-				}
-			}
-		}
-
 		int popSizeLeft = popSize;
 
 		boolean capping = false;
+		Map<Species, Integer> tempNextGenPop = new HashMap<Species, Integer>();
 		do {
 			capping = false;
 			double sumFitness = 0;
@@ -72,12 +56,20 @@ public class SpeciationSolver {
 						nextGenPop = sp.individuals.size() + popSize / 10;
 						capping = true;
 						processedSpecies.add(sp);
+						popSizeLeft -= nextGenPop;
+						sp.setNextGenPopulation(nextGenPop);
+					} else {
+						tempNextGenPop.put(sp, nextGenPop);
 					}
-					popSizeLeft -= nextGenPop;
-					sp.setNextGenPopulation(nextGenPop);
 				}
 			}
 		} while (capping);
+		
+		for (Species sp:tempNextGenPop.keySet()) {
+			int nextGenPop = tempNextGenPop.get(sp);
+			popSizeLeft -= nextGenPop;
+			sp.setNextGenPopulation(nextGenPop);
+		}
 
 		// if there is still spaces left, randomly assign them to each species
 		Random rand = new Random();
