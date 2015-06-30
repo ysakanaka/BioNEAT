@@ -79,7 +79,7 @@ public class Run {
 			Species[] species = populationInfo.getSpecies();
 
 			for (int j = 0; j < species.length; j++) {
-				VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].representative.getNetwork());
+				VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].getBestIndividual().getNetwork());
 
 				JPanel panelSpecie = new JPanel();
 				panelSpecie.setLayout(new BorderLayout(0, 0));
