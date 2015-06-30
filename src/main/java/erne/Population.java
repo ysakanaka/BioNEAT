@@ -15,6 +15,7 @@ import cluster.Cluster;
 import erne.mutation.Mutator;
 import erne.speciation.SpeciationSolver;
 import erne.speciation.Species;
+import reactionnetwork.Connection;
 import reactionnetwork.ReactionNetwork;
 
 public class Population {
@@ -34,6 +35,9 @@ public class Population {
 	private Mutator mutator;
 
 	public Population(int size, ReactionNetwork initNetwork) {
+		for (Connection conn : initNetwork.connections) {
+			innovationNumbers.put(conn.from.name + "->" + conn.to.name, innovationNumbers.size());
+		}
 		this.populations.add(new Individual[size]);
 		this.initIndividual = new Individual(initNetwork);
 		speciationSolver = new SpeciationSolver();
