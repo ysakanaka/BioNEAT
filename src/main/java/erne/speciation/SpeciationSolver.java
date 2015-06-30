@@ -1,6 +1,7 @@
 package erne.speciation;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import erne.Constants;
 import erne.Individual;
@@ -52,40 +53,36 @@ public class SpeciationSolver {
 		}
 
 		int popSizeLeft = popSize;
-		// calculate 1st time
-		double sumFitness = 0;
-		for (Species sp : nextGenSpecies) {
-			sumFitness += sp.getSpeciesFitness();
-		}
 
-		for (Species sp : nextGenSpecies) {
-			int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
-			if (nextGenPop > 1 && processedSpecies.contains(sp)) {
-				nextGenPop = 1;
-				sp.setNextGenPopulation(nextGenPop);
-				popSizeLeft -= nextGenPop;
+		boolean capping = false;
+		do {
+			capping = false;
+			double sumFitness = 0;
+			for (Species sp : nextGenSpecies) {
+				if (!processedSpecies.contains(sp)) {
+					sumFitness += sp.getSpeciesFitness();
+				}
 			}
-			// capping
-			if (nextGenPop > sp.individuals.size() + popSize / 10) {
-				nextGenPop = sp.individuals.size() + popSize / 10;
-				sp.setNextGenPopulation(nextGenPop);
-				processedSpecies.add(sp);
-				popSizeLeft -= nextGenPop;
+			for (Species sp : nextGenSpecies) {
+				if (!processedSpecies.contains(sp)) {
+					int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
+					// capping
+					if (nextGenPop > sp.individuals.size() + popSize / 10) {
+						nextGenPop = sp.individuals.size() + popSize / 10;
+						capping = true;
+						processedSpecies.add(sp);
+					}
+					popSizeLeft -= nextGenPop;
+					sp.setNextGenPopulation(nextGenPop);
+				}
 			}
-		}
+		} while (capping);
 
-		// calculate 2nd time removing the capped species
-		sumFitness = 0;
-		for (Species sp : nextGenSpecies) {
-			if (!processedSpecies.contains(sp)) {
-				sumFitness += sp.getSpeciesFitness();
-			}
-		}
-		for (Species sp : nextGenSpecies) {
-			if (!processedSpecies.contains(sp)) {
-				int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
-				sp.setNextGenPopulation(nextGenPop);
-			}
+		// if there is still spaces left, randomly assign them to each species
+		Random rand = new Random();
+		for (int i = 0; i < popSizeLeft; i++) {
+			int index = rand.nextInt(nextGenSpecies.size());
+			nextGenSpecies.get(index).setNextGenPopulation(nextGenSpecies.get(index).getNextGenPopulation() + 1);
 		}
 		return nextGenSpecies;
 	}
