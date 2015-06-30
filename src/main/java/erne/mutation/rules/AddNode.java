@@ -47,7 +47,7 @@ public class AddNode extends MutationRule {
 					String inhibitionNodeName = "I" + connection.from.name + connection.to.name;
 					Node inhibitionNode = indiv.getNetwork().getNodeByName(inhibitionNodeName);
 					if (inhibitionNode == null) {
-						inhibitionNode = new Node(inhibitionNodeName);
+						inhibitionNode = new Node(inhibitionNodeName, Node.INHIBITING_SEQUENCE);
 						indiv.getNetwork().nodes.add(inhibitionNode);
 					}
 					Node newNode = indiv.addNodeByOrigin("null->" + inhibitionNode.name);

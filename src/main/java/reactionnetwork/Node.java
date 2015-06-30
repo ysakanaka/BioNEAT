@@ -22,4 +22,10 @@ public class Node implements Serializable {
 	public Node(String name) {
 		this.name = name;
 	}
+	
+	public Node(String name, int type) {
+		this.name = name;
+		this.type = type;
+	}
+	
 }

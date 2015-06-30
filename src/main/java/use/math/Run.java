@@ -1,20 +1,24 @@
 package use.math;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import org.apache.commons.lang3.SerializationUtils;
-
 import cluster.Cluster;
 import reactionnetwork.Library;
+import reactionnetwork.visual.RNVisualizationViewerFactory;
 import xy.reflect.ui.ReflectionUI;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import erne.Population;
+import erne.PopulationInfo;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.rules.AddActivation;
@@ -22,7 +26,9 @@ import erne.mutation.rules.AddInhibition;
 import erne.mutation.rules.AddNode;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
+import erne.speciation.Species;
 import gui.Main;
+import gui.WrapLayout;
 
 public class Run {
 
@@ -57,7 +63,31 @@ public class Run {
 			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			window.getTabHistory().addTab("Gen " + i, null, scrollPane, null);
-			scrollPane.setViewportView(reflectionUI.createObjectForm(population.getPopulationInfo(i)));
+
+			JPanel panelGeneration = new JPanel();
+			scrollPane.setViewportView(panelGeneration);
+			panelGeneration.setLayout(new BorderLayout(0, 0));
+			PopulationInfo populationInfo = population.getPopulationInfo(i);
+			panelGeneration.add(reflectionUI.createObjectForm(populationInfo), BorderLayout.NORTH);
+
+			JPanel panelSpecies = new JPanel();
+			panelSpecies.setLayout(new WrapLayout());
+			panelSpecies.setSize(new Dimension(300, 1));
+			panelGeneration.add(panelSpecies, BorderLayout.CENTER);
+			RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
+
+			Species[] species = populationInfo.getSpecies();
+
+			for (int j = 0; j < species.length; j++) {
+				VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].representative.getNetwork());
+
+				JPanel panelSpecie = new JPanel();
+				panelSpecie.setLayout(new BorderLayout(0, 0));
+				panelSpecie.add(new JLabel("Species " + species[j].getName()), BorderLayout.NORTH);
+				panelSpecie.add(vv, BorderLayout.CENTER);
+
+				panelSpecies.add(panelSpecie);
+			}
 		}
 
 	}
