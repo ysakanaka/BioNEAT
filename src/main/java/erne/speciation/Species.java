@@ -19,6 +19,10 @@ public class Species implements Serializable {
 		this.individuals = new ArrayList<Individual>();
 	}
 
+	public int getPopulation() {
+		return individuals.size();
+	}
+
 	public double getTotalFitness() {
 		double totalFitness = 0;
 		for (Individual i : individuals) {
