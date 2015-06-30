@@ -143,7 +143,7 @@ public class DEIndiv {
 		return (this.network);
 	}
 
-	public void setReactionNetwork(ReactionNetwork oligoSystem) {
+	public void setReactionNetwork(ReactionNetwork network) {
 		this.network = network;
 	}
 
