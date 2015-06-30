@@ -32,6 +32,7 @@ public class SpeciationSolver {
 	}
 
 	private ArrayList<Species> decideSpeciesPopulation(ArrayList<Species> nextGenSpecies, int popSize) {
+		System.out.println(popSize);
 		// calculate next gen population for each species
 		ArrayList<Species> processedSpecies = new ArrayList<Species>();
 		if (Constants.removeNonImprovingSpecies && speciesByGeneration.size() > Constants.nNonInprovingGenerations) {
