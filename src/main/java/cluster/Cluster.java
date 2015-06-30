@@ -125,7 +125,8 @@ public class Cluster {
 							Member m = futureToMember.get(future);
 							int taskCount = activeTaskCounts.get(m) - 1;
 							completedJobCount++;
-							progressBar.setValue(completedJobCount * 100 / totalJobCount);
+							if (progressBar != null)
+								progressBar.setValue(completedJobCount * 100 / totalJobCount);
 							System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
 							activeTaskCounts.put(m, taskCount);
 							ReactionNetwork n = futureToNetwork.get(future);
@@ -149,7 +150,8 @@ public class Cluster {
 					Member m = entry.getValue();
 					int taskCount = activeTaskCounts.get(m) - 1;
 					completedJobCount++;
-					progressBar.setValue(completedJobCount * 100 / totalJobCount);
+					if (progressBar != null)
+						progressBar.setValue(completedJobCount * 100 / totalJobCount);
 					System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
 					activeTaskCounts.put(m, taskCount);
 					ReactionNetwork n = futureToNetwork.get(future);
