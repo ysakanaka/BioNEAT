@@ -79,6 +79,9 @@ public class Run {
 			Species[] species = populationInfo.getSpecies();
 
 			for (int j = 0; j < species.length; j++) {
+				System.out.println("Species " + species[j].getName() + " Fitness "
+						+ species[j].getBestIndividual().getFitnessResult().getFitness());
+				System.out.println(species[j].getBestIndividual().getNetwork());
 				VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].getBestIndividual().getNetwork());
 
 				JPanel panelSpecie = new JPanel();
