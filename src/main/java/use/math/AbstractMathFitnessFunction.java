@@ -3,6 +3,7 @@ package use.math;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
@@ -26,6 +27,10 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 	String OUTPUT_SEQUENCE = "b";
 	String REPORTER_OUTPUT_SEQUENCE = "Reporter b";
 
+	static boolean saveSimulation = false;
+
+	public static Map<Double, Map<String, double[]>> simulationResults;
+
 	@Override
 	public AbstractFitnessResult minFitness() {
 		return new FitnessResult(true);
@@ -44,6 +49,11 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 			double[] actualOutputs = new double[nTests];
 
 			Map<String, Double> sequencesLastTest = new HashMap<String, Double>();
+
+			if (saveSimulation) {
+				simulationResults = new TreeMap<Double, Map<String, double[]>>();
+			}
+
 			for (int i = 0; i < tests.size(); i++) {
 				double[] inputs = tests.get(i);
 
@@ -51,12 +61,19 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				// state.
 				for (Node node : network.nodes) {
 					if (sequencesLastTest.containsKey(node.name)) {
-						node.initialConcentration = sequencesLastTest.get(node.name);
+						if (!node.name.equals(INPUT_SEQUENCE)) {
+							node.initialConcentration = sequencesLastTest.get(node.name);
+						}
+					} else {
+						node.initialConcentration = 10;
 					}
 				}
 				network.getNodeByName(INPUT_SEQUENCE).initialConcentration = inputs[0];
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
 				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(30);
+				if (saveSimulation) {
+					simulationResults.put(inputs[0], timeSeries);
+				}
 				for (String sequence : timeSeries.keySet()) {
 					double[] outputTimeSeries = timeSeries.get(sequence);
 					double value = outputTimeSeries[outputTimeSeries.length - 1];
