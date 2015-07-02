@@ -26,7 +26,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		for (int i = 0; i < tests.size(); i++) {
 			obs.add(tests.get(i)[0], actualOutputs[i]);
-			targetOutputs[i] = 50 * Math.exp((-Math.pow(tests.get(i)[0] - 25, 2)) / 2);
+			targetOutputs[i] = 50 * Math.exp((-Math.pow(tests.get(i)[0] - 25, 2)) / (2 * Math.pow(3.5, 2)));
 		}
 
 		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000);
