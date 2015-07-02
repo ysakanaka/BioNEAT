@@ -3,6 +3,7 @@ package use.math;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.commons.math3.exception.TooManyIterationsException;
 import org.apache.commons.math3.fitting.GaussianCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
@@ -13,7 +14,8 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	static final double[] targetCoeff = new double[] { 50, 2, 0.5 };
+	// y= 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2)))
+	static final double[] targetCoeff = new double[] { 50, 25, 3.5 };
 
 	@Override
 	protected FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs) {
@@ -23,34 +25,36 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		for (int i = 0; i < tests.size(); i++) {
 			obs.add(tests.get(i)[0], actualOutputs[i]);
-			targetOutputs[i] = 0.02 * tests.get(i)[0] * tests.get(i)[0];
+			targetOutputs[i] = 50 * Math.exp((-Math.pow(tests.get(i)[0] - 25, 2)) / 2);
 		}
 
-		final GaussianCurveFitter fitter = GaussianCurveFitter.create();
+		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(100000);
 
-		final double[] coeff = fitter.fit(obs.toList());
+		try {
+			final double[] coeff = fitter.fit(obs.toList());
+			FitnessResult result = new FitnessResult(false);
 
-		FitnessResult result = new FitnessResult(false);
-
-		result.tests = tests;
-		result.actualOutputs = actualOutputs;
-		result.targetOutputs = targetOutputs;
-		result.targetFittingParams = targetCoeff;
-		result.actualFittingParams = coeff;
-		return result;
+			result.tests = tests;
+			result.actualOutputs = actualOutputs;
+			result.targetOutputs = targetOutputs;
+			result.targetFittingParams = targetCoeff;
+			result.actualFittingParams = new double[] { coeff[0], coeff[1], coeff[2] };
+			return result;
+		} catch (TooManyIterationsException e) {
+			return (FitnessResult) minFitness();
+		}
 
 	}
 
 	public static void main(String[] args) {
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		for (int i = 0; i < 100; i++) {
-			obs.add(i, 50 * Math.exp((-Math.pow(Math.log(i) - Math.log(100) / 2, 2)) / 1));
+			obs.add(i, 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2))));
 		}
 
-		final GaussianCurveFitter fitter = GaussianCurveFitter.create();
+		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000000);
 
 		final double[] coeff = fitter.fit(obs.toList());
 		System.out.println(Arrays.toString(coeff));
 	}
-
 }
