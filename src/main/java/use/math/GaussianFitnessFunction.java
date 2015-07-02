@@ -2,6 +2,7 @@ package use.math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import org.apache.commons.math3.exception.TooManyIterationsException;
 import org.apache.commons.math3.fitting.GaussianCurveFitter;
@@ -28,7 +29,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			targetOutputs[i] = 50 * Math.exp((-Math.pow(tests.get(i)[0] - 25, 2)) / 2);
 		}
 
-		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(100000);
+		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000);
 
 		try {
 			final double[] coeff = fitter.fit(obs.toList());
@@ -48,11 +49,12 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 	public static void main(String[] args) {
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
+		Random rand = new Random();
 		for (int i = 0; i < 100; i++) {
-			obs.add(i, 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2))));
+			obs.add(i, rand.nextDouble() * 10 - 5 + 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2))));
 		}
 
-		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000000);
+		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000);
 
 		final double[] coeff = fitter.fit(obs.toList());
 		System.out.println(Arrays.toString(coeff));
