@@ -54,6 +54,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				simulationResults = new TreeMap<Double, Map<String, double[]>>();
 			}
 
+			boolean minFitness = false;
 			for (int i = 0; i < tests.size(); i++) {
 				double[] inputs = tests.get(i);
 
@@ -71,9 +72,26 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				network.getNodeByName(INPUT_SEQUENCE).initialConcentration = inputs[0];
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
 				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(30);
+
+				// System could not reach stable time before 1000 minutes
+				if (timeSeries.entrySet().iterator().next().getValue().length >= 1000) {
+					minFitness = true;
+					// Stop evaluation if we don't need to store timeseries
+					if (!saveSimulation) {
+						return minFitness();
+					}
+				}
+
 				if (saveSimulation) {
 					simulationResults.put(inputs[0], timeSeries);
+
+					// if we have enough timeseries and fitness should be
+					// minimum
+					if (i == tests.size() - 1 && minFitness) {
+						return minFitness();
+					}
 				}
+
 				for (String sequence : timeSeries.keySet()) {
 					double[] outputTimeSeries = timeSeries.get(sequence);
 					double value = outputTimeSeries[outputTimeSeries.length - 1];
