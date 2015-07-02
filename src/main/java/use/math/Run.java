@@ -50,7 +50,7 @@ public class Run {
 		ReflectionUI reflectionUI = new ReflectionUI();
 
 		Population population = new Population(200, Library.startingMath);
-		population.setFitnessFunction(new SquareFitnessFunction());
+		population.setFitnessFunction(new GaussianFitnessFunction());
 		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
 				new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5) }))));
 		for (int i = 0; i < 100; i++) {
