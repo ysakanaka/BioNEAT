@@ -35,9 +35,7 @@ public class FitnessResult extends AbstractFitnessResult {
 
 		if (targetFittingParams != null) {
 			for (int i = 0; i < targetFittingParams.length; i++) {
-				result = result
-						* Math.exp(-(actualFittingParams[i] - targetFittingParams[i]) * (actualFittingParams[i] - targetFittingParams[i])
-								/ (targetFittingParams[i] * targetFittingParams[i] / 100));
+				result = result * Math.exp(-Math.pow((actualFittingParams[i] - targetFittingParams[i]) * 10 / targetFittingParams[i], 2));
 			}
 		}
 		return result;
@@ -48,7 +46,7 @@ public class FitnessResult extends AbstractFitnessResult {
 		if (minFitness)
 			return "MIN_FITNESS";
 		StringBuilder builder = new StringBuilder();
-		builder.append(Static.df4.format(getFitness()));
+		builder.append(getFitness());
 
 		builder.append(" Outputs[target]:");
 		for (int i = 0; i < actualOutputs.length; i++) {
