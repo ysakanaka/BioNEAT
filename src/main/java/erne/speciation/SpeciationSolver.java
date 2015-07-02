@@ -52,8 +52,9 @@ public class SpeciationSolver {
 				if (!processedSpecies.contains(sp)) {
 					int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
 					// capping
-					if (nextGenPop > sp.individuals.size() + popSize / 10) {
-						nextGenPop = sp.individuals.size() + popSize / 10;
+					System.out.println(speciesByGeneration.size());
+					if (nextGenPop > (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10) {
+						nextGenPop = (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10;
 						capping = true;
 						processedSpecies.add(sp);
 						popSizeLeft -= nextGenPop;
