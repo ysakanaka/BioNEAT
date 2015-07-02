@@ -30,20 +30,20 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 		}
 
 		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000);
-
+		double[] coeff = targetCoeff;
 		try {
-			final double[] coeff = fitter.fit(obs.toList());
-			FitnessResult result = new FitnessResult(false);
-
-			result.tests = tests;
-			result.actualOutputs = actualOutputs;
-			result.targetOutputs = targetOutputs;
-			result.targetFittingParams = targetCoeff;
-			result.actualFittingParams = new double[] { coeff[0], coeff[1], coeff[2] };
-			return result;
+			coeff = fitter.fit(obs.toList());
 		} catch (TooManyIterationsException e) {
-			return (FitnessResult) minFitness();
+
 		}
+		FitnessResult result = new FitnessResult(false);
+
+		result.tests = tests;
+		result.actualOutputs = actualOutputs;
+		result.targetOutputs = targetOutputs;
+		result.targetFittingParams = targetCoeff;
+		result.actualFittingParams = new double[] { coeff[0], coeff[1], coeff[2] };
+		return result;
 
 	}
 
@@ -51,7 +51,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		Random rand = new Random();
 		for (int i = 0; i < 100; i++) {
-			obs.add(i, rand.nextDouble() * 10 - 5 + 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2))));
+			obs.add(i, 0.0000000000001 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2))));
 		}
 
 		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000);
