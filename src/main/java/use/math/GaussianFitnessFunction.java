@@ -20,30 +20,32 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 	@Override
 	protected FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs) {
-
-		double[] targetOutputs = new double[tests.size()];
-
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		for (int i = 0; i < tests.size(); i++) {
 			obs.add(tests.get(i)[0], actualOutputs[i]);
-			targetOutputs[i] = 50 * Math.exp((-Math.pow(tests.get(i)[0] - 25, 2)) / (2 * Math.pow(3.5, 2)));
 		}
 
-		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000);
-		double[] coeff = targetCoeff;
+		final GaussianCurveFitter fitter = GaussianCurveFitter.create().withMaxIterations(1000).withStartPoint(targetCoeff);
 		try {
-			coeff = fitter.fit(obs.toList());
+			double[] coeff = fitter.fit(obs.toList());
+			FitnessResult result = new FitnessResult(false);
+
+			result.tests = tests;
+			result.actualOutputs = actualOutputs;
+
+			double[] targetOutputs = new double[tests.size()];
+			for (int i = 0; i < tests.size(); i++) {
+				obs.add(tests.get(i)[0], actualOutputs[i]);
+				targetOutputs[i] = coeff[0] * Math.exp((-Math.pow(tests.get(i)[0] - coeff[1], 2)) / (2 * Math.pow(coeff[2], 2)));
+			}
+			result.targetOutputs = targetOutputs;
+
+			result.targetFittingParams = targetCoeff;
+			result.actualFittingParams = new double[] { coeff[0], coeff[1], coeff[2] };
+			return result;
 		} catch (TooManyIterationsException e) {
-
+			return (FitnessResult) minFitness();
 		}
-		FitnessResult result = new FitnessResult(false);
-
-		result.tests = tests;
-		result.actualOutputs = actualOutputs;
-		result.targetOutputs = targetOutputs;
-		result.targetFittingParams = targetCoeff;
-		result.actualFittingParams = new double[] { coeff[0], coeff[1], coeff[2] };
-		return result;
 
 	}
 
