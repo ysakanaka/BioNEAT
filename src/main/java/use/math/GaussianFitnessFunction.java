@@ -16,7 +16,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 	private static final long serialVersionUID = 1L;
 
 	// y= 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2)))
-	static final double[] targetCoeff = new double[] { 50, 25, 3.5 };
+	static final double[] targetCoeff = new double[] { 50, (Math.log(100) + Math.log(0.1)) / 2, 0.7 };
 
 	@Override
 	protected FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs) {
@@ -27,7 +27,8 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 		double[] targetOutputs = new double[tests.size()];
 		for (int i = 0; i < tests.size(); i++) {
-			targetOutputs[i] = targetCoeff[0] * Math.exp((-Math.pow(tests.get(i)[0] - targetCoeff[1], 2)) / (2 * Math.pow(targetCoeff[2], 2)));
+			targetOutputs[i] = targetCoeff[0]
+					* Math.exp((-Math.pow(Math.log(tests.get(i)[0]) - targetCoeff[1], 2)) / (2 * Math.pow(targetCoeff[2], 2)));
 		}
 		result.targetOutputs = targetOutputs;
 
@@ -38,6 +39,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 	}
 
 	public static void main(String[] args) {
+		System.out.println((Math.log(100) - Math.log(0.1)) / 2);
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		obs.add(1.0, 0.0000001);
 		obs.add(6.444444444444445, 0.0000001);

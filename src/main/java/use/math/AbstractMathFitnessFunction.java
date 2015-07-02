@@ -19,9 +19,9 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 	private static final long serialVersionUID = 1L;
 	int nInputs = 1;
 
-	double minInputValue = 1;
-	double maxInputValue = 50;
-	int nTests = 10;
+	double minInputValue = 0.1;
+	double maxInputValue = 100;
+	int nTests = 11;
 
 	String INPUT_SEQUENCE = "a";
 	String OUTPUT_SEQUENCE = "b";
@@ -45,7 +45,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 			// output sequence is reported
 			network.getNodeByName(OUTPUT_SEQUENCE).reporter = true;
 
-			ArrayList<double[]> tests = getInputValues(minInputValue, maxInputValue, nTests, nInputs);
+			ArrayList<double[]> tests = getLogScaleInputValues(minInputValue, maxInputValue, nTests, nInputs);
 			double[] actualOutputs = new double[nTests];
 
 			Map<String, Double> sequencesLastTest = new HashMap<String, Double>();
@@ -109,6 +109,19 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 	}
 
 	protected abstract FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs);
+
+	private static ArrayList<double[]> getLogScaleInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+		ArrayList<double[]> result = new ArrayList<double[]>();
+		double step = (Math.log(maxInputValue) - Math.log(minInputValue)) / (nTests - 1);
+		double[] inputs = new double[nInputs];
+		getInputs(0, step, nTests, Math.log(minInputValue), inputs, result);
+		for (double[] results : result) {
+			for (int i = 0; i < results.length; i++) {
+				results[i] = Math.exp(results[i]);
+			}
+		}
+		return result;
+	}
 
 	private static ArrayList<double[]> getInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
 		ArrayList<double[]> result = new ArrayList<double[]>();
