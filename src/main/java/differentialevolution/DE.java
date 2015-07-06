@@ -8,13 +8,14 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import cluster.Cluster;
+import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import erne.Individual;
 import reactionnetwork.Connection;
 import reactionnetwork.Library;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.math.SquareFitnessFunction;
+import use.math.GaussianFitnessFunction;
 
 public class DE {
 
@@ -26,12 +27,14 @@ public class DE {
 	protected int maxGeneration = 1000;
 	protected int GenCount;
 	ReactionNetwork templateNetwork;
+	AbstractFitnessFunction fitnessFunction;
 
 	DEIndiv CurGen[];
 	DEIndiv NextGen[];
 
-	public DE(ReactionNetwork templateSystem) {
+	public DE(ReactionNetwork templateSystem, AbstractFitnessFunction fitnessFunction) {
 		this.templateNetwork = templateSystem;
+		this.fitnessFunction = fitnessFunction;
 		this.rnd = new Random(System.currentTimeMillis());
 		this.GenCount = 0;
 	}
@@ -140,7 +143,7 @@ public class DE {
 
 	// @OVERRIDE the parent method because of DE's one to one generation
 	// alternation mechanism
-	public void optimize() throws InterruptedException, ExecutionException {
+	public ReactionNetwork optimize() throws InterruptedException, ExecutionException {
 		ReactionNetwork[] curGen = createInitGeneration(templateNetwork);
 		ReactionNetwork[] nextGen;
 		double[] curFitness = new double[curGen.length];
@@ -150,14 +153,14 @@ public class DE {
 		for (int i = 0; i < curGen.length; i++) {
 			networks.add(curGen[i]);
 		}
-		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(new SquareFitnessFunction(), networks);
+		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
 		for (int i = 0; i < curGen.length; i++) {
 			curFitness[i] = fitnesses.get(curGen[i]).getFitness();
 			this.CurGen[i].setFitnessScore(curFitness[i]);
 		}
 
 		int bestIndivIndex = 0;
-		while (!stopEvolution()) {
+		while (this.GenCount < maxGeneration) {
 			nextGen = getNextGeneration(curGen, curFitness);
 			nextFitness = new double[nextGen.length];
 			System.out.println("Evaluating fitness");
@@ -165,7 +168,7 @@ public class DE {
 			for (int i = 0; i < nextGen.length; i++) {
 				networks.add(nextGen[i]);
 			}
-			fitnesses = Cluster.evaluateFitness(new SquareFitnessFunction(), networks);
+			fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
 			for (int i = 0; i < nextGen.length; i++) {
 				nextFitness[i] = fitnesses.get(nextGen[i]).getFitness();
 				this.NextGen[i].setFitnessScore(curFitness[i]);
@@ -195,7 +198,12 @@ public class DE {
 			System.out.println("Gen " + this.GenCount + " Best fitness index: " + bestIndivIndex + " Best fitness score: "
 					+ curFitness[bestIndivIndex] + " Avg fitness score: " + avgFitness);
 			System.out.println(this.CurGen[bestIndivIndex].getReactionNetwork());
+			if (stopEvolution()) {
+				break;
+			}
+			this.GenCount++;
 		}
+		return this.CurGen[bestIndivIndex].getReactionNetwork();
 	}
 
 	public ReactionNetwork[] getNextGeneration(ReactionNetwork[] curGen, double[] results) {
@@ -226,21 +234,15 @@ public class DE {
 		return oligoSystemGen;
 	}
 
-	public boolean stopEvolution() {
-		// TODO Auto-generated method stub
-		++this.GenCount;
-		if (this.GenCount > maxGeneration) {
-			return true;
-		} else
-			return (false);
-
+	protected boolean stopEvolution() {
+		return false;
 	}
 
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		System.out.println("Initializing DE");
 		ReactionNetwork templateNetwork = Library.squareFunction;
 
-		DE de = new DE(templateNetwork);
+		DE de = new DE(templateNetwork, new GaussianFitnessFunction());
 		de.optimize();
 	}
 

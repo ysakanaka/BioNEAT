@@ -17,7 +17,7 @@ public class Individual implements Serializable {
 	 */
 
 	public static double minNodeValue = 0.1;
-	public static double maxNodeValue = 100;
+	public static double maxNodeValue = 200;
 	public static double minTemplateValue = 0.1;
 	public static double maxTemplateValue = 60;
 

@@ -79,7 +79,7 @@ public class OligoSystemComplex {
 		
 		//Fifth step: other parameters? TODO
 		//Specifically, we should change the kms above...
-		graph.saturableExo = true;
+		graph.saturableExo = false;
 		graph.saturableNick = true;
 		graph.saturablePoly = true;
 		graph.dangle = true;
@@ -180,7 +180,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+1]);
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+2]); // changed from +1 to +2 to account for protected a
 			}
 		}
 		return result;
@@ -202,9 +202,10 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+1]);
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+2]); // changed from +1 to +2 to account for protected a
 			}
 		}
+
 		return result;
 	}
 }
