@@ -54,6 +54,9 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 		GaussianCurveFitter fitter = GaussianCurveFitter.create().withStartPoint(targetCoeff).withMaxIterations(10000);
 		try {
 			final double[] fittingParams = fitter.fit(obs.toList());
+			if (fittingParams[0] < 0.01) {
+				fittingParams[2] = targetCoeff[2] / 2;
+			}
 			result.tests = tests;
 			result.actualOutputs = actualOutputs;
 
@@ -74,7 +77,9 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 	}
 
 	public static void main(String[] args) {
-		System.out.println((Math.log(100) - Math.log(0.1)) / 2);
+		System.out.println(Math.log(0.1));
+		System.out.println(Math.log(100));
+		System.out.println((Math.log(100) + Math.log(0.1)) / 2);
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		// for (int i = 0; i < 10; i++) {
 		// obs.add(i, 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5,

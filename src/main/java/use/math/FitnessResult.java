@@ -36,7 +36,7 @@ public class FitnessResult extends AbstractFitnessResult {
 
 		if (targetFittingParams != null) {
 			for (int i = 0; i < targetFittingParams.length; i++) {
-				result = result * Math.exp(-Math.pow((actualFittingParams[i] - targetFittingParams[i]) / targetFittingParams[i], 2));
+				result = result * Math.exp(-Math.pow((actualFittingParams[i] - targetFittingParams[i]) * 2 / targetFittingParams[i], 2));
 			}
 		}
 		
