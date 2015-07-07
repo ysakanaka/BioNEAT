@@ -30,7 +30,7 @@ public class FitnessResult extends AbstractFitnessResult {
 		double result = 0;
 		for (int i = 0; i < actualOutputs.length; i++) {
 			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
-			result += Math.abs(error);
+			result += Math.pow(error, 2);
 		}
 		result = 10000 / Math.max(result, 0.01);
 
@@ -39,7 +39,23 @@ public class FitnessResult extends AbstractFitnessResult {
 				result = result * Math.exp(-Math.pow((actualFittingParams[i] - targetFittingParams[i]) * 10 / targetFittingParams[i], 2));
 			}
 		}
+		
+		result *= getSDV(actualOutputs);
+
 		return result;
+	}
+
+	private double getSDV(double[] actualOutputs) {
+		double mean = 0;
+		for (int i = 0; i < actualOutputs.length; i++) {
+			mean += actualOutputs[i];
+		}
+		mean /= actualOutputs.length;
+		double sdv = 0;
+		for (int i = 0; i < actualOutputs.length; i++) {
+			sdv += Math.pow(actualOutputs[i] - mean, 2);
+		}
+		return Math.sqrt(sdv / actualOutputs.length);
 	}
 
 	@Override
@@ -59,6 +75,7 @@ public class FitnessResult extends AbstractFitnessResult {
 				builder.append(Static.df4.format(actualFittingParams[j]) + "[" + Static.df4.format(targetFittingParams[j]) + "] ");
 			}
 		}
+		builder.append("SDV: " + Static.df4.format(getSDV(actualOutputs)));
 		return builder.toString();
 	}
 }
