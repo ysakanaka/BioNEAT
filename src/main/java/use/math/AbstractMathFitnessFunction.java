@@ -114,7 +114,13 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 					}
 				}
 			}
-			return calculateFitnessResult(tests, actualOutputs);
+			FitnessResult result = calculateFitnessResult(tests, actualOutputs);
+			double[] inputs = new double[tests.size()];
+			for (int i = 0; i < tests.size(); i++) {
+				inputs[i] = tests.get(i)[0];
+			}
+			result.inputs = inputs;
+			return result;
 
 		} catch (Exception e) {
 			return minFitness();
