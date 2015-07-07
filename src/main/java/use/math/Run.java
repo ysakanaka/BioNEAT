@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import common.Static;
+
 import cluster.Cluster;
 import reactionnetwork.Library;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
@@ -73,12 +75,12 @@ public class Run {
 			scrollPane.setViewportView(panelGeneration);
 			panelGeneration.setLayout(new BorderLayout(0, 0));
 			PopulationInfo populationInfo = population.getPopulationInfo(i);
-			panelGeneration.add(reflectionUI.createObjectForm(populationInfo), BorderLayout.NORTH);
+			panelGeneration.add(reflectionUI.createObjectForm(populationInfo), BorderLayout.CENTER);
 
 			JPanel panelSpecies = new JPanel();
 			panelSpecies.setLayout(new WrapLayout());
 			panelSpecies.setSize(new Dimension(300, 1));
-			panelGeneration.add(panelSpecies, BorderLayout.CENTER);
+			panelGeneration.add(panelSpecies, BorderLayout.NORTH);
 			RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
 
 			Species[] species = populationInfo.getSpecies();
@@ -91,12 +93,21 @@ public class Run {
 
 				JPanel panelSpecie = new JPanel();
 				panelSpecie.setLayout(new BorderLayout(0, 0));
-				panelSpecie.add(new JLabel("Species " + species[j].getName()), BorderLayout.NORTH);
+				panelSpecie.add(
+						new JLabel("Species " + species[j].getName() + " Fitness: "
+								+ Static.df4.format(species[j].getBestIndividual().getFitnessResult().getFitness())), BorderLayout.NORTH);
 				panelSpecie.add(vv, BorderLayout.CENTER);
 				if (!fitnessResult.minFitness) {
+					double[] targetOutputs = new double[fitnessResult.inputs.length];
+					for (int k = 0; k < targetOutputs.length; k++) {
+						targetOutputs[k] = GaussianFitnessFunction.targetCoeff[0]
+								* Math.exp((-Math.pow(Math.log(fitnessResult.inputs[k]) - GaussianFitnessFunction.targetCoeff[1], 2))
+										/ (2 * Math.pow(GaussianFitnessFunction.targetCoeff[2], 2)));
+					}
 					Map<String, double[]> timeSeries = new HashMap<String, double[]>();
 					timeSeries.put("Actual outputs", fitnessResult.actualOutputs);
-					timeSeries.put("Target outputs", fitnessResult.targetOutputs);
+					timeSeries.put("Fitted outputs", fitnessResult.targetOutputs);
+					timeSeries.put("Target outputs", targetOutputs);
 					double[] xData = new double[fitnessResult.inputs.length];
 					for (int k = 0; k < xData.length; k++) {
 						xData[k] = fitnessResult.inputs[k];
