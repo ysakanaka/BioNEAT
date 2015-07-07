@@ -55,7 +55,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 		try {
 			final double[] fittingParams = fitter.fit(obs.toList());
 			if (fittingParams[0] < 0.01) {
-				fittingParams[2] = targetCoeff[2] / 2;
+				fittingParams[2] = 50;
 			}
 			result.tests = tests;
 			result.actualOutputs = actualOutputs;
