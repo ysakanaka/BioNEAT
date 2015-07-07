@@ -29,7 +29,7 @@ public class FitnessResult extends AbstractFitnessResult {
 		double result = 0;
 		for (int i = 0; i < actualOutputs.length; i++) {
 			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
-			result += Math.pow(error, 2);
+			result += Math.abs(error);
 		}
 		result = 10000 / Math.max(result, 0.01);
 
