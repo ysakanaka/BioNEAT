@@ -3,8 +3,6 @@ package use.math;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,7 +30,6 @@ import erne.mutation.rules.AddNode;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
 import erne.speciation.Species;
-import gui.BehaviorDisplayer;
 import gui.Main;
 import gui.WrapLayout;
 
@@ -89,60 +86,20 @@ public class Run {
 				System.out.println("Species " + species[j].getName() + " Fitness " + fitnessResult.getFitness());
 				System.out.println(species[j].getBestIndividual().getNetwork());
 				VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].getBestIndividual().getNetwork());
-				vv.addMouseListener(new MouseListener() {
-					BehaviorDisplayer frame;
-
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void mousePressed(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e) {
-
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						if (!fitnessResult.minFitness) {
-							Map<String, double[]> timeSeries = new HashMap<String, double[]>();
-							timeSeries.put("Actual outputs", fitnessResult.actualOutputs);
-							timeSeries.put("Target outputs", fitnessResult.targetOutputs);
-							double[] xData = new double[fitnessResult.inputs.length];
-							for (int i = 0; i < xData.length; i++) {
-								xData[i] = fitnessResult.inputs[i];
-							}
-							try {
-								if (frame == null) {
-									frame = new BehaviorDisplayer(new PlotFactory().createTimeSeriesPanel(timeSeries, xData, true));
-								}
-								frame.setVisible(true);
-
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
-
-					}
-
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-				});
-
 				JPanel panelSpecie = new JPanel();
 				panelSpecie.setLayout(new BorderLayout(0, 0));
 				panelSpecie.add(new JLabel("Species " + species[j].getName()), BorderLayout.NORTH);
 				panelSpecie.add(vv, BorderLayout.CENTER);
+				if (!fitnessResult.minFitness) {
+					Map<String, double[]> timeSeries = new HashMap<String, double[]>();
+					timeSeries.put("Actual outputs", fitnessResult.actualOutputs);
+					timeSeries.put("Target outputs", fitnessResult.targetOutputs);
+					double[] xData = new double[fitnessResult.inputs.length];
+					for (int k = 0; k < xData.length; k++) {
+						xData[k] = fitnessResult.inputs[k];
+					}
+					panelSpecie.add(new PlotFactory().createTimeSeriesPanel(timeSeries, xData, true), BorderLayout.SOUTH);
+				}
 
 				panelSpecies.add(panelSpecie);
 			}
