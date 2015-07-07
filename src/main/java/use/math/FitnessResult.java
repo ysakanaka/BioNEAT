@@ -10,6 +10,7 @@ public class FitnessResult extends AbstractFitnessResult {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	public double[] inputs;
 	public double[] targetOutputs;
 	public double[] actualOutputs;
 	public double[] targetFittingParams;

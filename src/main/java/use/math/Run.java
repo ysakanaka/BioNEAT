@@ -3,8 +3,12 @@ package use.math;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JLabel;
@@ -15,6 +19,7 @@ import javax.swing.ScrollPaneConstants;
 import cluster.Cluster;
 import reactionnetwork.Library;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
+import use.oligomodel.PlotFactory;
 import xy.reflect.ui.ReflectionUI;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import erne.Population;
@@ -27,6 +32,7 @@ import erne.mutation.rules.AddNode;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
 import erne.speciation.Species;
+import gui.BehaviorDisplayer;
 import gui.Main;
 import gui.WrapLayout;
 
@@ -49,7 +55,7 @@ public class Run {
 
 		ReflectionUI reflectionUI = new ReflectionUI();
 
-		Population population = new Population(500, Library.startingMath);
+		Population population = new Population(50, Library.startingMath);
 		population.setFitnessFunction(new GaussianFitnessFunction());
 		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(3),
 				new MutateParameter(970), new AddNode(6), new AddActivation(6), new AddInhibition(15) }))));
@@ -79,10 +85,59 @@ public class Run {
 			Species[] species = populationInfo.getSpecies();
 
 			for (int j = 0; j < species.length; j++) {
-				System.out.println("Species " + species[j].getName() + " Fitness "
-						+ species[j].getBestIndividual().getFitnessResult().getFitness());
+				FitnessResult fitnessResult = (FitnessResult) species[j].getBestIndividual().getFitnessResult();
+				System.out.println("Species " + species[j].getName() + " Fitness " + fitnessResult.getFitness());
 				System.out.println(species[j].getBestIndividual().getNetwork());
 				VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].getBestIndividual().getNetwork());
+				vv.addMouseListener(new MouseListener() {
+					BehaviorDisplayer frame;
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						if (!fitnessResult.minFitness) {
+							Map<String, double[]> timeSeries = new HashMap<String, double[]>();
+							timeSeries.put("Actual outputs", fitnessResult.actualOutputs);
+							timeSeries.put("Target outputs", fitnessResult.targetOutputs);
+							double[] xData = new double[fitnessResult.inputs.length];
+							for (int i = 0; i < xData.length; i++) {
+								xData[i] = fitnessResult.inputs[i];
+							}
+							try {
+								if (frame == null) {
+									frame = new BehaviorDisplayer(new PlotFactory().createTimeSeriesPanel(timeSeries, xData, true));
+								}
+								frame.setVisible(true);
+
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+
+					}
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+				});
 
 				JPanel panelSpecie = new JPanel();
 				panelSpecie.setLayout(new BorderLayout(0, 0));
@@ -94,5 +149,4 @@ public class Run {
 		}
 
 	}
-
 }
