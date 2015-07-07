@@ -7,6 +7,7 @@ import reactionnetwork.Node;
 import edu.uci.ics.jung.graph.util.Pair;
 import erne.Individual;
 import erne.mutation.MutationRule;
+import erne.util.Randomizer;
 
 public class AddActivation extends MutationRule {
 	public double probGeneMutation = 0.8;
@@ -33,7 +34,8 @@ public class AddActivation extends MutationRule {
 			Pair<Node> nodes = possibleActivations.get(index);
 			Connection connection = indiv.getNetwork().getConnectionByEnds(nodes.getFirst(), nodes.getSecond());
 			if (connection == null) {
-				indiv.addConnection(nodes.getFirst(), nodes.getSecond(), (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
+				indiv.addConnection(nodes.getFirst(), nodes.getSecond(),
+						Randomizer.getRandomLogScale(Individual.minTemplateValue, Individual.maxTemplateValue));
 			} else {
 				connection.enabled = true;
 			}

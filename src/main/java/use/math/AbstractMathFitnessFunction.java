@@ -45,6 +45,19 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 			// output sequence is reported
 			network.getNodeByName(OUTPUT_SEQUENCE).reporter = true;
 
+			// calculate inhK using 7_6 rules
+			for (Node node : network.nodes) {
+				if (node.type == Node.INHIBITING_SEQUENCE) {
+					for (Node n1 : network.nodes) {
+						for (Node n2 : network.nodes) {
+							if (node.name.equals("I" + n1.name + n2.name)) {
+								node.parameter = (double) 1 / 100 * Math.exp((Math.log(n1.parameter) + Math.log(n2.parameter)) / 2);
+							}
+						}
+					}
+				}
+			}
+
 			ArrayList<double[]> tests = getLogScaleInputValues(minInputValue, maxInputValue, nTests, nInputs);
 			double[] actualOutputs = new double[nTests];
 

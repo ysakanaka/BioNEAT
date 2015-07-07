@@ -16,8 +16,8 @@ public class Individual implements Serializable {
 	 * 
 	 */
 
-	public static double minNodeValue = 0.1;
-	public static double maxNodeValue = 200;
+	public static double minNodeValue = 10;
+	public static double maxNodeValue = 1000;
 	public static double minTemplateValue = 0.1;
 	public static double maxTemplateValue = 60;
 
@@ -60,7 +60,7 @@ public class Individual implements Serializable {
 		return id;
 	}
 
-	public Node addNodeByOrigin(String nodeOrigins) {
+	public Node addNodeByOrigin(String nodeOrigins, double parameter) {
 		String newNodeName = "";
 		if (Population.nodeNameOrigins.containsKey(nodeOrigins)) {
 			newNodeName = Population.nodeNameOrigins.get(nodeOrigins);
@@ -77,7 +77,7 @@ public class Individual implements Serializable {
 		}
 
 		Node newNode = new Node(newNodeName);
-		newNode.parameter = (minNodeValue + maxNodeValue) / 2;
+		newNode.parameter = parameter;
 		network.nodes.add(newNode);
 		return newNode;
 	}
