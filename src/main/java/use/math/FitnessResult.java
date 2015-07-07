@@ -32,7 +32,7 @@ public class FitnessResult extends AbstractFitnessResult {
 			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
 			result += Math.pow(error, 2);
 		}
-		result = 1000 / Math.max(result, 0.01);
+		result = 100 / Math.max(result, 0.01);
 
 		double result1 = 1000000;
 		if (targetFittingParams != null) {
