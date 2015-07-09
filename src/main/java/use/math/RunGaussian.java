@@ -16,7 +16,7 @@ public class RunGaussian {
 
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		GaussianFitnessFunction fitnessFunction = new GaussianFitnessFunction();
-		Evolver evolver = new Evolver(50, 200, Library.startingMath, fitnessFunction, null, new FitnessDisplayer() {
+		Evolver evolver = new Evolver(500, 200, Library.startingMath, fitnessFunction, null, new FitnessDisplayer() {
 
 			@Override
 			public JPanel drawVisualization(AbstractFitnessResult fitness) {
