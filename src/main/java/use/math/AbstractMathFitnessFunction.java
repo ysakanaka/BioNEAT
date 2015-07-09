@@ -58,7 +58,9 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				}
 			}
 
-			ArrayList<double[]> tests = getLogScaleInputValues(minInputValue, maxInputValue, nTests, nInputs);
+			// get list of input values for different tests
+			ArrayList<double[]> tests = getInputs(minInputValue, maxInputValue, nTests, nInputs);
+
 			double[] actualOutputs = new double[nTests];
 
 			Map<String, Double> sequencesLastTest = new HashMap<String, Double>();
@@ -129,7 +131,11 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 
 	protected abstract FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs);
 
-	private static ArrayList<double[]> getLogScaleInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+	protected ArrayList<double[]> getInputs(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+		return getInputValues(minInputValue, maxInputValue, nTests, nInputs);
+	}
+
+	protected static ArrayList<double[]> getLogScaleInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
 		ArrayList<double[]> result = new ArrayList<double[]>();
 		double step = (Math.log(maxInputValue) - Math.log(minInputValue)) / (nTests - 1);
 		double[] inputs = new double[nInputs];
@@ -142,7 +148,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 		return result;
 	}
 
-	private static ArrayList<double[]> getInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+	protected static ArrayList<double[]> getInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
 		ArrayList<double[]> result = new ArrayList<double[]>();
 		double step = (maxInputValue - minInputValue) / (nTests - 1);
 		double[] inputs = new double[nInputs];

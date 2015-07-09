@@ -1,14 +1,10 @@
-package use.math;
+package erne;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JLabel;
@@ -16,16 +12,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import common.Static;
-
-import cluster.Cluster;
-import reactionnetwork.Library;
+import reactionnetwork.ReactionNetwork;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
-import use.oligomodel.PlotFactory;
+import use.math.FitnessResult;
 import xy.reflect.ui.ReflectionUI;
+import cluster.Cluster;
+import common.Static;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import erne.Population;
-import erne.PopulationInfo;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.rules.AddActivation;
@@ -37,11 +30,26 @@ import erne.speciation.Species;
 import gui.Main;
 import gui.WrapLayout;
 
-public class Run {
-
+public class Evolver {
 	public static Main window;
+	private int popSize;
+	private int maxGenerations;
+	private ReactionNetwork startingNetwork;
+	private AbstractFitnessFunction fitnessFunction;
+	private Mutator mutator;
+	private FitnessDisplayer fitnessDisplayer;
 
-	public static void main(String[] args) throws InterruptedException, ExecutionException {
+	public Evolver(int popSize, int maxGenerations, ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction,
+			Mutator mutator, FitnessDisplayer fitnessDisplayer) {
+		this.popSize = popSize;
+		this.maxGenerations = maxGenerations;
+		this.startingNetwork = startingNetwork;
+		this.fitnessFunction = fitnessFunction;
+		this.mutator = mutator;
+		this.fitnessDisplayer = fitnessDisplayer;
+	}
+
+	public void evolve() throws InterruptedException, ExecutionException {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -56,11 +64,15 @@ public class Run {
 
 		ReflectionUI reflectionUI = new ReflectionUI();
 
-		Population population = new Population(500, Library.startingMath);
-		population.setFitnessFunction(new GaussianFitnessFunction());
-		population.setMutator(new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
-				new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5) }))));
-		for (int i = 0; i < 10000; i++) {
+		Population population = new Population(popSize, startingNetwork);
+		population.setFitnessFunction(fitnessFunction);
+		if (mutator == null) {
+			mutator = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] { new DisableTemplate(1),
+					new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5) })));
+		}
+		population.setMutator(mutator);
+
+		for (int i = 0; i < maxGenerations; i++) {
 			if (i == 0) {
 				population.resetPopulation();
 			} else {
@@ -97,26 +109,9 @@ public class Run {
 						new JLabel("Species " + species[j].getName() + " Fitness: "
 								+ Static.df4.format(species[j].getBestIndividual().getFitnessResult().getFitness())), BorderLayout.NORTH);
 				panelSpecie.add(vv, BorderLayout.CENTER);
-				if (!fitnessResult.minFitness) {
-					double[] targetOutputs = new double[fitnessResult.inputs.length];
-					for (int k = 0; k < targetOutputs.length; k++) {
-						targetOutputs[k] = GaussianFitnessFunction.targetCoeff[0]
-								* Math.exp((-Math.pow(Math.log(fitnessResult.inputs[k]) - GaussianFitnessFunction.targetCoeff[1], 2))
-										/ (2 * Math.pow(GaussianFitnessFunction.targetCoeff[2], 2)));
-					}
-					Map<String, double[]> timeSeries = new HashMap<String, double[]>();
-					timeSeries.put("Actual outputs", fitnessResult.actualOutputs);
-					timeSeries.put("Fitted outputs", fitnessResult.targetOutputs);
-					timeSeries.put("Target outputs", targetOutputs);
-					double[] xData = new double[fitnessResult.inputs.length];
-					for (int k = 0; k < xData.length; k++) {
-						xData[k] = fitnessResult.inputs[k];
-					}
-					panelSpecie.add(new PlotFactory().createTimeSeriesPanel(timeSeries, xData, true), BorderLayout.SOUTH);
-				}
+				panelSpecie.add(fitnessDisplayer.drawVisualization(fitnessResult), BorderLayout.SOUTH);
 				panelSpecies.add(panelSpecie);
 			}
 		}
-
 	}
 }
