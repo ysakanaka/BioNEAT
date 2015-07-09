@@ -9,8 +9,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang3.SerializationUtils;
-
 import cluster.Cluster;
 import erne.mutation.Mutator;
 import erne.speciation.SpeciationSolver;
@@ -41,6 +39,10 @@ public class Population {
 		this.populations.add(new Individual[size]);
 		this.initIndividual = new Individual(initNetwork);
 		speciationSolver = new SpeciationSolver();
+	}
+
+	public ArrayList<Species[]> getSpeciesByGenerations() {
+		return speciationSolver.speciesByGeneration;
 	}
 
 	public PopulationInfo getPopulationInfo(int i) {

@@ -27,6 +27,7 @@ import erne.mutation.rules.AddNode;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
 import erne.speciation.Species;
+import erne.speciation.SpeciesPlotFactory;
 import gui.Main;
 import gui.WrapLayout;
 
@@ -87,7 +88,7 @@ public class Evolver {
 			scrollPane.setViewportView(panelGeneration);
 			panelGeneration.setLayout(new BorderLayout(0, 0));
 			PopulationInfo populationInfo = population.getPopulationInfo(i);
-			panelGeneration.add(reflectionUI.createObjectForm(populationInfo), BorderLayout.CENTER);
+			panelGeneration.add(reflectionUI.createObjectForm(populationInfo), BorderLayout.SOUTH);
 
 			JPanel panelSpecies = new JPanel();
 			panelSpecies.setLayout(new WrapLayout());
@@ -112,6 +113,11 @@ public class Evolver {
 				panelSpecie.add(fitnessDisplayer.drawVisualization(fitnessResult), BorderLayout.SOUTH);
 				panelSpecies.add(panelSpecie);
 			}
+
+			window.getPanelSpecies().removeAll();
+			window.getPanelSpecies().add(new SpeciesPlotFactory().createSpeciesPanel(population.getSpeciesByGenerations()),
+					BorderLayout.CENTER);
+			window.getPanelFitness().revalidate();
 		}
 	}
 }
