@@ -40,7 +40,24 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 	private static final long serialVersionUID = 1L;
 
 	// y= 50 * Math.exp((-Math.pow(i - 25, 2)) / (2 * Math.pow(3.5, 2)))
-	public static final double[] targetCoeff = new double[] { 50, (Math.log(100) + Math.log(0.1)) / 2, 0.7 };
+
+	// logscale Gaussian
+	public static final boolean logScale = true;
+	public static final double[] targetCoeff = new double[] { 100, (Math.log(100) + Math.log(0.1)) / 2, 0.7 };
+
+	// linear Gaussian
+	// public static final boolean logScale = false;
+	// public static final double[] targetCoeff = new double[] { 50, (100 - 0.1)
+	// / 2, 3.5 };
+
+	@Override
+	protected ArrayList<double[]> getInputs(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+		if (logScale) {
+			return getLogScaleInputValues(minInputValue, maxInputValue, nTests, nInputs);
+		} else {
+			return getInputValues(minInputValue, maxInputValue, nTests, nInputs);
+		}
+	}
 
 	@Override
 	protected FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs) {
@@ -62,8 +79,13 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 			double[] targetOutputs = new double[tests.size()];
 			for (int i = 0; i < tests.size(); i++) {
-				targetOutputs[i] = fittingParams[0]
-						* Math.exp((-Math.pow(Math.log(tests.get(i)[0]) - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+				if (logScale) {
+					targetOutputs[i] = fittingParams[0]
+							* Math.exp((-Math.pow(Math.log(tests.get(i)[0]) - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+				} else {
+					targetOutputs[i] = fittingParams[0]
+							* Math.exp((-Math.pow(tests.get(i)[0] - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+				}
 			}
 			result.targetOutputs = targetOutputs;
 
