@@ -1,11 +1,16 @@
 package erne.speciation;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.jfree.chart.ChartColor;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,27 +20,79 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.StackedAreaRenderer;
 import org.jfree.chart.urls.StandardCategoryURLGenerator;
 import org.jfree.chart.util.ParamChecks;
+import org.jfree.data.UnknownKeyException;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import erne.Individual;
 import reactionnetwork.Library;
 
 public class SpeciesPlotFactory {
+
+	private static Paint[] colors = ChartColor.createDefaultPaintArray();
+
+	public JPanel createSpeciesFitnessPanel(ArrayList<Species[]> speciesByGeneration, Map<Integer, Paint> speciesColors) {
+		XYSeriesCollection dataset = new XYSeriesCollection();
+		for (int i = 0; i < speciesByGeneration.size(); i++) {
+			Species[] species = speciesByGeneration.get(i);
+			for (int j = 0; j < species.length; j++) {
+				XYSeries series;
+				try {
+					series = dataset.getSeries(String.valueOf(species[j].representative.getId()));
+				} catch (UnknownKeyException e) {
+					series = new XYSeries(String.valueOf(species[j].representative.getId()));
+					dataset.addSeries(series);
+				}
+				series.add(i, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
+						.getFitnessResult().getFitness());
+			}
+		}
+		JFreeChart chart = ChartFactory.createXYLineChart("", "Generation", "Fitness", dataset, PlotOrientation.VERTICAL, true, false,
+				false);
+		final ChartPanel chartPanel = new ChartPanel(chart);
+		XYPlot plot = (XYPlot) chart.getPlot();
+		plot.setBackgroundPaint(Color.white);
+		for (int i = 0; i < dataset.getSeriesCount(); i++) {
+			plot.getRenderer().setSeriesPaint(i, speciesColors.get(Integer.parseInt(String.valueOf(dataset.getSeries(i).getKey()))));
+		}
+
+		chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+
+		JPanel ret = new JPanel();
+		ret.setLayout(new BoxLayout(ret, BoxLayout.Y_AXIS));
+		ret.add(chartPanel);
+		return ret;
+	}
+
+	public Map<Integer, Paint> getSpeciesColors(ChartPanel chartPanel) {
+		Map<Integer, Paint> result = new HashMap<Integer, Paint>();
+		CategoryPlot plot = (CategoryPlot) chartPanel.getChart().getPlot();
+		for (int i = 0; i < plot.getDataset().getRowCount(); i++) {
+			result.put(Integer.parseInt(String.valueOf(plot.getDataset().getRowKey(i))), plot.getRenderer().getSeriesPaint(i));
+		}
+		return result;
+	}
+
 	public JPanel createSpeciesPanel(ArrayList<Species[]> speciesByGeneration) {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		for (int i = 0; i < speciesByGeneration.size(); i++) {
 			Species[] species = speciesByGeneration.get(i);
 			for (int j = 0; j < species.length; j++) {
-				dataset.addValue(species[j].individuals.size(), "Species " + species[j].representative.getId(),
-						"Generation " + String.valueOf(i));
+				dataset.addValue(species[j].individuals.size(), String.valueOf(species[j].representative.getId()), String.valueOf(i));
 			}
 		}
 
 		JFreeChart chart = createChart(dataset);
+		CategoryPlot plot = (CategoryPlot) chart.getPlot();
+		for (int i = 0; i < dataset.getRowCount(); i++) {
+			plot.getRenderer().setSeriesPaint(i, colors[i % colors.length]);
+		}
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
@@ -168,10 +225,12 @@ public class SpeciesPlotFactory {
 			species[2].individuals.add(new Individual(Library.startingMath));
 		}
 		speciesByGeneration.add(species);
-
-		panel.add(new SpeciesPlotFactory().createSpeciesPanel(speciesByGeneration));
+		SpeciesPlotFactory factory = new SpeciesPlotFactory();
+		JPanel chart = factory.createSpeciesPanel(speciesByGeneration);
+		JPanel fitness = factory.createSpeciesFitnessPanel(speciesByGeneration, factory.getSpeciesColors((ChartPanel) chart));
+		panel.add(chart);
+		panel.add(fitness);
 		frame.setVisible(true);
-		;
 
 	}
 }

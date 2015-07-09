@@ -16,8 +16,8 @@ public class Main {
 	private JFrame frmEvolutionaryConstructionFramework;
 	private JTabbedPane tabHistory;
 	private JProgressBar progressBar;
-	private JPanel panelFitness;
 	private JPanel panelSpecies;
+	private JPanel panelFitness;
 
 	public JPanel getPanelFitness() {
 		return panelFitness;
@@ -78,6 +78,23 @@ public class Main {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmEvolutionaryConstructionFramework.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
+		JPanel panelGeneral = new JPanel();
+		tabbedPane.addTab("General", null, panelGeneral, null);
+		panelGeneral.setLayout(new BorderLayout(0, 0));
+
+		JSplitPane splitPane = new JSplitPane();
+		splitPane.setResizeWeight(0.5);
+		splitPane.setDividerSize(3);
+		panelGeneral.add(splitPane);
+
+		panelFitness = new JPanel();
+		splitPane.setLeftComponent(panelFitness);
+		panelFitness.setLayout(new BorderLayout(0, 0));
+
+		panelSpecies = new JPanel();
+		splitPane.setRightComponent(panelSpecies);
+		panelSpecies.setLayout(new BorderLayout(0, 0));
+
 		JPanel tabEvolution = new JPanel();
 		tabbedPane.addTab("Generations", null, tabEvolution, null);
 		tabEvolution.setLayout(new BorderLayout(0, 0));
@@ -88,36 +105,6 @@ public class Main {
 
 		tabHistory = new JTabbedPane(JTabbedPane.TOP);
 		scrollPane_1.setViewportView(tabHistory);
-
-		JPanel panelGeneral = new JPanel();
-		tabbedPane.addTab("General", null, panelGeneral, null);
-		panelGeneral.setLayout(new BorderLayout(0, 0));
-
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.5);
-		splitPane.setDividerSize(3);
-		panelGeneral.add(splitPane);
-
-		JPanel panelLeft = new JPanel();
-		splitPane.setLeftComponent(panelLeft);
-		panelLeft.setLayout(new BorderLayout(0, 0));
-
-		JSplitPane splitPane_1 = new JSplitPane();
-		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		splitPane_1.setResizeWeight(0.5);
-		panelLeft.add(splitPane_1, BorderLayout.CENTER);
-
-		panelFitness = new JPanel();
-		splitPane_1.setLeftComponent(panelFitness);
-		panelFitness.setLayout(new BorderLayout(0, 0));
-
-		panelSpecies = new JPanel();
-		splitPane_1.setRightComponent(panelSpecies);
-		panelSpecies.setLayout(new BorderLayout(0, 0));
-
-		JPanel panelRight = new JPanel();
-		splitPane.setRightComponent(panelRight);
-		panelRight.setLayout(new BorderLayout(0, 0));
 	}
 
 }

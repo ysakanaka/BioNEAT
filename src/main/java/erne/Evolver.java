@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import org.jfree.chart.ChartPanel;
+
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.math.FitnessResult;
@@ -114,9 +116,16 @@ public class Evolver {
 				panelSpecies.add(panelSpecie);
 			}
 
+			SpeciesPlotFactory speciesFactory = new SpeciesPlotFactory();
+			JPanel speciesVisualPanel = speciesFactory.createSpeciesPanel(population.getSpeciesByGenerations());
 			window.getPanelSpecies().removeAll();
-			window.getPanelSpecies().add(new SpeciesPlotFactory().createSpeciesPanel(population.getSpeciesByGenerations()),
-					BorderLayout.CENTER);
+			window.getPanelSpecies().add(speciesVisualPanel, BorderLayout.CENTER);
+			window.getPanelSpecies().revalidate();
+
+			window.getPanelFitness().removeAll();
+			window.getPanelFitness().add(
+					speciesFactory.createSpeciesFitnessPanel(population.getSpeciesByGenerations(),
+							speciesFactory.getSpeciesColors((ChartPanel) speciesVisualPanel)));
 			window.getPanelFitness().revalidate();
 		}
 	}
