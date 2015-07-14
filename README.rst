@@ -1,3 +1,23 @@
+***************************************************************
+ECFRN: Evolutionary Construction Framework of Reaction Networks
+***************************************************************
+
+-----
+
+|pypi| |unix_build| |windows_build| |coverage|
+
+-----
+
+=============
+Main Features
+=============
+
+============
+Installation
+============
+
+
+
 Develop
 -----------
 
@@ -37,4 +57,27 @@ Create IntelliJ project
 Run the Demo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-demo/Oligator.java > main
+main class of use.math.Run
+
+
+Production
+-----------
+
+Requirements
+~~~~~~~~~~~~
+
+For building:
+
+* Java 8
+
+For running:
+
+* Java 8
+
+Version info
+~~~~~~~~~~~~
+
+::
+
+  ./gradlew version
+
