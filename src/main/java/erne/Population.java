@@ -1,5 +1,6 @@
 package erne;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,11 +17,14 @@ import erne.speciation.Species;
 import reactionnetwork.Connection;
 import reactionnetwork.ReactionNetwork;
 
-public class Population {
+public class Population implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static AtomicInteger nextIndivId = new AtomicInteger();
 	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b');
 	public static Map<String, Integer> innovationNumbers = new HashMap<String, Integer>();
-	public static Map<Integer, Individual> allIndividuals = new HashMap<Integer, Individual>();
 	public static Map<String, String> nodeNameOrigins = new HashMap<String, String>();
 
 	private Individual initIndividual;
@@ -39,6 +43,10 @@ public class Population {
 		this.populations.add(new Individual[size]);
 		this.initIndividual = new Individual(initNetwork);
 		speciationSolver = new SpeciationSolver();
+	}
+
+	public int getTotalGeneration() {
+		return populations.size();
 	}
 
 	public ArrayList<Species[]> getSpeciesByGenerations() {

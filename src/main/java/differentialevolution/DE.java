@@ -15,7 +15,7 @@ import reactionnetwork.Connection;
 import reactionnetwork.Library;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.math.GaussianFitnessFunction;
+import use.math.gaussian.GaussianFitnessFunction;
 
 public class DE {
 
@@ -236,14 +236,6 @@ public class DE {
 
 	protected boolean stopEvolution() {
 		return false;
-	}
-
-	public static void main(String[] args) throws InterruptedException, ExecutionException {
-		System.out.println("Initializing DE");
-		ReactionNetwork templateNetwork = Library.squareFunction;
-
-		DE de = new DE(templateNetwork, new GaussianFitnessFunction());
-		de.optimize();
 	}
 
 }

@@ -1,4 +1,4 @@
-package use.math;
+package use.math.gaussian;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +31,9 @@ import org.apache.commons.math3.optim.ConvergenceChecker;
 import org.apache.commons.math3.util.FastMath;
 import org.apache.commons.math3.util.Incrementor;
 import org.apache.commons.math3.util.Precision;
+
+import use.math.AbstractMathFitnessFunction;
+import use.math.FitnessResult;
 
 public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 

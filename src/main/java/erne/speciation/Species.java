@@ -23,18 +23,10 @@ public class Species implements Serializable {
 		return individuals.size();
 	}
 
-	public double getTotalFitness() {
-		double totalFitness = 0;
-		for (Individual i : individuals) {
-			totalFitness += i.getFitnessResult().getFitness();
-		}
-		return totalFitness;
-	}
-
 	public Individual getBestIndividual() {
 		Individual bestIndividual = individuals.get(0);
 		for (Individual indiv : individuals) {
-			if (indiv.getFitnessResult().getFitness() > bestIndividual.getFitnessResult().getFitness()) {
+			if (indiv.getFitnessResult() != null && indiv.getFitnessResult().getFitness() > bestIndividual.getFitnessResult().getFitness()) {
 				bestIndividual = indiv;
 			}
 		}

@@ -33,7 +33,6 @@ public class Individual implements Serializable {
 		this.id = Population.nextIndivId.incrementAndGet();
 		this.speciesId = -1;
 		this.parentIds = new ArrayList<Integer>();
-		Population.allIndividuals.put(this.id, this);
 	}
 
 	public ReactionNetwork getNetwork() {
@@ -44,7 +43,6 @@ public class Individual implements Serializable {
 		Individual cloned = (Individual) SerializationUtils.clone(this);
 		cloned.id = Population.nextIndivId.incrementAndGet();
 		cloned.speciesId = -1;
-		Population.allIndividuals.put(cloned.id, cloned);
 		return cloned;
 	}
 

@@ -14,7 +14,7 @@ public class Randomizer {
 
 	public static void main(String[] args) {
 		for (int i = 0; i < 1000; i++) {
-			System.out.println(getRandomLogScale(10, 1000));
+			System.out.println(getRandomLogScale(1, 60));
 		}
 	}
 }

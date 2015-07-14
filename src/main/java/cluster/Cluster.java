@@ -2,7 +2,6 @@ package cluster;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,14 +13,12 @@ import java.util.concurrent.Future;
 import javax.swing.JProgressBar;
 
 import reactionnetwork.ReactionNetwork;
-import use.math.SquareFitnessFunction;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IExecutorService;
 import com.hazelcast.core.Member;
 
-import demo.ProtectedSeq;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 
@@ -74,14 +71,6 @@ public class Cluster {
 
 	public static Set<Member> getMembers() {
 		return cluster.getMembers();
-	}
-
-	public static void doSomething() throws Exception {
-		List<ReactionNetwork> networks = new LinkedList<ReactionNetwork>();
-		for (int i = 0; i < 100; i++) {
-			networks.add(ProtectedSeq.getInitNetwork());
-		}
-		evaluateFitness(new SquareFitnessFunction(), networks);
 	}
 
 	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,

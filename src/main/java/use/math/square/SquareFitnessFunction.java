@@ -1,4 +1,4 @@
-package use.math;
+package use.math.square;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +13,9 @@ import org.apache.commons.math3.fitting.leastsquares.LeastSquaresBuilder;
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresProblem;
 import org.apache.commons.math3.linear.DiagonalMatrix;
 
+import use.math.AbstractMathFitnessFunction;
+import use.math.FitnessResult;
+
 public class SquareFitnessFunction extends AbstractMathFitnessFunction {
 
 	/**
@@ -20,17 +23,15 @@ public class SquareFitnessFunction extends AbstractMathFitnessFunction {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	static final double[] targetCoeff = new double[] { 0.02 }; // y=0.02x^2
+	static final double[] targetCoeff = new double[] { 0.01 }; // y=0.01x^2
 
 	@Override
 	protected FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs) {
 
-		double[] targetOutputs = new double[tests.size()];
 
 		final WeightedObservedPoints obs = new WeightedObservedPoints();
 		for (int i = 0; i < tests.size(); i++) {
 			obs.add(tests.get(i)[0], actualOutputs[i]);
-			targetOutputs[i] = 0.02 * tests.get(i)[0] * tests.get(i)[0];
 		}
 
 		final SquareCurveFitter fitter = SquareCurveFitter.create(2);
@@ -41,7 +42,14 @@ public class SquareFitnessFunction extends AbstractMathFitnessFunction {
 
 		result.tests = tests;
 		result.actualOutputs = actualOutputs;
+
+		double[] targetOutputs = new double[tests.size()];
+		for (int i = 0; i < tests.size(); i++) {
+			obs.add(tests.get(i)[0], actualOutputs[i]);
+			targetOutputs[i] = coeff[2] * tests.get(i)[0] * tests.get(i)[0];
+		}
 		result.targetOutputs = targetOutputs;
+		
 		result.targetFittingParams = targetCoeff;
 		result.actualFittingParams = new double[] { coeff[2] };
 		return result;

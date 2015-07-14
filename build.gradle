@@ -6,7 +6,27 @@ apply plugin: 'eclipse'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = '1.0'
+version = '1.0-SNAPSHOT'
+
+def versionFile = 'src/main/java/erne/Version.java'
+def tempDir = 'build/tmp/sourcesCache'
+def versionFileName = 'Version.java'
+
+compileJava.doFirst {
+    copy {
+        from(versionFile)
+        into(tempDir)
+    }
+    ant.replace(file: versionFile, token: '@VERSION@', value: gitVersion())
+}
+
+compileJava.doLast {
+    copy {
+        from(tempDir + '/' + versionFileName)
+        into(project.file(versionFile).parent)
+    }
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version

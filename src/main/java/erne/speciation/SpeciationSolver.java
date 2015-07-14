@@ -1,5 +1,6 @@
 package erne.speciation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,11 @@ import erne.Constants;
 import erne.Individual;
 import reactionnetwork.Connection;
 
-public class SpeciationSolver {
+public class SpeciationSolver implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public ArrayList<Species[]> speciesByGeneration = new ArrayList<Species[]>();
 	public ArrayList<Individual> speciesLib = new ArrayList<Individual>();
 
