@@ -3,6 +3,7 @@ package use.math;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
@@ -18,13 +19,17 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 	private static final long serialVersionUID = 1L;
 	int nInputs = 1;
 
-	double minInputValue = 1;
-	double maxInputValue = 50;
-	int nTests = 10;
+	double minInputValue = 0.1;
+	double maxInputValue = 100;
+	int nTests = 11;
 
 	String INPUT_SEQUENCE = "a";
 	String OUTPUT_SEQUENCE = "b";
 	String REPORTER_OUTPUT_SEQUENCE = "Reporter b";
+
+	static boolean saveSimulation = false;
+
+	public static Map<Double, Map<String, double[]>> simulationResults;
 
 	@Override
 	public AbstractFitnessResult minFitness() {
@@ -40,10 +45,31 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 			// output sequence is reported
 			network.getNodeByName(OUTPUT_SEQUENCE).reporter = true;
 
-			ArrayList<double[]> tests = getInputValues(minInputValue, maxInputValue, nTests, nInputs);
+			// calculate inhK using 7_6 rules
+			for (Node node : network.nodes) {
+				if (node.type == Node.INHIBITING_SEQUENCE) {
+					for (Node n1 : network.nodes) {
+						for (Node n2 : network.nodes) {
+							if (node.name.equals("I" + n1.name + n2.name)) {
+								node.parameter = (double) 1 / 100 * Math.exp((Math.log(n1.parameter) + Math.log(n2.parameter)) / 2);
+							}
+						}
+					}
+				}
+			}
+
+			// get list of input values for different tests
+			ArrayList<double[]> tests = getInputs(minInputValue, maxInputValue, nTests, nInputs);
+
 			double[] actualOutputs = new double[nTests];
 
 			Map<String, Double> sequencesLastTest = new HashMap<String, Double>();
+
+			if (saveSimulation) {
+				simulationResults = new TreeMap<Double, Map<String, double[]>>();
+			}
+
+			boolean minFitness = false;
 			for (int i = 0; i < tests.size(); i++) {
 				double[] inputs = tests.get(i);
 
@@ -51,12 +77,36 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				// state.
 				for (Node node : network.nodes) {
 					if (sequencesLastTest.containsKey(node.name)) {
-						node.initialConcentration = sequencesLastTest.get(node.name);
+						if (!node.name.equals(INPUT_SEQUENCE)) {
+							node.initialConcentration = sequencesLastTest.get(node.name);
+						}
+					} else {
+						node.initialConcentration = 10;
 					}
 				}
 				network.getNodeByName(INPUT_SEQUENCE).initialConcentration = inputs[0];
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
 				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(30);
+
+				// System could not reach stable time before 1000 minutes
+				if (timeSeries.entrySet().iterator().next().getValue().length >= 1000) {
+					minFitness = true;
+					// Stop evaluation if we don't need to store timeseries
+					if (!saveSimulation) {
+						return minFitness();
+					}
+				}
+
+				if (saveSimulation) {
+					simulationResults.put(inputs[0], timeSeries);
+
+					// if we have enough timeseries and fitness should be
+					// minimum
+					if (i == tests.size() - 1 && minFitness) {
+						return minFitness();
+					}
+				}
+
 				for (String sequence : timeSeries.keySet()) {
 					double[] outputTimeSeries = timeSeries.get(sequence);
 					double value = outputTimeSeries[outputTimeSeries.length - 1];
@@ -66,7 +116,13 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 					}
 				}
 			}
-			return calculateFitnessResult(tests, actualOutputs);
+			FitnessResult result = calculateFitnessResult(tests, actualOutputs);
+			double[] inputs = new double[tests.size()];
+			for (int i = 0; i < tests.size(); i++) {
+				inputs[i] = tests.get(i)[0];
+			}
+			result.inputs = inputs;
+			return result;
 
 		} catch (Exception e) {
 			return minFitness();
@@ -75,7 +131,24 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 
 	protected abstract FitnessResult calculateFitnessResult(ArrayList<double[]> tests, double[] actualOutputs);
 
-	private static ArrayList<double[]> getInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+	protected ArrayList<double[]> getInputs(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+		return getInputValues(minInputValue, maxInputValue, nTests, nInputs);
+	}
+
+	protected static ArrayList<double[]> getLogScaleInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
+		ArrayList<double[]> result = new ArrayList<double[]>();
+		double step = (Math.log(maxInputValue) - Math.log(minInputValue)) / (nTests - 1);
+		double[] inputs = new double[nInputs];
+		getInputs(0, step, nTests, Math.log(minInputValue), inputs, result);
+		for (double[] results : result) {
+			for (int i = 0; i < results.length; i++) {
+				results[i] = Math.exp(results[i]);
+			}
+		}
+		return result;
+	}
+
+	protected static ArrayList<double[]> getInputValues(double minInputValue, double maxInputValue, int nTests, int nInputs) {
 		ArrayList<double[]> result = new ArrayList<double[]>();
 		double step = (maxInputValue - minInputValue) / (nTests - 1);
 		double[] inputs = new double[nInputs];

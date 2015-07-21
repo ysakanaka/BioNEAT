@@ -106,12 +106,12 @@ public class Test {
 						.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
 				ReactionNetwork network = gson.fromJson(json, ReactionNetwork.class);
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
-				Map<String, double[]> timeSeries = new HashMap<String, double[]>();
+				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries();
 				PlotFactory plotFactory = new PlotFactory();
 				JPanel timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
 				panelBehavior.add(timeSeriesPanel, BorderLayout.CENTER);
 				panelBehavior.revalidate();
-				
+
 				RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
 				VisualizationViewer<String, String> vv = factory
 						.createVisualizationViewer(network);

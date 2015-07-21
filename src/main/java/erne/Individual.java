@@ -16,9 +16,9 @@ public class Individual implements Serializable {
 	 * 
 	 */
 
-	public static double minNodeValue = 0.1;
-	public static double maxNodeValue = 100;
-	public static double minTemplateValue = 0.1;
+	public static double minNodeValue = 10;
+	public static double maxNodeValue = 1000;
+	public static double minTemplateValue = 1;
 	public static double maxTemplateValue = 60;
 
 	private static final long serialVersionUID = 1L;
@@ -33,7 +33,6 @@ public class Individual implements Serializable {
 		this.id = Population.nextIndivId.incrementAndGet();
 		this.speciesId = -1;
 		this.parentIds = new ArrayList<Integer>();
-		Population.allIndividuals.put(this.id, this);
 	}
 
 	public ReactionNetwork getNetwork() {
@@ -44,7 +43,6 @@ public class Individual implements Serializable {
 		Individual cloned = (Individual) SerializationUtils.clone(this);
 		cloned.id = Population.nextIndivId.incrementAndGet();
 		cloned.speciesId = -1;
-		Population.allIndividuals.put(cloned.id, cloned);
 		return cloned;
 	}
 
@@ -60,7 +58,7 @@ public class Individual implements Serializable {
 		return id;
 	}
 
-	public Node addNodeByOrigin(String nodeOrigins) {
+	public Node addNodeByOrigin(String nodeOrigins, double parameter) {
 		String newNodeName = "";
 		if (Population.nodeNameOrigins.containsKey(nodeOrigins)) {
 			newNodeName = Population.nodeNameOrigins.get(nodeOrigins);
@@ -77,7 +75,7 @@ public class Individual implements Serializable {
 		}
 
 		Node newNode = new Node(newNodeName);
-		newNode.parameter = (minNodeValue + maxNodeValue) / 2;
+		newNode.parameter = parameter;
 		network.nodes.add(newNode);
 		return newNode;
 	}

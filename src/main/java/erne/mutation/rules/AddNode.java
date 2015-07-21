@@ -7,6 +7,7 @@ import reactionnetwork.Node;
 import erne.Individual;
 import erne.Population;
 import erne.mutation.MutationRule;
+import erne.util.Randomizer;
 
 public class AddNode extends MutationRule {
 	public double probGeneMutation = 0.8;
@@ -27,11 +28,13 @@ public class AddNode extends MutationRule {
 					to = indiv.getNetwork().nodes.get(index);
 				}
 
-				Node newNode = indiv.addNodeByOrigin("null->" + to.name);
+				Node newNode = indiv.addNodeByOrigin("null->" + to.name,
+						Randomizer.getRandomLogScale(Individual.minNodeValue, Individual.maxNodeValue));
 
-				indiv.addConnection(newNode, newNode, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
+				indiv.addConnection(newNode, newNode,
+						Randomizer.getRandomLogScale(Individual.minTemplateValue, Individual.maxTemplateValue));
 
-				indiv.addConnection(newNode, to, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
+				indiv.addConnection(newNode, to, Randomizer.getRandomLogScale(Individual.minTemplateValue, Individual.maxTemplateValue));
 
 			} else {
 				// new node connect to inhibiting sequence node
@@ -47,14 +50,17 @@ public class AddNode extends MutationRule {
 					String inhibitionNodeName = "I" + connection.from.name + connection.to.name;
 					Node inhibitionNode = indiv.getNetwork().getNodeByName(inhibitionNodeName);
 					if (inhibitionNode == null) {
-						inhibitionNode = new Node(inhibitionNodeName);
+						inhibitionNode = new Node(inhibitionNodeName, Node.INHIBITING_SEQUENCE);
 						indiv.getNetwork().nodes.add(inhibitionNode);
 					}
-					Node newNode = indiv.addNodeByOrigin("null->" + inhibitionNode.name);
+					Node newNode = indiv.addNodeByOrigin("null->" + inhibitionNode.name,
+							Randomizer.getRandomLogScale(Individual.minNodeValue, Individual.maxNodeValue));
 
-					indiv.addConnection(newNode, newNode, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
+					indiv.addConnection(newNode, newNode,
+							Randomizer.getRandomLogScale(Individual.minTemplateValue, Individual.maxTemplateValue));
 
-					indiv.addConnection(newNode, inhibitionNode, (Individual.minTemplateValue + Individual.maxTemplateValue) / 2);
+					indiv.addConnection(newNode, inhibitionNode,
+							Randomizer.getRandomLogScale(Individual.minTemplateValue, Individual.maxTemplateValue));
 
 				}
 			}
@@ -73,11 +79,14 @@ public class AddNode extends MutationRule {
 				connection = getCorrectConnection(indiv, possibleActivations.get(index));
 
 				connection.enabled = false;
-				Node newNode = indiv.addNodeByOrigin(connection.from.name + "->" + connection.to.name);
+				Node newNode = indiv.addNodeByOrigin(connection.from.name + "->" + connection.to.name,
+						Randomizer.getRandomLogScale(Individual.minNodeValue, Individual.maxNodeValue));
 
-				indiv.addConnection(connection.from, newNode,
-						(connection.to.type == Node.INHIBITING_SEQUENCE) ? (Individual.minTemplateValue + Individual.maxTemplateValue) / 2
-								: connection.parameter);
+				indiv.addConnection(
+						connection.from,
+						newNode,
+						(connection.to.type == Node.INHIBITING_SEQUENCE) ? Randomizer.getRandomLogScale(Individual.minTemplateValue,
+								Individual.maxTemplateValue) : connection.parameter);
 
 				indiv.addConnection(newNode, connection.to, connection.parameter);
 

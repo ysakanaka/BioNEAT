@@ -245,8 +245,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		where++;
 	}
 	
-	@Override
-	public double[][] calculateTimeSeries(PluggableWorker myWorker) {
+	public double[][] calculateTimeSeries() {
 		final GraggBulirschStoerIntegrator myIntegrator = new GraggBulirschStoerIntegrator(
 				1e-14, 1, Constants.absprec, Constants.relprec);
 		
@@ -254,12 +253,12 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		
 		final double[] placeholder = this.initialConditions();
 		final OligoSystem<E> syst = this;
-		final MyStepHandler handler = new MyStepHandler(); //TODO: put your own handler here
-		
-		handler.registerWorker(myWorker);
+		StopableEventHandler eventHandler = new StopableEventHandler();
+		final StopableStepHandler handler = new StopableStepHandler(eventHandler); //TODO: put your own handler here
 		
 		
 		myIntegrator.addStepHandler(handler);
+		myIntegrator.addEventHandler(eventHandler, 100, 1e-6, 100);
 		try{
 		myIntegrator.integrate(syst, 0, placeholder, Constants.numberOfPoints,
 				placeholder);

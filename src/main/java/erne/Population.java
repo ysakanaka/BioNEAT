@@ -1,5 +1,6 @@
 package erne;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -13,17 +14,21 @@ import cluster.Cluster;
 import erne.mutation.Mutator;
 import erne.speciation.SpeciationSolver;
 import erne.speciation.Species;
+import reactionnetwork.Connection;
 import reactionnetwork.ReactionNetwork;
 
-public class Population {
+public class Population implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static AtomicInteger nextIndivId = new AtomicInteger();
 	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b');
 	public static Map<String, Integer> innovationNumbers = new HashMap<String, Integer>();
-	public static Map<Integer, Individual> allIndividuals = new HashMap<Integer, Individual>();
 	public static Map<String, String> nodeNameOrigins = new HashMap<String, String>();
 
 	private Individual initIndividual;
-	private Individual[] individuals;
+	private ArrayList<Individual[]> populations = new ArrayList<Individual[]>();
 	private AbstractFitnessFunction fitnessFunction;
 	private SpeciationSolver speciationSolver;
 
@@ -32,9 +37,24 @@ public class Population {
 	private Mutator mutator;
 
 	public Population(int size, ReactionNetwork initNetwork) {
-		this.individuals = new Individual[size];
+		for (Connection conn : initNetwork.connections) {
+			innovationNumbers.put(conn.from.name + "->" + conn.to.name, innovationNumbers.size());
+		}
+		this.populations.add(new Individual[size]);
 		this.initIndividual = new Individual(initNetwork);
 		speciationSolver = new SpeciationSolver();
+	}
+
+	public int getTotalGeneration() {
+		return populations.size();
+	}
+
+	public ArrayList<Species[]> getSpeciesByGenerations() {
+		return speciationSolver.speciesByGeneration;
+	}
+
+	public PopulationInfo getPopulationInfo(int i) {
+		return new PopulationInfo(populations.get(i), speciationSolver.speciesByGeneration.get(i));
 	}
 
 	public void setFitnessFunction(AbstractFitnessFunction fitnessFunction) {
@@ -45,68 +65,65 @@ public class Population {
 		this.mutator = mutator;
 	}
 
-	public Individual[] resetPopulation() {
+	public Individual[] resetPopulation() throws InterruptedException, ExecutionException {
+		Individual[] individuals = populations.get(populations.size() - 1);
 		for (int i = 0; i < individuals.length; i++) {
 			individuals[i] = initIndividual.clone();
 			mutator.mutate(individuals[i]);
 			individuals[i].parentIds.add(initIndividual.getId());
 		}
+		evaluateFitness();
+		speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
 	public Individual[] evolve() throws InterruptedException, ExecutionException {
+		reproduction(speciationSolver.speciesByGeneration.get(speciationSolver.speciesByGeneration.size() - 1));
 		evaluateFitness();
-		Species[] species = speciationSolver.speciate(individuals);
-		reproduction(species);
+		Individual[] individuals = populations.get(populations.size() - 1);
+		speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
-	public Individual getBestIndividual() {
-		Individual bestIndividual = individuals[0];
-		for (Individual individual : individuals) {
-			if (bestIndividual.getFitnessResult().getFitness() < individual.getFitnessResult().getFitness()) {
-				bestIndividual = individual;
-			}
-		}
-		return bestIndividual;
-	}
-
 	public Individual[] reproduction(Species[] species) {
+		Individual[] individuals = populations.get(populations.size() - 1);
+		Individual[] nextGeneIndividuals = new Individual[individuals.length];
 		int i = 0;
 		for (Species sp : species) {
 			int nextGenPop = sp.getNextGenPopulation();
 			if (sp.getNextGenPopulation() > 0) {
-				if (i >= individuals.length)
+				if (i >= nextGeneIndividuals.length)
 					break;
-				individuals[i] = sp.getBestIndividual().clone();
+				nextGeneIndividuals[i] = sp.getBestIndividual().clone();
 				i++;
 				nextGenPop--;
-				if (i >= individuals.length)
+				if (i >= nextGeneIndividuals.length)
 					break;
 			}
 			for (int j = 0; j < nextGenPop; j++) {
 				Individual[] parents = selectCrossoverParents(sp.individuals);
-				individuals[i] = parents[0].clone();
-				mutator.mutate(individuals[i]);
-				individuals[i].parentIds.add(parents[0].getId());
+				nextGeneIndividuals[i] = parents[0].clone();
+				mutator.mutate(nextGeneIndividuals[i]);
+				nextGeneIndividuals[i].parentIds.add(parents[0].getId());
 				i++;
-				if (i >= individuals.length)
+				if (i >= nextGeneIndividuals.length)
 					break;
 			}
 		}
 
 		// fill the rest with mutation only
-		while (i < individuals.length) {
+		while (i < nextGeneIndividuals.length) {
 			Species randomSpecies = species[rand.nextInt(species.length)];
 			Individual parent = randomSpecies.individuals.get(rand.nextInt(randomSpecies.individuals.size()));
-			individuals[i] = parent.clone();
-			mutator.mutate(individuals[i]);
-			individuals[i].parentIds.add(parent.getId());
+			nextGeneIndividuals[i] = parent.clone();
+			mutator.mutate(nextGeneIndividuals[i]);
+			nextGeneIndividuals[i].parentIds.add(parent.getId());
 			i++;
-			if (i >= individuals.length)
+			if (i >= nextGeneIndividuals.length)
 				break;
 		}
-		return individuals;
+		populations.add(nextGeneIndividuals);
+		return nextGeneIndividuals;
 	}
 
 	private Individual[] selectCrossoverParents(ArrayList<Individual> curGen) {
@@ -144,6 +161,7 @@ public class Population {
 	}
 
 	private void evaluateFitness() throws InterruptedException, ExecutionException {
+		Individual[] individuals = populations.get(populations.size() - 1);
 		System.out.println("Evaluating fitness");
 		List<ReactionNetwork> networks = new LinkedList<ReactionNetwork>();
 		for (int i = 0; i < individuals.length; i++) {
@@ -152,7 +170,8 @@ public class Population {
 		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
 		for (int i = 0; i < individuals.length; i++) {
 			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));
-			System.out.println("Indiv " + i + " Fitness: " + individuals[i].getFitnessResult());
+			// System.out.println("Indiv " + i + " Fitness: " +
+			// individuals[i].getFitnessResult());
 		}
 	}
 }

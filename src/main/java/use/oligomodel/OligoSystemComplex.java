@@ -79,7 +79,7 @@ public class OligoSystemComplex {
 		
 		//Fifth step: other parameters? TODO
 		//Specifically, we should change the kms above...
-		graph.saturableExo = true;
+		graph.saturableExo = false;
 		graph.saturableNick = true;
 		graph.saturablePoly = true;
 		graph.dangle = true;
@@ -180,7 +180,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+1]);
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+2]); // changed from +1 to +2 to account for protected a
 			}
 		}
 		return result;
@@ -189,19 +189,10 @@ public class OligoSystemComplex {
 	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
-		MyCancellableWorker mcw = new MyCancellableWorker(myOligo,timeOut);
-		mcw.execute();
-
 		double[][] timeTrace = {};
-		try {
-			timeTrace = (double[][]) mcw.get(timeOut,TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			
-		} catch (ExecutionException e) {
-			
-		} catch (TimeoutException e) {
-			return result;
-		}
+		
+		timeTrace = (double[][]) myOligo.calculateTimeSeries();
+		
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
 			int index = getTrueIndex(myOligo.getSequences(),s);
@@ -211,9 +202,10 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+1]);
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+2]); // changed from +1 to +2 to account for protected a
 			}
 		}
+
 		return result;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import common.Static;
 
 public class ReactionNetwork implements Serializable {
 	/**
@@ -71,23 +72,7 @@ public class ReactionNetwork implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Nodes:\n");
-		for (Node node : nodes) {
-			builder.append(" " + node.name + " " + common.Static.df4.format(node.parameter) + " "
-					+ common.Static.df4.format(node.initialConcentration) + " " + node.DNAString + "\n");
-		}
-
-		builder.append("Connections:\n");
-		for (Connection connection : connections) {
-			builder.append(" " + connection.innovation + " " + connection.from.name + "->" + connection.to.name + " " + connection.enabled
-					+ " " + common.Static.df4.format(connection.parameter) + "\n");
-		}
-
-		for (String key : parameters.keySet()) {
-			builder.append(key + ": " + common.Static.df4.format(parameters.get(key)) + "\n");
-		}
-		return builder.toString();
+		return Static.gson.toJson(this);
 	}
 
 	public ReactionNetwork clone() {

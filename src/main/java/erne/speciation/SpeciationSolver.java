@@ -1,12 +1,20 @@
 package erne.speciation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import erne.Constants;
 import erne.Individual;
 import reactionnetwork.Connection;
 
-public class SpeciationSolver {
+public class SpeciationSolver implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public ArrayList<Species[]> speciesByGeneration = new ArrayList<Species[]>();
 	public ArrayList<Individual> speciesLib = new ArrayList<Individual>();
 
@@ -33,59 +41,50 @@ public class SpeciationSolver {
 	private ArrayList<Species> decideSpeciesPopulation(ArrayList<Species> nextGenSpecies, int popSize) {
 		// calculate next gen population for each species
 		ArrayList<Species> processedSpecies = new ArrayList<Species>();
-		if (Constants.removeNonImprovingSpecies && speciesByGeneration.size() > Constants.nNonInprovingGenerations) {
-			Species[] previousSpecies = speciesByGeneration.get(speciesByGeneration.size() - Constants.nNonInprovingGenerations);
+		int popSizeLeft = popSize;
+
+		boolean capping = false;
+		Map<Species, Integer> tempNextGenPop = new HashMap<Species, Integer>();
+		do {
+			capping = false;
+			double sumFitness = 0;
 			for (Species sp : nextGenSpecies) {
-				for (Species prevSp : previousSpecies) {
-					if (sp.representative == prevSp.representative) {
-						try {
-							if (sp.getBestIndividual().getFitnessResult().getFitness() <= prevSp.getBestIndividual().getFitnessResult()
-									.getFitness()) {
-								processedSpecies.add(sp);
-							}
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
+				if (!processedSpecies.contains(sp)) {
+					sumFitness += sp.getSpeciesFitness();
+				}
+			}
+			for (Species sp : nextGenSpecies) {
+				if (!processedSpecies.contains(sp)) {
+					int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
+					// capping
+					System.out.println(speciesByGeneration.size());
+					if (nextGenPop > (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10) {
+						nextGenPop = (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10;
+						capping = true;
+						processedSpecies.add(sp);
+						popSizeLeft -= nextGenPop;
+						sp.setNextGenPopulation(nextGenPop);
+					} else {
+						tempNextGenPop.put(sp, nextGenPop);
 					}
 				}
 			}
-		}
+		} while (capping);
 
-		int popSizeLeft = popSize;
-		// calculate 1st time
-		double sumFitness = 0;
-		for (Species sp : nextGenSpecies) {
-			sumFitness += sp.getSpeciesFitness();
-		}
-
-		for (Species sp : nextGenSpecies) {
-			int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
-			if (nextGenPop > 1 && processedSpecies.contains(sp)) {
-				nextGenPop = 1;
-				sp.setNextGenPopulation(nextGenPop);
-				popSizeLeft -= nextGenPop;
-			}
-			// capping
-			if (nextGenPop > sp.individuals.size() + popSize / 10) {
-				nextGenPop = sp.individuals.size() + popSize / 10;
-				sp.setNextGenPopulation(nextGenPop);
-				processedSpecies.add(sp);
-				popSizeLeft -= nextGenPop;
-			}
-		}
-
-		// calculate 2nd time removing the capped species
-		sumFitness = 0;
-		for (Species sp : nextGenSpecies) {
+		for (Species sp : tempNextGenPop.keySet()) {
 			if (!processedSpecies.contains(sp)) {
-				sumFitness += sp.getSpeciesFitness();
-			}
-		}
-		for (Species sp : nextGenSpecies) {
-			if (!processedSpecies.contains(sp)) {
-				int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
+				int nextGenPop = tempNextGenPop.get(sp);
+				popSizeLeft -= nextGenPop;
 				sp.setNextGenPopulation(nextGenPop);
 			}
+
+		}
+
+		// if there is still spaces left, randomly assign them to each species
+		Random rand = new Random();
+		for (int i = 0; i < popSizeLeft; i++) {
+			int index = rand.nextInt(nextGenSpecies.size());
+			nextGenSpecies.get(index).setNextGenPopulation(nextGenSpecies.get(index).getNextGenPopulation() + 1);
 		}
 		return nextGenSpecies;
 	}
@@ -158,6 +157,6 @@ public class SpeciationSolver {
 				nMatches++;
 			}
 		}
-		return (N - nMatches) / N;
+		return (double) (N - nMatches) / N;
 	}
 }

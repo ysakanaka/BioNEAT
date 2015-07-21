@@ -2,7 +2,6 @@ package cluster;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,15 +10,15 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.swing.JProgressBar;
+
 import reactionnetwork.ReactionNetwork;
-import use.math.SquareFitnessFunction;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IExecutorService;
 import com.hazelcast.core.Member;
 
-import demo.ProtectedSeq;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 
@@ -41,7 +40,13 @@ public class Cluster {
 
 	private static final Map<Member, Integer> activeTaskCounts = new HashMap<Member, Integer>();
 
+	private static JProgressBar progressBar;
+
 	public static void start() {
+	}
+
+	public static void bindProgressBar(JProgressBar progressBar) {
+		Cluster.progressBar = progressBar;
 	}
 
 	public static String echoOnTheMember(String input, Member member) throws Exception {
@@ -68,16 +73,12 @@ public class Cluster {
 		return cluster.getMembers();
 	}
 
-	public static void doSomething() throws Exception {
-		List<ReactionNetwork> networks = new LinkedList<ReactionNetwork>();
-		for (int i = 0; i < 100; i++) {
-			networks.add(ProtectedSeq.getInitNetwork());
-		}
-		evaluateFitness(new SquareFitnessFunction(), networks);
-	}
-
 	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,
 			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
+		int totalJobCount = networks.size();
+		int completedJobCount = 0;
+		if (progressBar != null)
+			progressBar.setValue(0);
 		Map<ReactionNetwork, AbstractFitnessResult> results = new HashMap<ReactionNetwork, AbstractFitnessResult>();
 		Map<Future<AbstractFitnessResult>, Member> futureToMember = new HashMap<Future<AbstractFitnessResult>, Member>();
 		Map<Future<AbstractFitnessResult>, ReactionNetwork> futureToNetwork = new HashMap<Future<AbstractFitnessResult>, ReactionNetwork>();
@@ -96,7 +97,8 @@ public class Cluster {
 				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
 					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(fitnessFunction, network), m);
 					taskCount++;
-					//System.out.println("Submitted to <" + m + ">. Task count: " + taskCount);
+					// System.out.println("Submitted to <" + m +
+					// ">. Task count: " + taskCount);
 					futureToMember.put(future, m);
 					futureToNetwork.put(future, network);
 					activeTaskCounts.put(m, taskCount);
@@ -111,6 +113,9 @@ public class Cluster {
 							AbstractFitnessResult fitnessResult = future.get();
 							Member m = futureToMember.get(future);
 							int taskCount = activeTaskCounts.get(m) - 1;
+							completedJobCount++;
+							if (progressBar != null)
+								progressBar.setValue(completedJobCount * 100 / totalJobCount);
 							System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
 							activeTaskCounts.put(m, taskCount);
 							ReactionNetwork n = futureToNetwork.get(future);
@@ -133,6 +138,9 @@ public class Cluster {
 					AbstractFitnessResult fitnessResult = future.get();
 					Member m = entry.getValue();
 					int taskCount = activeTaskCounts.get(m) - 1;
+					completedJobCount++;
+					if (progressBar != null)
+						progressBar.setValue(completedJobCount * 100 / totalJobCount);
 					System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
 					activeTaskCounts.put(m, taskCount);
 					ReactionNetwork n = futureToNetwork.get(future);
