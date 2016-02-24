@@ -62,9 +62,9 @@ public class OligoSystemComplex {
 					atTheNick += c.to.DNAString.charAt(0);
 					//System.out.println(atTheNick);
 					double[] slow = model.SlowdownConstants.getSlowdown(atTheNick);
-					graph.stackSlowdown.put(name,slow[0]);
-					graph.dangleLSlowdown.put(name,slow[1]);
-					graph.dangleRSlowdown.put(name,slow[2]);
+					graph.setStacking(name,slow[0]);
+					graph.setDangleL(name,slow[1]);
+					graph.setDangleR(name,slow[2]);
 				}	
 			}
 		}

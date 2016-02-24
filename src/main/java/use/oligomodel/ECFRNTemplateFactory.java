@@ -21,10 +21,10 @@ public class ECFRNTemplateFactory<E> extends DefaultTemplateFactory<E> {
 			//System.out.println("This is a reporter");
 			return new Reporter<E>(graph,graph.getTemplateConcentration(e),origin);
 		}
-		double dangleL = graph.dangle?graph.dangleLSlowdown.get(e):Constants.baseDangleL;
-		double dangleR = graph.dangle?graph.dangleRSlowdown.get(e):Constants.baseDangleR;
+		double dangleL = graph.dangle?graph.getDangleL(e):Constants.baseDangleL;
+		double dangleR = graph.dangle?graph.getDangleR(e):Constants.baseDangleR;
 		if(ProtectedSequenceVertex.class.isAssignableFrom(origin.getClass())||ProtectedSequenceVertex.class.isAssignableFrom(dest.getClass())){
-			return new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.stackSlowdown.get(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));	
+			return new TemplateWithProtected<E>(graph,graph.getTemplateConcentration(e),graph.getStacking(e),dangleL,dangleR,graph.getSource(e),graph.getDest(e),(graph.getInhibition(e)==null?null:graph.getInhibition(e).getLeft()));	
 		} else {
 			return super.create(e);
 		}
