@@ -24,6 +24,7 @@ public class Test {
 			ReactionNetwork network = Library.oldGaussian;
 			AbstractMathFitnessFunction.saveSimulation = true;
 			FitnessResult fitnessResult = (FitnessResult) new GaussianFitnessFunction().evaluate(network);
+//			FitnessResult fitnessResult = new FitnessResult(true);
 			System.out.println(fitnessResult);
 			RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
 			VisualizationViewer<String, String> vv = factory.createVisualizationViewer(network);

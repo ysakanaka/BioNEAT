@@ -29,6 +29,7 @@ public class OligoSystemComplex {
 	public OligoSystemComplex(ReactionNetwork network) {
 		
 		this.network = network;
+		boolean toggle = true; //TODO: what the heck is this supposed to be
 		
 		//First step: create an empty oligograph:
 		initGraph();
@@ -80,14 +81,26 @@ public class OligoSystemComplex {
 		//Fifth step: other parameters? TODO
 		//Specifically, we should change the kms above...
 		graph.saturableExo = false;
-		graph.saturableNick = true;
-		graph.saturablePoly = true;
+		graph.saturableNick = false;
+		graph.saturablePoly = false;
 		graph.dangle = true;
-		if(this.graph.exoSaturationByFreeTemplates){
-	    	exoKm[SaturationEvaluator.TALONE] = Constants.exoKmTemplate;
-	    }
+		//if(this.graph.exoSaturationByFreeTemplates){
+	    //	exoKm[SaturationEvaluator.TALONE] = Constants.exoKmTemplate;
+	    //}
+		
+/*		for(String param: network.parameters.keySet()){
+			//only a few params are known:
+			if(param.equals("nick")){
+				Constants.nickVm = network.parameters.get(param)*Constants.nickKm;
+			} else if(param.equals("pol")){
+				Constants.polVm = network.parameters.get(param)*Constants.polKm;
+			} else if(param.equals("exo")){
+				Constants.exoVm = network.parameters.get(param)*Constants.exoKmSimple;
+			}
+		}*/ //Not sure we are evolving the enzyme conc...
+		
 		//Do the toggle here TODO
-		if(true){
+		if(toggle){
 			toggleExoSaturationByAll();
 		}
 
@@ -180,7 +193,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+2]); // changed from +1 to +2 to account for protected a
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)]);
 			}
 		}
 		return result;

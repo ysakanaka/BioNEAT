@@ -75,6 +75,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 
 				// Yannick's idea: set init concentration as last test's stable
 				// state.
+				
 				for (Node node : network.nodes) {
 					if (sequencesLastTest.containsKey(node.name)) {
 						if (!node.name.equals(INPUT_SEQUENCE)) {

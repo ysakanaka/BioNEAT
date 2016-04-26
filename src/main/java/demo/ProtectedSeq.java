@@ -15,6 +15,7 @@ import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.oligomodel.OligoSystemComplex;
+import use.oligomodel.OligoSystemWithProtectedSequences;
 import use.oligomodel.PlotFactory;
 
 import com.google.gson.Gson;
@@ -88,7 +89,7 @@ public class ProtectedSeq extends JApplet {
 
 					OligoSystemComplex oligoSystem = new OligoSystemComplex(
 							network);
-					Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(30);
+					Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries();
 					PlotFactory plotFactory = new PlotFactory();
 					JPanel timeSeriesPanel = plotFactory
 							.createTimeSeriesPanel(timeSeries);

@@ -60,14 +60,14 @@ public class Library {
 				"    {\r\n" + 
 				"      \"innovation\": 1,\r\n" + 
 				"      \"enabled\": true,\r\n" + 
-				"      \"parameter\": 46.333,\r\n" + 
+				"      \"parameter\": 40.0,\r\n" + 
 				"      \"from\": \"b\",\r\n" + 
 				"      \"to\": \"b\"\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
 				"      \"innovation\": 2,\r\n" + 
 				"      \"enabled\": true,\r\n" + 
-				"      \"parameter\": 0,\r\n" + 
+				"      \"parameter\": 5,\r\n" + 
 				"      \"from\": \"c\",\r\n" + 
 				"      \"to\": \"c\"\r\n" + 
 				"    },\r\n" + 
@@ -81,14 +81,14 @@ public class Library {
 				"    {\r\n" + 
 				"      \"innovation\": 4,\r\n" + 
 				"      \"enabled\": true,\r\n" + 
-				"      \"parameter\": 20.8801,\r\n" + 
+				"      \"parameter\": 200.8801,\r\n" + 
 				"      \"from\": \"a\",\r\n" + 
 				"      \"to\": \"Icc\"\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
 				"      \"innovation\": 5,\r\n" + 
 				"      \"enabled\": true,\r\n" + 
-				"      \"parameter\": 47.8194,\r\n" + 
+				"      \"parameter\": 20.8194,\r\n" + 
 				"      \"from\": \"c\",\r\n" + 
 				"      \"to\": \"Ibb\"\r\n" + 
 				"    }\r\n" + 
