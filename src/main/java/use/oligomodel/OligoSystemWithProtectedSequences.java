@@ -5,9 +5,6 @@ import java.util.Iterator;
 
 import org.apache.commons.math3.ode.nonstiff.GraggBulirschStoerIntegrator;
 
-import utils.MyStepHandler;
-import utils.PluggableWorker;
-
 import model.Constants;
 import model.OligoGraph;
 import model.OligoSystem;

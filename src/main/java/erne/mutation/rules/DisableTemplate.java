@@ -1,6 +1,7 @@
 package erne.mutation.rules;
 
 import reactionnetwork.Connection;
+import reactionnetwork.Node;
 import erne.Individual;
 import erne.mutation.MutationRule;
 
@@ -19,6 +20,8 @@ public class DisableTemplate extends MutationRule {
 				if (rand.nextDouble() < Math.min(1, Math.max(0, probConnectionDisabling - Math.log(conn.parameter)))
 						&& indiv.getNetwork().getNEnabledConnections() > 1) {
 					conn.enabled = false;
+					
+					
 				}
 			}
 		}

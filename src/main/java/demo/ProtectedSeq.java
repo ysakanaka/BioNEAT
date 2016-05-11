@@ -15,7 +15,6 @@ import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.oligomodel.OligoSystemComplex;
-import use.oligomodel.OligoSystemWithProtectedSequences;
 import use.oligomodel.PlotFactory;
 
 import com.google.gson.Gson;

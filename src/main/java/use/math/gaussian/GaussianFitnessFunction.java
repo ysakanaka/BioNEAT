@@ -82,13 +82,13 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 			double[] targetOutputs = new double[tests.size()];
 			for (int i = 0; i < tests.size(); i++) {
-				if (logScale) {
-					targetOutputs[i] = fittingParams[0]
-							* Math.exp((-Math.pow(Math.log(tests.get(i)[0]) - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
-				} else {
-					targetOutputs[i] = fittingParams[0]
-							* Math.exp((-Math.pow(tests.get(i)[0] - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
-				}
+					if (logScale) {
+						targetOutputs[i] = fittingParams[0]
+								* Math.exp((-Math.pow(Math.log(tests.get(i)[0])- fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+					} else {
+						targetOutputs[i] = fittingParams[0]
+								* Math.exp((-Math.pow(tests.get(i)[0] - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+					}
 			}
 			result.targetOutputs = targetOutputs;
 
@@ -96,7 +96,16 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			result.actualFittingParams = fittingParams;
 			return result;
 		} catch (Exception ex) {
-			return new FitnessResult(true);
+			System.err.println("Warning: Gaussian fitness calculation failure");
+			ex.printStackTrace();
+			System.err.println("==========================================================");
+			result.minFitness = true;
+			result.tests = tests;
+			result.actualOutputs = actualOutputs;
+
+			double[] targetOutputs = new double[tests.size()];
+			result.targetFittingParams = targetCoeff;
+			return result;
 		}
 
 	}

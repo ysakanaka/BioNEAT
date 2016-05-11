@@ -100,4 +100,26 @@ public class Individual implements Serializable {
 	public String toString() {
 		return Static.gson.toJson(network);
 	}
+
+	public void sanitize() {
+		// Now, we need to check if the system is still sane
+		// So far, it only means that we have no inhibitor pointing to nothing.
+		ArrayList<Node> toRemove = new ArrayList<Node>();
+		for (Node inhib: network.nodes){
+			if (inhib.type == Node.INHIBITING_SEQUENCE){
+				Node from = network.getNodeByName(""+inhib.name.charAt(1)); // TODO: warning, very implementation dependent
+				Node to = network.getNodeByName(""+inhib.name.charAt(2));
+				Connection inhibited = network.getConnectionByEnds(from, to);
+				if(inhibited.equals(null) || !inhibited.enabled){
+					for (Connection cn : network.connections){
+						if (cn.to.equals(inhib)){
+							cn.enabled = false;
+						}
+					}
+					toRemove.add(inhib); // No choice
+				}
+			}
+		}
+		network.nodes.removeAll(toRemove);
+	}
 }

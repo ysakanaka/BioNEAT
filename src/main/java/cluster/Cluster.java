@@ -94,6 +94,7 @@ public class Cluster {
 				if (taskCountObject != null) {
 					taskCount = taskCountObject.intValue();
 				}
+				m.setIntAttribute(nProcessorsAttribute, Runtime.getRuntime().availableProcessors());
 				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
 					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(fitnessFunction, network), m);
 					taskCount++;

@@ -61,12 +61,14 @@ public class Evolver implements Serializable {
 	private static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
 
 	private transient boolean readerMode = false;
+	private transient boolean noGUI = false;
 	private static ReflectionUI reflectionUI = new ReflectionUI();
 
 	// Reader mode
 	public void setReader(String resultDirectory) {
 		this.resultDirectory = resultDirectory;
 		this.readerMode = true;
+		this.noGUI = false;
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction) throws IOException {
@@ -97,6 +99,7 @@ public class Evolver implements Serializable {
 	}
 
 	public void evolve() throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
+		model.Constants.numberOfPoints = erne.Constants.maxEvalTime;
 		if (readerMode) {
 			System.out.println("ERNe version: " + Serializer.deserialize(resultDirectory + "/version"));
 			Evolver savedEvolver = (Evolver) Serializer.deserialize(resultDirectory + "/evolver");
@@ -109,21 +112,24 @@ public class Evolver implements Serializable {
 			Serializer.serialize(resultDirectory + "/version", Version.version);
 			Serializer.serialize(resultDirectory + "/evolver", this);
 		}
+		if (!noGUI){
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+			
 				try {
 					window = new Main();
-					if (!readerMode) {
+					if (!readerMode && window != null) {
 						window.getMainForm().setVisible(true);
 					}
-					Cluster.bindProgressBar(window.getProgressBar());
+					//Cluster.bindProgressBar(window.getProgressBar());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
+			
 		});
-
+		}
 		Population population;
 		if (readerMode) {
 			population = (Population) Serializer.deserialize(resultDirectory + "/population");
@@ -147,7 +153,7 @@ public class Evolver implements Serializable {
 				Serializer.serialize(resultDirectory + "/population", population);
 			}
 
-			displayPopulation(i, population);
+			if (!noGUI) displayPopulation(i, population);
 		}
 		System.out.println("Done!");
 		if (readerMode) {

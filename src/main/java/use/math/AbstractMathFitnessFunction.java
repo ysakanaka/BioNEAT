@@ -90,7 +90,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(30);
 
 				// System could not reach stable time before 1000 minutes
-				if (timeSeries.entrySet().iterator().next().getValue().length >= 1000) {
+				if (timeSeries.entrySet().iterator().next().getValue().length >= erne.Constants.maxEvalTime) {
 					minFitness = true;
 					// Stop evaluation if we don't need to store timeseries
 					if (!saveSimulation) {
@@ -126,6 +126,9 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 			return result;
 
 		} catch (Exception e) {
+			System.err.println("Warning: Individual evaluation (Abstract Math) failure");
+			e.printStackTrace();
+			System.err.println("==========================================================");
 			return minFitness();
 		}
 	}

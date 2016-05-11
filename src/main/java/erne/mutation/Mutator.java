@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import use.math.gaussian.GaussianFitnessFunction;
@@ -37,7 +38,10 @@ public class Mutator implements Serializable {
 		for (MutationRule mutationRule : mutationRules) {
 			if (mutationRule.getWeight() > randomizedInt) {
 				try {
-					return mutationRule.mutate(indiv);
+					Individual ret = mutationRule.mutate(indiv);
+					ret.sanitize();	
+							
+					return ret;
 				} catch (Exception e) {
 					e.printStackTrace();
 					return indiv;

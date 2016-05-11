@@ -6,6 +6,7 @@ public class Library {
 	public static final ReactionNetwork startingMath;
 	public static final ReactionNetwork squareFunction;
 	public static final ReactionNetwork oldGaussian;
+	public static final ReactionNetwork dummyNetwork;
 
 	static {
 		oldGaussian = Static.gson.fromJson("{\r\n" + 
@@ -81,14 +82,14 @@ public class Library {
 				"    {\r\n" + 
 				"      \"innovation\": 4,\r\n" + 
 				"      \"enabled\": true,\r\n" + 
-				"      \"parameter\": 200.8801,\r\n" + 
+				"      \"parameter\": 100.8801,\r\n" + 
 				"      \"from\": \"a\",\r\n" + 
 				"      \"to\": \"Icc\"\r\n" + 
 				"    },\r\n" + 
 				"    {\r\n" + 
 				"      \"innovation\": 5,\r\n" + 
 				"      \"enabled\": true,\r\n" + 
-				"      \"parameter\": 20.8194,\r\n" + 
+				"      \"parameter\": 30.0,\r\n" + 
 				"      \"from\": \"c\",\r\n" + 
 				"      \"to\": \"Ibb\"\r\n" + 
 				"    }\r\n" + 
@@ -226,5 +227,71 @@ public class Library {
 				"    \"exo\": 0.68182\r\n" + 
 				"  }\r\n" + 
 				"}", ReactionNetwork.class);
+		dummyNetwork = Static.gson.fromJson("{\r\n" + 
+				"  \"nodes\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"name\": \"a\",\r\n" + 
+				"      \"parameter\": 1000.0,\r\n" + 
+				"      \"initialConcentration\": 10.0,\r\n" + 
+				"      \"type\": 1,\r\n" + 
+				"      \"protectedSequence\": true,\r\n" + 
+				"      \"DNAString\": \"\",\r\n" + 
+				"      \"reporter\": false\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"name\": \"b\",\r\n" + 
+				"      \"parameter\": 29.76,\r\n" + 
+				"      \"initialConcentration\": 5.0,\r\n" + 
+				"      \"type\": 1,\r\n" + 
+				"      \"protectedSequence\": false,\r\n" + 
+				"      \"DNAString\": \"\",\r\n" + 
+				"      \"reporter\": true\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"name\": \"Iab\",\r\n" + 
+				"      \"parameter\": 1.7,\r\n" + 
+				"      \"initialConcentration\": 0.0,\r\n" + 
+				"      \"type\": 2,\r\n" + 
+				"      \"protectedSequence\": false,\r\n" + 
+				"      \"DNAString\": \"\",\r\n" + 
+				"      \"reporter\": false\r\n" + 
+				"    }\r\n" + 
+				"  ],\r\n" + 
+				"  \"connections\": [\r\n" + 
+				"    {\r\n" + 
+				"      \"innovation\": 1,\r\n" + 
+				"      \"enabled\": true,\r\n" + 
+				"      \"parameter\": 1.5150505451673735,\r\n" + 
+				"      \"from\": \"a\",\r\n" + 
+				"      \"to\": \"b\"\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"innovation\": 2,\r\n" + 
+				"      \"enabled\": true,\r\n" + 
+				"      \"parameter\": 60.0,\r\n" + 
+				"      \"from\": \"a\",\r\n" + 
+				"      \"to\": \"Iab\"\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"innovation\": 3,\r\n" + 
+				"      \"enabled\": true,\r\n" + 
+				"      \"parameter\": 3.83999237598769,\r\n" + 
+				"      \"from\": \"b\",\r\n" + 
+				"      \"to\": \"b\"\r\n" + 
+				"    },\r\n" + 
+				"    {\r\n" + 
+				"      \"innovation\": 4,\r\n" + 
+				"      \"enabled\": true,\r\n" + 
+				"      \"parameter\": 21.961110096005036,\r\n" + 
+				"      \"from\": \"a\",\r\n" + 
+				"      \"to\": \"a\"\r\n" + 
+				"    }\r\n" +
+				"  ],\r\n" + 
+				"  \"parameters\": {\r\n" + 
+				"    \"nick\": 3.0,\r\n" + 
+				"    \"pol\": 17.0,\r\n" + 
+				"    \"exo\": 0.68182\r\n" + 
+				"  }\r\n" + 
+				"}",ReactionNetwork.class);
 	}
 }

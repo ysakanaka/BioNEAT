@@ -9,5 +9,6 @@ public class Constants {
 	public static final double probMutationOnly = 0.5;
 	public static final int tournamentSize = 5;
 	public static double speciationThreshold = 0.4;
-
+    public static int maxEvalTime = 3000;
+	
 }

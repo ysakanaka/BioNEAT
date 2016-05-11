@@ -46,6 +46,13 @@ public class OligoSystemComplex {
 			}
 			equiv.put(n.name, s);
 			s.setInhib(n.type == Node.INHIBITING_SEQUENCE);
+			// Hard to sanitize at the mutator stage, so just to be sure: we ignore inhibitors that are pointing on nothing
+			if (s.isInhib()){
+				Node from = network.getNodeByName(""+n.name.charAt(1)); // TODO: warning, very implementation dependent
+				Node to = network.getNodeByName(""+n.name.charAt(2));
+				Connection inhibited = network.getConnectionByEnds(from, to);
+				if (!inhibited.enabled) continue; // we ignore the species
+			}
 			graph.addSpecies(s,n.parameter,n.initialConcentration);
 			//custom exonuclease inhibition
 			graph.getCustomExoKm().put(s.toString(), (s.isInhib()?Constants.exoKmInhib:Constants.exoKmSimple));
@@ -55,7 +62,10 @@ public class OligoSystemComplex {
 		for(Connection c : network.connections){
 			if (c.enabled) {
 				String name = c.from.name+c.to.name;
-				
+				if(equiv.get(c.from.name)== null || equiv.get(c.to.name)== null){
+					//Somehow one of the ends was deleted, and this connection was reactivated afterwards.
+					continue;
+				}
 				
 				graph.addActivation(name, equiv.get(c.from.name), equiv.get(c.to.name), c.parameter);
 				if(!c.from.DNAString.equals("")&!c.to.DNAString.equals("")){
@@ -80,9 +90,9 @@ public class OligoSystemComplex {
 		
 		//Fifth step: other parameters? TODO
 		//Specifically, we should change the kms above...
-		graph.saturableExo = false;
-		graph.saturableNick = false;
-		graph.saturablePoly = false;
+		graph.saturableExo = true;
+		graph.saturableNick = true;
+		graph.saturablePoly = true;
 		graph.dangle = true;
 		//if(this.graph.exoSaturationByFreeTemplates){
 	    //	exoKm[SaturationEvaluator.TALONE] = Constants.exoKmTemplate;
@@ -187,6 +197,7 @@ public class OligoSystemComplex {
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
 			int index = getTrueIndex(myOligo.getSequences(),s);
+			if (index == -1) continue; // This DNA strand does not exist in the system
 			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
 				result.put(n.name, arraySum(timeTrace[index],timeTrace[index+1]));
 			} else {
@@ -215,7 +226,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)+2]); // changed from +1 to +2 to account for protected a
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)]); // changed from +1 to +2 to account for protected a
 			}
 		}
 
