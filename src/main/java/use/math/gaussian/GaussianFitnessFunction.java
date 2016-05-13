@@ -82,13 +82,13 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 			double[] targetOutputs = new double[tests.size()];
 			for (int i = 0; i < tests.size(); i++) {
-					if (logScale) {
-						targetOutputs[i] = fittingParams[0]
-								* Math.exp((-Math.pow(Math.log(tests.get(i)[0])- fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
-					} else {
-						targetOutputs[i] = fittingParams[0]
-								* Math.exp((-Math.pow(tests.get(i)[0] - fittingParams[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
-					}
+				if (logScale) {
+					targetOutputs[i] = fittingParams[0]
+							* Math.exp((-Math.pow(Math.log(tests.get(i)[0])- targetCoeff[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+				} else {
+					targetOutputs[i] = fittingParams[0]
+							* Math.exp((-Math.pow(tests.get(i)[0] - targetCoeff[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+				}
 			}
 			result.targetOutputs = targetOutputs;
 

@@ -27,7 +27,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 	String OUTPUT_SEQUENCE = "b";
 	String REPORTER_OUTPUT_SEQUENCE = "Reporter b";
 
-	static boolean saveSimulation = false;
+	private static boolean saveSimulation = false;
 
 	public static Map<Double, Map<String, double[]>> simulationResults;
 
@@ -65,7 +65,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 
 			Map<String, Double> sequencesLastTest = new HashMap<String, Double>();
 
-			if (saveSimulation) {
+			if (doSaveSimulation()) {
 				simulationResults = new TreeMap<Double, Map<String, double[]>>();
 			}
 
@@ -93,12 +93,12 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				if (timeSeries.entrySet().iterator().next().getValue().length >= erne.Constants.maxEvalTime) {
 					minFitness = true;
 					// Stop evaluation if we don't need to store timeseries
-					if (!saveSimulation) {
+					if (!doSaveSimulation()) {
 						return minFitness();
 					}
 				}
 
-				if (saveSimulation) {
+				if (doSaveSimulation()) {
 					simulationResults.put(inputs[0], timeSeries);
 
 					// if we have enough timeseries and fitness should be
@@ -169,6 +169,14 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				getInputs(firstPos + 1, step, n, min, inputs, result);
 			}
 		}
+	}
+
+	public static boolean doSaveSimulation() {
+		return saveSimulation;
+	}
+
+	public static void setSaveSimulation(boolean saveSimulation) {
+		AbstractMathFitnessFunction.saveSimulation = saveSimulation;
 	}
 
 }

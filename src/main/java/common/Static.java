@@ -31,4 +31,5 @@ public class Static {
 	//	Reflections reflections = new Reflections("");
 	//	fitnessFunctions = reflections.getSubTypesOf(AbstractFitnessFunction.class);
 	//}
+	
 }

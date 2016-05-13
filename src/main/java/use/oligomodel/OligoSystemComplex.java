@@ -204,7 +204,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)]);
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.inhTotal+myOligo.getReporterIndex(s)]);
 			}
 		}
 		return result;
@@ -226,7 +226,7 @@ public class OligoSystemComplex {
 				result.put(n.name, timeTrace[index]);
 			}
 			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.getReporterIndex(s)]); // changed from +1 to +2 to account for protected a
+				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.inhTotal+myOligo.getReporterIndex(s)]); // changed from +1 to +2 to account for protected a
 			}
 		}
 
