@@ -122,7 +122,8 @@ public class DE {
 		initGen = new ReactionNetwork[this.PopSize];
 
 		// first randomly place the template individual in the population
-		int index = (int) (this.rnd.nextDouble() * this.PopSize);
+		//No we don't. Anyway, it would be overwritten by the next loop.
+		int index = 0;
 
 		double[] param = getParameterArray(indiv);
 		this.CurGen[index] = new DEIndiv(param, this.rnd);
@@ -131,7 +132,7 @@ public class DE {
 		index = (index + 1) % this.PopSize;
 
 		// now create other initial individuals randomly
-		for (int i = 0; i < this.PopSize; ++i) {
+		for (int i = 1; i < this.PopSize; ++i) {
 			this.CurGen[index] = new DEIndiv(param.length, this.minRange, this.maxRange, this.rnd);
 			initGen[index] = getReactionNetwork(this.CurGen[index].getParameters());
 			this.CurGen[index].setReactionNetwork(initGen[index]);

@@ -42,7 +42,7 @@ public class FitnessResult extends AbstractFitnessResult {
 		}
 		result += result1;
 
-		result *= getSDV(actualOutputs);
+		result *= Math.pow(getSDV(actualOutputs),2);
 
 		return result;
 	}

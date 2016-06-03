@@ -22,10 +22,13 @@ public class TestGaussianFitness {
 				.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
 		BufferedReader in = new BufferedReader(new FileReader(args[0]));
 		ReactionNetwork rn = gson.fromJson(in, ReactionNetwork.class);
+		erne.Constants.maxEvalTime = 3000;
+		model.Constants.numberOfPoints = 3000;
 		TestGUI window = new TestGUI();
 		window.frame.setVisible(true);
+		GaussianFitnessFunction gf = new GaussianFitnessFunction();
 		AbstractMathFitnessFunction.setSaveSimulation(true);
-		window.displayEvaluationResults(rn, (FitnessResult) new GaussianFitnessFunction().evaluate(rn));
+		window.displayEvaluationResults(rn, (FitnessResult) gf.evaluate(rn));
 	}
 
 }

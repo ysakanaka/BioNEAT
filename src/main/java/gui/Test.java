@@ -132,7 +132,7 @@ public class Test {
 		Node node2 = new Node("b");
 		node2.parameter = 1;
 		node2.initialConcentration = 5;
-		Node node3 = new Node("Iaa");
+		Node node3 = new Node("IaTa");
 		node3.type = Node.INHIBITING_SEQUENCE;
 		network.nodes.add(node1);
 		network.nodes.add(node2);

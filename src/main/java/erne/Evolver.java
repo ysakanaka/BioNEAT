@@ -54,15 +54,19 @@ public class Evolver implements Serializable {
 	private FitnessDisplayer fitnessDisplayer;
 	private transient String resultDirectory;
 
-	private static final int DEFAULT_POP_SIZE = 50;
-	private static final int MAX_GENERATIONS = 200;
+	public static final int DEFAULT_POP_SIZE = 50;
+	public static final int MAX_GENERATIONS = 200;
 	private static final Mutator DEFAULT_MUTATOR = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
 			new DisableTemplate(1), new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5) })));
-	private static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
+	public static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
 
 	private transient boolean readerMode = false;
-	private transient boolean noGUI = false;
+	private transient boolean noGUI = false; //there IS a GUI
 	private static ReflectionUI reflectionUI = new ReflectionUI();
+	
+	public void setGUI(boolean gui){
+		this.noGUI = !gui;
+	}
 
 	// Reader mode
 	public void setReader(String resultDirectory) {

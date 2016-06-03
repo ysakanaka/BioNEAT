@@ -33,7 +33,7 @@ public class SquareFitnessDisplayer implements FitnessDisplayer {
 			for (int k = 0; k < xData.length; k++) {
 				xData[k] = fitnessResult.inputs[k];
 			}
-			return new PlotFactory().createTimeSeriesPanel(timeSeries, xData, false);
+			return new PlotFactory().createTimeSeriesPanel(timeSeries, xData, false, "Input concentration", "Output concentration");
 		} else {
 			return new JPanel();
 		}

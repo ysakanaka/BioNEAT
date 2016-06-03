@@ -67,7 +67,7 @@ public class Mutator implements Serializable {
 				+ "      \"reporter\": false\r\n" + "    },\r\n" + "    {\r\n" + "      \"name\": \"Icc\",\r\n"
 				+ "      \"parameter\": 0.0,\r\n" + "      \"initialConcentration\": 0.0,\r\n" + "      \"type\": 2,\r\n"
 				+ "      \"protectedSequence\": false,\r\n" + "      \"DNAString\": \"\",\r\n" + "      \"reporter\": false\r\n"
-				+ "    },\r\n" + "    {\r\n" + "      \"name\": \"Ibb\",\r\n" + "      \"parameter\": 0.0,\r\n"
+				+ "    },\r\n" + "    {\r\n" + "      \"name\": \"IbTb\",\r\n" + "      \"parameter\": 0.0,\r\n"
 				+ "      \"initialConcentration\": 0.0,\r\n" + "      \"type\": 2,\r\n" + "      \"protectedSequence\": false,\r\n"
 				+ "      \"DNAString\": \"\",\r\n" + "      \"reporter\": false\r\n" + "    }\r\n" + "  ],\r\n"
 				+ "  \"connections\": [\r\n" + "    {\r\n" + "      \"innovation\": 0,\r\n" + "      \"enabled\": false,\r\n"
@@ -78,16 +78,16 @@ public class Mutator implements Serializable {
 				+ "      \"to\": \"Icc\"\r\n" + "    },\r\n" + "    {\r\n" + "      \"innovation\": 3,\r\n"
 				+ "      \"enabled\": true,\r\n" + "      \"parameter\": 8.79339302669801,\r\n" + "      \"from\": \"b\",\r\n"
 				+ "      \"to\": \"b\"\r\n" + "    },\r\n" + "    {\r\n" + "      \"innovation\": 4,\r\n" + "      \"enabled\": true,\r\n"
-				+ "      \"parameter\": 10.073504045319158,\r\n" + "      \"from\": \"c\",\r\n" + "      \"to\": \"Ibb\"\r\n" + "    }\r\n"
+				+ "      \"parameter\": 10.073504045319158,\r\n" + "      \"from\": \"c\",\r\n" + "      \"to\": \"IbTb\"\r\n" + "    }\r\n"
 				+ "  ],\r\n" + "  \"parameters\": {\r\n" + "    \"nick\": 10.0,\r\n" + "    \"pol\": 10.0,\r\n" + "    \"exo\": 10.0\r\n"
 				+ "  }\r\n" + "}", ReactionNetwork.class));
 		System.out.println(new GaussianFitnessFunction().evaluate(indiv.getNetwork()).getFitness());
 		for (int i = 0; i < 10000; i++) {
 			Individual indiv1 = indiv.clone();
 			mutator.mutate(indiv1);
-			if (indiv1.getNetwork().getConnectionByEnds(new Node("a"), new Node("Ibb")) != null) {
+			if (indiv1.getNetwork().getConnectionByEnds(new Node("a"), new Node("IbTb")) != null) {
 				System.out.println(indiv1.getNetwork());
-				System.out.println(indiv1.getNetwork().getConnectionByEnds(new Node("a"), new Node("Ibb")).parameter + " "
+				System.out.println(indiv1.getNetwork().getConnectionByEnds(new Node("a"), new Node("IbTb")).parameter + " "
 						+ new GaussianFitnessFunction().evaluate(indiv.getNetwork()).getFitness());
 
 			}

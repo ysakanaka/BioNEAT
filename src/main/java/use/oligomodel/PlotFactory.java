@@ -21,9 +21,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 public class PlotFactory {
 	public JPanel createTimeSeriesPanel(Map<String, double[]> timeSeries, double[] xData, boolean logscale) {
+		return createTimeSeriesPanel(timeSeries, xData, logscale, "Time", "Concentration");
+	}
+	
+	public JPanel createTimeSeriesPanel(Map<String, double[]> timeSeries, double[] xData, boolean logscale, String xlabel , String ylabel) {
 
 		XYDataset dataset = createDataset(timeSeries, xData);
-		JFreeChart chart = ChartFactory.createXYLineChart("", "Time", "Concentration", dataset, PlotOrientation.VERTICAL, true, false,
+		JFreeChart chart = ChartFactory.createXYLineChart("", xlabel, ylabel, dataset, PlotOrientation.VERTICAL, true, false,
 				false);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		XYPlot plot = (XYPlot) chart.getPlot();

@@ -110,6 +110,7 @@ public class ReactionNetwork implements Serializable {
 	}
 
 	public Connection getConnectionByEnds(Node from, Node to) {
+		if(from == null || to == null) return null;
 		for (Connection connection : connections) {
 			if (connection.from.name.equals(from.name) && connection.to.name.equals(to.name)) {
 				return connection;

@@ -39,7 +39,7 @@ public class Oligator extends JApplet {
 		Node node2 = new Node("b");
 		node2.parameter = 50;
 		node2.initialConcentration = 5;
-		Node node3 = new Node("Iaa");
+		Node node3 = new Node("IaTa");
 		node3.parameter = 0.1;
 		node3.type = Node.INHIBITING_SEQUENCE;
 		network.nodes.add(node1);

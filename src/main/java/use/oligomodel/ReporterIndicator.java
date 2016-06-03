@@ -11,6 +11,7 @@ import model.chemicals.SequenceVertex;
 public class ReporterIndicator extends SequenceVertex {
 
 	public static final ReporterIndicator indicator = new ReporterIndicator(0);
+	public static final double reporterConcentration = 200.0;
 	
 	public ReporterIndicator(Integer i) {
 		super(i);

@@ -30,6 +30,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import erne.Evolver;
 import erne.Individual;
 import reactionnetwork.Library;
 
@@ -49,11 +50,11 @@ public class SpeciesPlotFactory {
 					series = new XYSeries(String.valueOf(species[j].representative.getId()));
 					dataset.addSeries(series);
 				}
-				series.add(i, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
+				series.add(i*Evolver.DEFAULT_POP_SIZE, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
 						.getFitnessResult().getFitness());
 			}
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart("", "Generation", "Fitness", dataset, PlotOrientation.VERTICAL, true, false,
+		JFreeChart chart = ChartFactory.createXYLineChart("", "Evaluations", "Fitness", dataset, PlotOrientation.VERTICAL, true, false,
 				false);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		XYPlot plot = (XYPlot) chart.getPlot();

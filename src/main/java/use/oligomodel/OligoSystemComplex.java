@@ -29,30 +29,40 @@ public class OligoSystemComplex {
 	public OligoSystemComplex(ReactionNetwork network) {
 		
 		this.network = network;
-		boolean toggle = true; //TODO: what the heck is this supposed to be
 		
 		//First step: create an empty oligograph:
 		initGraph();
 		
 		//Second step: populate with all sequences ("nodes") from the network
 		for(Node n : network.nodes){
+			if(n.type == Node.INHIBITING_SEQUENCE){
+				Node from ;
+				Node to;
+				// Hard to sanitize at the mutator stage, so just to be sure: we ignore inhibitors that are pointing on nothing
+				//check that everything is alright before going ahead
+				if(n.name.contains("T")){
+					String[] names = n.name.substring(1).split("T");
+					from = network.getNodeByName(names[0]); // TODO: warning, very implementation dependent
+					to = network.getNodeByName(names[1]);
+				} else {
+				from = network.getNodeByName(""+n.name.charAt(1)); // TODO: warning, very implementation dependent
+				to = network.getNodeByName(""+n.name.charAt(2));
+				}
+				if (from == null || to == null) continue;
+				Connection inhibited = network.getConnectionByEnds(from, to);
+				if (!inhibited.enabled) continue; // we ignore the species
+			}
 			SequenceVertex s = graph.getVertexFactory().create();
 			s.initialConcentration = n.initialConcentration;
 			if(n.protectedSequence){
 				s = new ProtectedSequenceVertex(s.ID,s.initialConcentration);
 			}
 			if(n.reporter){
-				graph.addActivation("r"+s.ID,s,ReporterIndicator.indicator,200);
+				graph.addActivation("r"+s.ID,s,ReporterIndicator.indicator,ReporterIndicator.reporterConcentration);
 			}
 			equiv.put(n.name, s);
 			s.setInhib(n.type == Node.INHIBITING_SEQUENCE);
-			// Hard to sanitize at the mutator stage, so just to be sure: we ignore inhibitors that are pointing on nothing
-			if (s.isInhib()){
-				Node from = network.getNodeByName(""+n.name.charAt(1)); // TODO: warning, very implementation dependent
-				Node to = network.getNodeByName(""+n.name.charAt(2));
-				Connection inhibited = network.getConnectionByEnds(from, to);
-				if (!inhibited.enabled) continue; // we ignore the species
-			}
+			
 			graph.addSpecies(s,n.parameter,n.initialConcentration);
 			//custom exonuclease inhibition
 			graph.getCustomExoKm().put(s.toString(), (s.isInhib()?Constants.exoKmInhib:Constants.exoKmSimple));
@@ -83,8 +93,12 @@ public class OligoSystemComplex {
 		//Fourth step: add inhibitions
 		for(Node n : network.nodes){
 			if(n.type == Node.INHIBITING_SEQUENCE){
-				String inhibited = n.name.substring(1); //We remove the starting I
-				graph.addInhibition(inhibited, equiv.get(n.name));
+				String inhibited= n.name.substring(1);;
+				if(n.name.contains("T")){
+				 inhibited = inhibited.replace("T", "");
+				} 
+				SequenceVertex v = equiv.get(n.name);
+				if (v != null) graph.addInhibition(inhibited, v);
 			}
 		}
 		
@@ -108,11 +122,6 @@ public class OligoSystemComplex {
 				Constants.exoVm = network.parameters.get(param)*Constants.exoKmSimple;
 			}
 		}*/ //Not sure we are evolving the enzyme conc...
-		
-		//Do the toggle here TODO
-		if(toggle){
-			toggleExoSaturationByAll();
-		}
 
 	}
 	
@@ -128,11 +137,6 @@ public class OligoSystemComplex {
 		}
 	}
 	
-	@Deprecated
-	public void setUsageOfCustomExoKm(boolean value){
-		//TODO: we will have to add getter/setter for the Kms
-		graph.exoUseCustomKm = value;
-	}
 	
 	protected void initGraph(){
 		final OligoGraph<SequenceVertex, String> g = new OligoGraph<SequenceVertex,String>();
@@ -191,9 +195,13 @@ public class OligoSystemComplex {
 	}
 
 	public Map<String, double[]> calculateTimeSeries() {
+		return calculateTimeSeries(-1);
+	}
+	
+	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
-		double[][] timeTrace = myOligo.calculateTimeSeries(null);
+		double[][] timeTrace = myOligo.calculateTimeSeries();
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);
 			int index = getTrueIndex(myOligo.getSequences(),s);
@@ -210,26 +218,11 @@ public class OligoSystemComplex {
 		return result;
 	}
 	
-	public Map<String, double[]> calculateTimeSeries(int timeOut) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
-		double[][] timeTrace = {};
-		
-		timeTrace = (double[][]) myOligo.calculateTimeSeries();
-		
-		for(Node n : this.network.nodes){
-			SequenceVertex s = equiv.get(n.name);
-			int index = getTrueIndex(myOligo.getSequences(),s);
-			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
-				result.put(n.name, arraySum(timeTrace[index],timeTrace[index+1]));
-			} else {
-				result.put(n.name, timeTrace[index]);
-			}
-			if(n.reporter){
-				result.put("Reporter "+n.name,timeTrace[myOligo.total+myOligo.inhTotal+myOligo.getReporterIndex(s)]); // changed from +1 to +2 to account for protected a
-			}
-		}
-
-		return result;
+	public OligoGraph<SequenceVertex,String> getGraph(){
+		return graph;
+	}
+	
+	public HashMap<String, SequenceVertex> getEquiv(){
+		return equiv;
 	}
 }

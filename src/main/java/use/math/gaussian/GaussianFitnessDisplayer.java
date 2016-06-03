@@ -41,7 +41,7 @@ public class GaussianFitnessDisplayer implements FitnessDisplayer {
 			for (int k = 0; k < xData.length; k++) {
 				xData[k] = fitnessResult.inputs[k];
 			}
-			return new PlotFactory().createTimeSeriesPanel(timeSeries, xData, GaussianFitnessFunction.logScale);
+			return new PlotFactory().createTimeSeriesPanel(timeSeries, xData, GaussianFitnessFunction.logScale, "Input concentration", "Output concentration");
 		} else {
 			return new JPanel();
 		}

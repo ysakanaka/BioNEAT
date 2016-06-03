@@ -15,6 +15,7 @@ public class Node implements Serializable {
 	public double parameter;
 	public double initialConcentration = 0;
 	public int type = SIMPLE_SEQUENCE;
+	public String inhibitedTemplate = ""; //Only for inhibitors
 	public boolean protectedSequence = false;
 	public String DNAString = "";
 	public boolean reporter = false;

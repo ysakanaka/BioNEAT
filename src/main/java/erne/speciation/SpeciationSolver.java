@@ -55,7 +55,7 @@ public class SpeciationSolver implements Serializable {
 			}
 			for (Species sp : nextGenSpecies) {
 				if (!processedSpecies.contains(sp)) {
-					int nextGenPop = (int) (sp.getSpeciesFitness() * popSizeLeft / sumFitness);
+					int nextGenPop = (int) (sp.getSpeciesFitness() * popSize / sumFitness);
 					// capping
 					System.out.println(speciesByGeneration.size());
 					if (nextGenPop > (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10) {

@@ -52,7 +52,7 @@ public class AddInhibition extends MutationRule {
 		}
 	}
 
-	private Individual addInhibition(Individual indiv, Node nodeFrom, Node nodeTo) {
+	protected Individual addInhibition(Individual indiv, Node nodeFrom, Node nodeTo) {
 		ArrayList<Connection> possibleConnections = new ArrayList<Connection>();
 		for (Connection conn : indiv.getNetwork().connections) {
 			if (conn.to.name.equals(nodeTo.name) && conn.enabled) {
@@ -66,7 +66,7 @@ public class AddInhibition extends MutationRule {
 		} else {
 			conn = possibleConnections.get(rand.nextInt(possibleConnections.size()));
 		}
-		String inhibitionNodeName = "I" + conn.from.name + conn.to.name;
+		String inhibitionNodeName = "I" + conn.from.name +"T"+ conn.to.name;
 		Node inhibitionNode = indiv.getNetwork().getNodeByName(inhibitionNodeName);
 		if (inhibitionNode == null) {
 			inhibitionNode = new Node(inhibitionNodeName, Node.INHIBITING_SEQUENCE);
