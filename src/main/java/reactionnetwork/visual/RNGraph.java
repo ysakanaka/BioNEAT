@@ -40,7 +40,7 @@ public class RNGraph extends DirectedSparseGraph<String, String> {
 		}
 		for (Node node : network.nodes) {
 			if (node.type == Node.INHIBITING_SEQUENCE) {
-				MyPair<String, String> inhib = new MyPair<String, String>(node.name, node.name.replace("I", ""));
+				MyPair<String, String> inhib = new MyPair<String, String>(node.name, node.name.replace("I", "").replace("T",""));
 				this.addInhibition(node.name, inhib);
 			}
 		}

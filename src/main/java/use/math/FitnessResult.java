@@ -18,6 +18,10 @@ public class FitnessResult extends AbstractFitnessResult {
 	public ArrayList<double[]> tests;
 
 	public boolean minFitness = false;
+	
+	public static double maxReward = 1000000;
+	
+	public static double cutOff = 0.0*maxReward;
 
 	public FitnessResult(boolean minFitness) {
 		this.minFitness = minFitness;
@@ -32,16 +36,19 @@ public class FitnessResult extends AbstractFitnessResult {
 			double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
 			result += Math.pow(error, 2);
 		}
-		result = 1000000 / Math.max(result, 1);
+		result =  maxReward/ Math.max(result, 1.0);
+		
 
-		double result1 = 1000000;
-		if (targetFittingParams != null) {
-			for (int i = 0; i < targetFittingParams.length; i++) {
-				result1 /= Math.max(1, Math.abs(10 * (actualFittingParams[i] - targetFittingParams[i]) / targetFittingParams[i]));
+		if(result > cutOff){
+			double result1 = maxReward;
+			if (targetFittingParams != null) {
+				for (int i = 0; i < targetFittingParams.length; i++) {
+					result1 /= Math.max(1, Math.abs(10 * (actualFittingParams[i] - targetFittingParams[i]) / targetFittingParams[i]));
+				}
 			}
+			result += result1;
+			
 		}
-		result += result1;
-
 		result *= Math.pow(getSDV(actualOutputs),2);
 
 		return result;
@@ -65,12 +72,19 @@ public class FitnessResult extends AbstractFitnessResult {
 		if (minFitness)
 			return "MIN_FITNESS";
 		StringBuilder builder = new StringBuilder();
-		builder.append(getFitness());
+		double fitness = getFitness();
+		builder.append(fitness);
 
+		if (fitness < cutOff){
+			builder.append(" didn't make the cut");
+			return  builder.toString();
+		}
+		builder.append(" > cufoff ("+cutOff+")");
 		builder.append(" Outputs[target]:");
 		for (int i = 0; i < actualOutputs.length; i++) {
 			builder.append(Static.df2.format(actualOutputs[i]) + "[" + Static.df2.format(targetOutputs[i]) + "] ");
 		}
+		
 		if (targetFittingParams != null) {
 			builder.append("Fitting params[target]: ");
 			for (int j = 0; j < targetFittingParams.length; j++) {
