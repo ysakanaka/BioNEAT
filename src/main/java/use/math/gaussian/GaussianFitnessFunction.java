@@ -46,7 +46,10 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 
 	// logscale Gaussian
 	public static final boolean logScale = true;
+	public static boolean forceCenter = false;
 	public static final double[] targetCoeff = new double[] { 100, (Math.log(100) + Math.log(0.1)) / 2, 0.7 };
+	public static final int maxFitStep = 10000;
+	public static final double cutOffFlat = 0.01; //If amplitude lower, we are flat
 
 	// linear Gaussian
 	// public static final boolean logScale = false;
@@ -71,10 +74,10 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			obs.add(Math.log(tests.get(i)[0]), actualOutputs[i]);
 		}
 
-		GaussianCurveFitter fitter = GaussianCurveFitter.create().withStartPoint(targetCoeff).withMaxIterations(10000);
+		GaussianCurveFitter fitter = GaussianCurveFitter.create().withStartPoint(targetCoeff).withMaxIterations(maxFitStep);
 		try {
 			final double[] fittingParams = fitter.fit(obs.toList());
-			if (fittingParams[0] < 0.01) {
+			if (fittingParams[0] < cutOffFlat) {
 				fittingParams[2] = 50;
 			}
 			result.tests = tests;
@@ -84,10 +87,10 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			for (int i = 0; i < tests.size(); i++) {
 				if (logScale) {
 					targetOutputs[i] = fittingParams[0]
-							* Math.exp((-Math.pow(Math.log(tests.get(i)[0])- targetCoeff[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+							* Math.exp((-Math.pow(Math.log(tests.get(i)[0])- (forceCenter?targetCoeff[1]:fittingParams[1]), 2)) / (2 * Math.pow(fittingParams[2], 2)));
 				} else {
 					targetOutputs[i] = fittingParams[0]
-							* Math.exp((-Math.pow(tests.get(i)[0] - targetCoeff[1], 2)) / (2 * Math.pow(fittingParams[2], 2)));
+							* Math.exp((-Math.pow(tests.get(i)[0] - (forceCenter?targetCoeff[1]:fittingParams[1]), 2)) / (2 * Math.pow(fittingParams[2], 2)));
 				}
 			}
 			result.targetOutputs = targetOutputs;
@@ -103,7 +106,6 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			result.tests = tests;
 			result.actualOutputs = actualOutputs;
 
-			double[] targetOutputs = new double[tests.size()];
 			result.targetFittingParams = targetCoeff;
 			return result;
 		}

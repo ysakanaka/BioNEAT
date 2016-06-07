@@ -17,6 +17,8 @@ public class SpeciationSolver implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public ArrayList<Species[]> speciesByGeneration = new ArrayList<Species[]>();
 	public ArrayList<Individual> speciesLib = new ArrayList<Individual>();
+	
+	public static double speciesPopIncreaseCappingRatio = 0.1;
 
 	public Species[] speciate(Individual[] nextGen) {
 		ArrayList<Species> nextGenSpecies = decideSpecies(nextGen);
@@ -43,7 +45,7 @@ public class SpeciationSolver implements Serializable {
 		ArrayList<Species> processedSpecies = new ArrayList<Species>();
 		int popSizeLeft = popSize;
 
-		boolean capping = false;
+		boolean capping;
 		Map<Species, Integer> tempNextGenPop = new HashMap<Species, Integer>();
 		do {
 			capping = false;
@@ -55,11 +57,11 @@ public class SpeciationSolver implements Serializable {
 			}
 			for (Species sp : nextGenSpecies) {
 				if (!processedSpecies.contains(sp)) {
-					int nextGenPop = (int) (sp.getSpeciesFitness() * popSize / sumFitness);
-					// capping
+					int nextGenPop = (int) (sp.getSpeciesFitness() * ((double)popSizeLeft) / sumFitness); //Processed means we already capped the max for this species
+					// capping (Meaning we cannot increase pop size too fast)
 					System.out.println(speciesByGeneration.size());
-					if (nextGenPop > (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10) {
-						nextGenPop = (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize / 10;
+					if (nextGenPop > (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + popSize *speciesPopIncreaseCappingRatio) {
+						nextGenPop = (speciesByGeneration.size() == 0 ? 0 : sp.individuals.size()) + (int) (popSize *speciesPopIncreaseCappingRatio);
 						capping = true;
 						processedSpecies.add(sp);
 						popSizeLeft -= nextGenPop;

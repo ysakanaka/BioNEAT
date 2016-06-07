@@ -32,7 +32,7 @@ public class PlotFactory {
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		XYPlot plot = (XYPlot) chart.getPlot();
 		if (logscale) {
-			LogAxis logAxis = new LogAxis("Time");
+			LogAxis logAxis = new LogAxis(xlabel);
 			logAxis.setBase(10);
 			plot.setDomainAxis(logAxis);
 		}
