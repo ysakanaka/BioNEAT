@@ -44,7 +44,15 @@ public class FullEqsWriter {
 			curIndex += teqs.length;
 		}
 		EnzymeSaturationEqWriter<String> eseqw = new EnzymeSaturationEqWriter<String>(g, Utils.getDefaultSE(),explicit);
-		eqs.addAll(Arrays.asList(eseqw.getAllSaturationEqs(baseIndexes)));
+		if (EnzymeSaturationEqWriter.enzymeDiffusion){
+			for(int i = 0; i < EnzymeSaturationEqWriter.enzymeName.length; i++){
+				eqs.add("D_"+EnzymeSaturationEqWriter.enzymeName[i]+"Free * laplacian_"+Utils.idToString(eqs.size())); //Enzymes only have diffustion settings
+				eqs.add("D_"+EnzymeSaturationEqWriter.enzymeName[i]+"Attached * laplacian_"+Utils.idToString(eqs.size())); //Enzymes only have diffustion settings
+			}
+			eqs.addAll(Arrays.asList(eseqw.getAllSaturationEqs(baseIndexes,curIndex)));
+		} else {
+		    eqs.addAll(Arrays.asList(eseqw.getAllSaturationEqs(baseIndexes)));
+		}
 		for (SequenceVertex seq : g.getVertices()){
 			if (eqs.get(seq.ID -1).length() >=3){
 			eqs.set(seq.ID-1, eqs.get(seq.ID-1).substring(3)+" - exo"+(seq.isInhib()?"inhib":"")+" * "+Utils.idToString(seq.ID-1));

@@ -23,6 +23,10 @@ public class EnzymeSaturationEqWriter<E> {
 	public String exoKm;
 	public String exoKmInhib;
 	
+	public static boolean enzymeDiffusion = false; //Allows enzyme concentration to diffuse in space
+	
+	public static String[] enzymeName = {"Pol", "Nick", "Exo"};
+	
 	public EnzymeSaturationEqWriter(OligoGraph<SequenceVertex,E> g, SaturationEvaluator<E> se){
 		graph = g;
 		this.se = se;
@@ -56,6 +60,11 @@ public class EnzymeSaturationEqWriter<E> {
 		    nickKm = "NickKm";
 		    exoKm = "ExoKm";
 		    exoKmInhib = "ExoKmInhib";
+		}
+		if(enzymeDiffusion){
+			polVm = "(PolConcFree + PolConcAttached)*"+polVm;
+			nickVm = "(NickConcFree + NickConcAttached)*"+nickVm;
+			exoVm = "(ExoConcFree + ExoConcAttached)*"+exoVm;
 		}
 	}
 	
@@ -109,6 +118,22 @@ public class EnzymeSaturationEqWriter<E> {
 		return new String[] {polEq, polDisplEq, nickEq, exoEq, exoInhibEq};
 	}
 	
+	public String[] getAllSaturationEqs(HashMap<E,Integer> baseIndexes, int lastIndex){
+		String[] main = getAllSaturationEqs(baseIndexes);
+		String[] res = new String[main.length+2*se.enzymeKms.length]; //Two per enzyme
+		for (int i = 0; i< main.length; i++){
+			res[i] = main[i];
+		}
+		for (int i = 0; i<se.enzymeKms.length; i++){
+			String eqBottom = getEnzymeSaturationEq(SaturationEvaluator.ENZYME.values()[i],baseIndexes);
+			eqBottom = eqBottom.substring(eqBottom.indexOf("/")+1);
+			eqBottom = eqBottom.substring(eqBottom.indexOf("*")+1); //We only take the lower part of the equation. TODO: careful, this might change in the future
+			res[main.length+2*i] = "("+Utils.idToString(lastIndex+2*i)+" + "+Utils.idToString(lastIndex+2*i+1)+") * 1 / "+eqBottom;
+			res[main.length+2*i+1] = "("+Utils.idToString(lastIndex+2*i)+" + "+Utils.idToString(lastIndex+2*i+1)+") * ( 1 - 1 / "+eqBottom+" )";
+		}
+		return res;
+	}
+	
 	public static void main(String[] args){
 		OligoGraph<SequenceVertex,String> g = Utils.initGraph();
 		SequenceVertex s = g.getVertexFactory().create();
@@ -116,6 +141,10 @@ public class EnzymeSaturationEqWriter<E> {
 		String edge = g.getEdgeFactory().createEdge(s, s);
 		g.addActivation(edge, s, s);
 		//graph init done
+		
+		//More test
+		enzymeDiffusion = true;
+		//
 		
 		HashMap<String,Integer> baseIndexes = new HashMap<String,Integer>();
 		Iterator<String> it = g.getEdges().iterator();
@@ -129,8 +158,14 @@ public class EnzymeSaturationEqWriter<E> {
 			}
 			curIndex += eqs.length;
 		}
+		if (enzymeDiffusion){
+			for (int i = 0; i < Utils.getDefaultSE().enzymeKms.length; i++){
+				System.out.println("Diff_"+Utils.idToString(curIndex+2*i)+" * laplacian_"+Utils.idToString(curIndex+2*i));
+				System.out.println("Diff_"+Utils.idToString(curIndex+2*i+1)+" * laplacian_"+Utils.idToString(curIndex+2*i+1));
+			}
+		}
 		EnzymeSaturationEqWriter<String> eseqw = new EnzymeSaturationEqWriter<String>(g, Utils.getDefaultSE());
-		String[] eqs = eseqw.getAllSaturationEqs(baseIndexes);
+		String[] eqs = eseqw.getAllSaturationEqs(baseIndexes, curIndex);
 		for(int i=0; i<eqs.length; i++){
 			System.out.println(eqs[i]);
 		}

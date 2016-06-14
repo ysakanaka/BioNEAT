@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import use.ready.beads.Bead;
+import use.ready.eqwriter.EnzymeSaturationEqWriter;
 import model.OligoGraph;
 import model.chemicals.SequenceVertex;
 import use.ready.test.GraphMaker;
@@ -68,6 +69,11 @@ public class ReadyRunner {
 	}
 	
 	public static void main(String[] args) throws IOException{
+		
+		boolean doEnzymeDiffusion = true;
+		
+		EnzymeSaturationEqWriter.enzymeDiffusion = doEnzymeDiffusion;
+		
 		MyPair<String,Double>[] sp1 = (MyPair<String,Double>[]) new MyPair[3];
 		MyPair<String,Double>[] sp2 = (MyPair<String,Double>[]) new MyPair[3];
 		int totalBeads = 50;
@@ -90,7 +96,13 @@ public class ReadyRunner {
 		for (int i=0; i<totalBeads; i++){
 			beads.add(new Bead(rand.nextDouble(),rand.nextDouble(),0.03,sp2));
 		}
-		String[] enzymes = {"pol", "poldispl", "nick", "exo", "exoinhib"};
+		String[] enzymes;
+		if(doEnzymeDiffusion){
+		    enzymes = new String[]{"pol", "poldispl", "nick", "exo", "exoinhib"};
+		} else {
+			enzymes = new String[]{"pol", "poldispl", "nick", "exo", "exoinhib",
+					"PolConcFree", "PolConcAttached", "NickConcFree", "NickConcAttached", "ExoConcFree", "ExoConcAttached"};
+		}
 		OligoGraph<SequenceVertex,String> g = GraphMaker.makeOligator();
 		doReadySimulation("/home/naubertkato/Documents/Simulation/TestCode/", ReadyExporter.allInOneReadyExport(g,beads,enzymes,diffusing));
 	    double[][] test = concForSpecies("/home/naubertkato/Documents/Simulation/TestCode/","simu","a",0);

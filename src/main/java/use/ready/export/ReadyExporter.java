@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.qos.logback.classic.pattern.Util;
 import use.ready.beads.Bead;
+import use.ready.eqwriter.EnzymeSaturationEqWriter;
 import use.ready.eqwriter.FullEqsWriter;
 import use.ready.eqwriter.Utils;
 import model.Constants;
@@ -26,6 +28,8 @@ public class ReadyExporter {
     public static double scale = 5e-13; //scale for beads, in m
     public static double signalDiffusion = 16.0;
     public static double templateDiffusion = 10.7;
+    
+    public static double[] enzymeDiffusions = {10.7, 0.0, 10.7, 0.0, 10.7, 6.4}; //pol, nick, exo TODO; current values are BS
 	
 	public static String beadToReady(Bead bead, int index){
 		StringBuilder st = new StringBuilder();
@@ -64,6 +68,9 @@ public class ReadyExporter {
 		st.append("float4 PolConc = "+g.polConc+";\n");
 		st.append("float4 NickConc = "+g.nickConc+";\n");
 		st.append("float4 ExoConc = "+g.exoConc+";\n");
+		
+		
+		
 		st.append("float4 PolVm = "+Constants.polVm+";\n");
 		st.append("float4 NickVm = "+Constants.nickVm+";\n");
 		st.append("float4 ExoVm = "+Constants.exoVm+";\n");
@@ -79,6 +86,17 @@ public class ReadyExporter {
 		for(String s : diffusions.keySet()){
 			st.append("D_"+s+" = "+diffusions.get(s)+";\n");
 		}
+		
+		if(EnzymeSaturationEqWriter.enzymeDiffusion){
+			for(int i = 0; i<EnzymeSaturationEqWriter.enzymeName.length; i++){
+				st.append("float4 D_"+EnzymeSaturationEqWriter.enzymeName[i]+"Free = "+enzymeDiffusions[2*i]+";\n");
+				st.append("float4 D_"+EnzymeSaturationEqWriter.enzymeName[i]+"Attached = "+enzymeDiffusions[2*i+1]+";\n");
+			}
+			
+		}
+		
+		//TODO: add diffusion for enzymes
+		
 		st.append(")\n");
 		return st.toString();
 	}
@@ -91,6 +109,15 @@ public class ReadyExporter {
 		
 		for(int i=0;i < enzymes.length; i++){
 			st.append("float4 "+enzymes[i]+" = \""+eqs[offset+i]+";\"\n");
+		}
+		
+		if(EnzymeSaturationEqWriter.enzymeDiffusion){
+			int realOffset = offset - 2*EnzymeSaturationEqWriter.enzymeName.length;
+			
+			for(int i = 0; i < EnzymeSaturationEqWriter.enzymeName.length; i++){
+				st.append(Utils.idToString(2*i+realOffset)+" = "+EnzymeSaturationEqWriter.enzymeName[i]+"ConcFree;\n");
+				st.append(Utils.idToString(2*i+1+realOffset)+" = "+EnzymeSaturationEqWriter.enzymeName[i]+"ConcAttached;\n");
+			}
 		}
 		
 		return st.toString();
@@ -193,6 +220,8 @@ public class ReadyExporter {
 		diffusing.put("b", true);
 		diffusing.put("c", true);
 		String[] enzymes = {"pol", "poldispl", "nick", "exo", "exoinhib"};
+		String[] enzymesDiff = {"pol", "poldispl", "nick", "exo", "exoinhib",
+				"PolConcFree", "PolConcAttached", "NickConcFree", "NickConcAttached", "ExoConcFree", "ExoConcAttached"};
 		OligoGraph<SequenceVertex,String> g = GraphMaker.makeAutocatalyst();
 		System.out.println(allInOneReadyExport(g,beads,enzymes,diffusing));
 		System.out.println("===================");
@@ -200,6 +229,11 @@ public class ReadyExporter {
 		System.out.println("===================");
 		g =GraphMaker.makeOligator();
 		System.out.println(allInOneReadyExport(g,beads,enzymes,diffusing));
+		System.out.println("===================");
+		System.out.println("Test 4: Oligator system export with diffusing enzymes");
+		System.out.println("===================");
+		EnzymeSaturationEqWriter.enzymeDiffusion = true;
+		System.out.println(allInOneReadyExport(g,beads,enzymesDiff,diffusing));
 	}
 
 }
