@@ -127,7 +127,7 @@ public class EnzymeSaturationEqWriter<E> {
 		for (int i = 0; i<se.enzymeKms.length; i++){
 			String eqBottom = getEnzymeSaturationEq(SaturationEvaluator.ENZYME.values()[i],baseIndexes);
 			eqBottom = eqBottom.substring(eqBottom.indexOf("/")+1);
-			eqBottom = eqBottom.substring(eqBottom.indexOf("*")+1); //We only take the lower part of the equation. TODO: careful, this might change in the future
+			eqBottom = eqBottom.substring(eqBottom.indexOf("*")+1,eqBottom.lastIndexOf(")")); //We only take the lower part of the equation. TODO: careful, this might change in the future
 			res[main.length+2*i] = "("+Utils.idToString(lastIndex+2*i)+" + "+Utils.idToString(lastIndex+2*i+1)+") * 1 / "+eqBottom;
 			res[main.length+2*i+1] = "("+Utils.idToString(lastIndex+2*i)+" + "+Utils.idToString(lastIndex+2*i+1)+") * ( 1 - 1 / "+eqBottom+" )";
 		}

@@ -16,9 +16,10 @@ import utils.VertexFactory;
 
 public class Utils {
 	
-	public static double[] polKm = {0.0, Constants.polKm, 0.0, Constants.polKmBoth, 0.0,0.0,0.0,0.0};
-    public static double[] nickKm = {0.0, 0.0, 0.0, 0.0, Constants.nickKm,0.0,0.0,0.0};
-    public static double[] exoKm = {0.0, 0.0, 0.0, 0.0, 0.0,0.0,Constants.exoKmSimple,Constants.exoKmInhib};
+	public static final double[] polKm = {0.0, Constants.polKm, 0.0, Constants.polKmBoth, 0.0,0.0,0.0,0.0};
+    public static final double[] nickKm = {0.0, 0.0, 0.0, 0.0, Constants.nickKm,0.0,0.0,0.0};
+    public static final double[] exoKm = {0.0, 0.0, 0.0, 0.0, 0.0,0.0,Constants.exoKmSimple,Constants.exoKmInhib};
+    public static final double[] exoKmTem = {Constants.exoKmTemplate, 0.0, 0.0, 0.0, 0.0,0.0,Constants.exoKmSimple,Constants.exoKmInhib};
 	
 	public static String idToString(int index){
 		String name = "";
@@ -68,6 +69,10 @@ public class Utils {
 	
 	public static SaturationEvaluator<String> getDefaultSE(){
 	    return new SaturationEvaluator<String>(polKm,nickKm,exoKm);
+	}
+	
+	public static SaturationEvaluator<String> getTempSatSE(){
+	    return new SaturationEvaluator<String>(polKm,nickKm,exoKmTem);
 	}
 
 	public static <E> void  packGraphSequences(OligoGraph<SequenceVertex,E> graph){

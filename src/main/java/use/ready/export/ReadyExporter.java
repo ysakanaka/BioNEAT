@@ -117,6 +117,8 @@ public class ReadyExporter {
 			for(int i = 0; i < EnzymeSaturationEqWriter.enzymeName.length; i++){
 				st.append(Utils.idToString(2*i+realOffset)+" = "+EnzymeSaturationEqWriter.enzymeName[i]+"ConcFree;\n");
 				st.append(Utils.idToString(2*i+1+realOffset)+" = "+EnzymeSaturationEqWriter.enzymeName[i]+"ConcAttached;\n");
+				st.append(Utils.idToString(2*i+realOffset)+"_in[index_here] = "+EnzymeSaturationEqWriter.enzymeName[i]+"ConcFree;\n");
+				st.append(Utils.idToString(2*i+1+realOffset)+"_in[index_here] = "+EnzymeSaturationEqWriter.enzymeName[i]+"ConcAttached;\n");
 			}
 		}
 		
@@ -134,6 +136,7 @@ public class ReadyExporter {
 	public static String readyGlobalConfigs(Map<String,?> params, ArrayList<Bead> beads, String[] eqs, String[] enzymes, Map<String, Boolean> diffusing){
 		StringBuilder st = new StringBuilder();
 		int numEnzEqs = enzymes.length;
+		
 		st.append("nSpecies = "+(eqs.length-numEnzEqs)+"\n");
 	    for (String p : params.keySet()){
 		    st.append(p+" = "+params.get(p).toString()+"\n");
