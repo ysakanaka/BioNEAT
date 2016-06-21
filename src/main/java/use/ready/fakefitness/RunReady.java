@@ -13,7 +13,6 @@ import erne.mutation.rules.AddInhibition;
 import erne.mutation.rules.AddNode;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
-import use.math.gaussian.GaussianFitnessDisplayer;
 import use.ready.AbstractReadyFitnessFunction;
 import use.ready.ReadyReactionNetwork;
 import use.ready.export.ReadyExporter;

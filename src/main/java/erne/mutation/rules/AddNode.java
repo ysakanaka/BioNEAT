@@ -10,6 +10,10 @@ import erne.mutation.MutationRule;
 import erne.util.Randomizer;
 
 public class AddNode extends MutationRule {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public double probGeneMutation = 0.8;
 
 	public AddNode(int weight) {

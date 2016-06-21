@@ -17,6 +17,13 @@ import model.input.AbstractInput;
 
 public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public int timeOut = -1;
+
 	public OligoSystemWithProtectedSequences(OligoGraph<SequenceVertex, E> graph) {
 		super(graph,new ECFRNTemplateFactory<E>(graph));
 		for(SequenceVertex s : graph.getVertices()){
@@ -35,7 +42,6 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 				this.total++; //Those sequences need two slots
 			}
 		}
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -110,14 +116,14 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		if (s.protectedSequence) {
 			// As Input
 			double flux = 0;
-			TemplateWithProtected temp;
+			TemplateWithProtected<E> temp;
 			for(E e: graph.getOutEdges(s)){
-				temp = (TemplateWithProtected) this.templates.get(e);
+				temp = (TemplateWithProtected<E>) this.templates.get(e);
 				flux += temp.inputProtectedSequenceFlux();
 				}
 			// As Output
 			for (E e: graph.getInEdges(s)) {
-				temp = (TemplateWithProtected) this.templates.get(e);
+				temp = (TemplateWithProtected<E>) this.templates.get(e);
 				flux += temp.outputProtectedSequenceFlux();
 			}
 			
@@ -251,7 +257,8 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		final double[] placeholder = this.initialConditions();
 		final OligoSystem<E> syst = this;
 		StopableEventHandler eventHandler = new StopableEventHandler();
-		final StopableStepHandler handler = new StopableStepHandler(eventHandler); //TODO: put your own handler here
+		eventHandler.setFire(timeOut);
+		final StopableStepHandler handler = new StopableStepHandler(eventHandler);
 		
 		
 		myIntegrator.addStepHandler(handler);

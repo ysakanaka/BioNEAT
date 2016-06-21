@@ -79,7 +79,7 @@ public class PlotFactory {
 		timeSeries.put("abc", new double[] { 1, 2, 3 });
 
 		panel.add(new PlotFactory().createTimeSeriesPanel(timeSeries, new double[] { 1, 2, 3 }, true));
-		frame.show();
+		frame.setVisible(true);
 
 	}
 }

@@ -24,7 +24,6 @@ import reactionnetwork.ReactionNetwork;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.math.FitnessResult;
 import xy.reflect.ui.ReflectionUI;
-import cluster.Cluster;
 import common.Static;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import erne.mutation.MutationRule;

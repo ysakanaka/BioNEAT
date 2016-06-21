@@ -3,8 +3,6 @@ package cluster;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import use.math.FitnessResult;
-
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.HazelcastInstanceAware;
 import com.hazelcast.nio.ObjectDataInput;
@@ -29,6 +27,10 @@ public class FitnessEvaluationTask implements Callable<AbstractFitnessResult>, D
 	@Override
 	public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
 		this.hz = hazelcastInstance;
+	}
+	
+	public HazelcastInstance getHazelCastInstance(){
+		return hz;
 	}
 
 	@Override

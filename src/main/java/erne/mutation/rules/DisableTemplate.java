@@ -1,11 +1,14 @@
 package erne.mutation.rules;
 
 import reactionnetwork.Connection;
-import reactionnetwork.Node;
 import erne.Individual;
 import erne.mutation.MutationRule;
 
 public class DisableTemplate extends MutationRule {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public double probGeneMutation = 0.8;
 	public double probConnectionDisabling = 0.1;
 

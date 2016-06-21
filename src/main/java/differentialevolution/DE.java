@@ -12,10 +12,8 @@ import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import erne.Individual;
 import reactionnetwork.Connection;
-import reactionnetwork.Library;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.math.gaussian.GaussianFitnessFunction;
 
 public class DE {
 

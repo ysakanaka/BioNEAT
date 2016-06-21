@@ -6,6 +6,10 @@ import erne.Individual;
 import erne.mutation.MutationRule;
 
 public class MutateParameter extends MutationRule {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public double probGeneMutation = 0.8;
 
 	public MutateParameter(int weight) {

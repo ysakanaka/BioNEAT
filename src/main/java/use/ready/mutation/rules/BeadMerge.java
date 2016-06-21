@@ -1,13 +1,15 @@
 package use.ready.mutation.rules;
 
-import java.util.HashSet;
-
 import erne.Individual;
 import erne.mutation.MutationRule;
-import reactionnetwork.Connection;
 import use.ready.ReadyReactionNetwork;
 
 public class BeadMerge extends MutationRule {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public BeadMerge(int weight) {
 		super(weight);

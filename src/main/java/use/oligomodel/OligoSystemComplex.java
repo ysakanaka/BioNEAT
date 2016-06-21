@@ -3,9 +3,6 @@ package use.oligomodel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import model.Constants;
 import model.OligoGraph;
@@ -195,12 +192,13 @@ public class OligoSystemComplex {
 	}
 
 	public Map<String, double[]> calculateTimeSeries() {
-		return calculateTimeSeries(-1);
+		return calculateTimeSeries(-1); //for legagy/tests.
 	}
 	
 	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
+		myOligo.timeOut = timeOut;
 		double[][] timeTrace = myOligo.calculateTimeSeries();
 		for(Node n : this.network.nodes){
 			SequenceVertex s = equiv.get(n.name);

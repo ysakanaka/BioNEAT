@@ -9,7 +9,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import erne.SimpleFitnessResult;
@@ -18,7 +17,6 @@ import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.math.FitnessResult;
 import use.oligomodel.OligoSystemComplex;
 import use.ready.beads.Bead;
 import use.ready.eqwriter.FullEqsWriter;
@@ -104,7 +102,6 @@ public abstract class AbstractReadyFitnessFunction extends AbstractFitnessFuncti
 		try {
 			ReadyRunner.doReadySimulation(simulationPath+simulationName+currentSimu+"/", ReadyExporter.allInOneReadyExport(g,beads,enzymes,diffusing));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return calculateFitnessResult(simulationPath+simulationName+currentSimu+"/", inputNames);
@@ -116,6 +113,7 @@ public abstract class AbstractReadyFitnessFunction extends AbstractFitnessFuncti
 	
 	protected abstract AbstractFitnessResult calculateFitnessResult(String path, String[] inputNames);
 
+	@SuppressWarnings("unchecked")
 	protected ArrayList<Bead> getBeads(ReactionNetwork network, OligoSystemComplex oligo){
 		ArrayList<Bead> beads = new ArrayList<Bead>();
 		if (ReadyReactionNetwork.class.isAssignableFrom(network.getClass())){
@@ -178,6 +176,7 @@ public abstract class AbstractReadyFitnessFunction extends AbstractFitnessFuncti
 				initConditions.add(new MyPair<String,Double>(s,initPulse));
 			}
 		}
+		@SuppressWarnings("unchecked")
 		MyPair<String,Double>[] sp1 = (MyPair<String,Double>[]) new MyPair[initConditions.size()];
 		sp1 = initConditions.toArray(sp1);
 		beads.add(new Bead(0.5,0.5,1.0,sp1)); //initConditions

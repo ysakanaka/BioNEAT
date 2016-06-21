@@ -10,6 +10,11 @@ import erne.util.Randomizer;
 
 public class AddInhibition extends MutationRule {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public AddInhibition(int weight) {
 		super(weight);
 	}

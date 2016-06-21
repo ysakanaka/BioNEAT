@@ -1,11 +1,7 @@
 package use.oligomodel;
 
-import java.io.Serializable;
-
 import model.Constants;
 import model.OligoGraph;
-import model.SlowdownConstants;
-import model.chemicals.Enzyme;
 import model.chemicals.InvalidConcentrationException;
 import model.chemicals.SequenceVertex;
 import model.chemicals.Template;

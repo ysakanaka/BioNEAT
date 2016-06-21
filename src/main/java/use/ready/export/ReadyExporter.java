@@ -3,8 +3,6 @@ package use.ready.export;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import ch.qos.logback.classic.pattern.Util;
 import use.ready.beads.Bead;
 import use.ready.eqwriter.EnzymeSaturationEqWriter;
 import use.ready.eqwriter.FullEqsWriter;

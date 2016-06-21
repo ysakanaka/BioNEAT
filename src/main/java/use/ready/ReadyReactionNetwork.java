@@ -1,18 +1,13 @@
 package use.ready;
 
 import reactionnetwork.ReactionNetwork;
-import reactionnetwork.ReactionNetworkDeserializer;
-import use.ready.beads.Bead;
 import use.ready.fakefitness.RunReady;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;

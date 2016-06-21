@@ -1,6 +1,5 @@
 package erne;
 
-import reactionnetwork.ReactionNetwork;
 import erne.speciation.Species;
 
 public class PopulationInfo {

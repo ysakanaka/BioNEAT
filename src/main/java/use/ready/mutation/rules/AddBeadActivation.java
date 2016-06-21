@@ -1,8 +1,6 @@
 package use.ready.mutation.rules;
 
 import java.util.ArrayList;
-import java.util.Random;
-
 import edu.uci.ics.jung.graph.util.Pair;
 import erne.Individual;
 import erne.mutation.MutationRule;

@@ -87,7 +87,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				}
 				network.getNodeByName(INPUT_SEQUENCE).initialConcentration = inputs[0];
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
-				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(30);
+				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(erne.Constants.maxEvalClockTime);
 
 				// System could not reach stable time before 1000 minutes
 				if (timeSeries.entrySet().iterator().next().getValue().length >= erne.Constants.maxEvalTime) {

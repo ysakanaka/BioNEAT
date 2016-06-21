@@ -4,12 +4,16 @@ import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import erne.SimpleFitnessResult;
 import reactionnetwork.ReactionNetwork;
-import use.ready.AbstractReadyFitnessFunction;
 import use.ready.ReadyReactionNetwork;
 
 public class FakeReadyFitnessBeads extends AbstractFitnessFunction {
 
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

@@ -2,7 +2,6 @@ package use.oligomodel;
 
 import model.OligoSystem;
 import model.SaturationEvaluator;
-import model.SaturationEvaluator.ENZYME;
 import model.chemicals.SequenceVertex;
 import model.chemicals.Template;
 

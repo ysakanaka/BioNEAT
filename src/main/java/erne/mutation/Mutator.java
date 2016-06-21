@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import use.math.gaussian.GaussianFitnessFunction;

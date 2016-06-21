@@ -1,14 +1,9 @@
 package use.oligomodel;
 
 import java.util.ArrayList;
-
 import model.Constants;
-
 import org.apache.commons.math3.ode.sampling.StepHandler;
 import org.apache.commons.math3.ode.sampling.StepInterpolator;
-
-import utils.MyStepHandler;
-import utils.PluggableWorker;
 
 public class StopableStepHandler implements StepHandler {
 	private ArrayList<double[]> timeSerie;
@@ -27,17 +22,8 @@ public class StopableStepHandler implements StepHandler {
 	public void handleStep(StepInterpolator step, boolean isLastStep) {
 		StepInterpolator localCopy = step.copy();
 		if (step.getCurrentTime() >= time + 1 && time < Constants.numberOfPoints - 1) {
-			// while(time<step.getCurrentTime()&&
-			// time<Constants.numberOfPoints-1){
 			time++;
-			// worker.firePropertyChange("progress", time-1, time);
-
-			// Thread.yield();
-			// prog.setValue(time);
-			// prog.repaint();
-			// monitor.repaint();
 			localCopy.setInterpolatedTime(time);
-			// System.out.println("Time "+time);
 			double[] y0 = localCopy.getInterpolatedState();
 			double[] expression = new double[y0.length];
 			for (int i = 0; i < y0.length; i++) {
@@ -47,7 +33,6 @@ public class StopableStepHandler implements StepHandler {
 
 			if (time > minTimeStable - timeToCheckStability) {
 				boolean stable = true;
-				// System.out.println(t+" "+timeSeries[0][t]);
 				for (int i = 0; i < expression.length; i++) {
 					if (Math.abs(expression[i] - timeSerie.get(time - 1)[i]) > changeThresholdStable) {
 						stable = false;
@@ -64,7 +49,6 @@ public class StopableStepHandler implements StepHandler {
 					startedStable = 0;
 				}
 			}
-			// }
 		}
 
 	}

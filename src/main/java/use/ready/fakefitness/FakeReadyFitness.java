@@ -2,7 +2,6 @@ package use.ready.fakefitness;
 
 import use.math.FitnessResult;
 import use.ready.AbstractReadyFitnessFunction;
-import erne.AbstractFitnessResult;
 
 /**
  * This class is here to test the whole process
@@ -10,6 +9,11 @@ import erne.AbstractFitnessResult;
  *
  */
 public class FakeReadyFitness extends AbstractReadyFitnessFunction {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	protected FitnessResult calculateFitnessResult(String path, String[] inputNames) {

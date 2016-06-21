@@ -4,13 +4,16 @@ import java.io.IOException;
 
 import erne.AbstractFitnessResult;
 import erne.SimpleFitnessResult;
-import use.math.FitnessResult;
 import use.ready.AbstractReadyFitnessFunction;
 import use.ready.export.ReadyExporter;
 import use.ready.export.ReadyRunner;
 
 public class PolishFlagFitness extends AbstractReadyFitnessFunction {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static double minDelta = 1.0; //nM
 	public String input = "";
 

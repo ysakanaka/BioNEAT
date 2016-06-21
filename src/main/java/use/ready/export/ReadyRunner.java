@@ -68,6 +68,7 @@ public class ReadyRunner {
 		return forLine.toArray(ret);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException{
 		
 		boolean doEnzymeDiffusion = true;
