@@ -31,15 +31,15 @@ public class FullEqsWriter {
 		while(it.hasNext()){
 			String temp = it.next();
 			baseIndexes.put(temp, curIndex);
-			TemplateEqWriter<String> tew = new TemplateEqWriter<String>(g, temp,explicit);
+			TemplateEqWriter<String> tew = new DefaultTemplateEqWriter<String>(g, temp,explicit);
 			String[] teqs = tew.getEqs(curIndex);
 			eqs.addAll(Arrays.asList(teqs));
 			//mod the sequencevertex eqs
-			if (tew.inhib != null){
-				eqs.set(tew.inhib.ID-1,eqs.get(tew.inhib.ID-1)+" + "+tew.getInhibSequenceEq(curIndex));
+			if (tew.getInhib() != null){
+				eqs.set(tew.getInhib().ID-1,eqs.get(tew.getInhib().ID-1)+" + "+tew.getInhibSequenceEq(curIndex));
 			}
-			eqs.set(tew.from.ID-1,eqs.get(tew.from.ID-1)+" + "+tew.getInSequenceEq(curIndex));
-			eqs.set(tew.to.ID-1,eqs.get(tew.to.ID-1)+" + "+tew.getOutSequenceEq(curIndex));
+			eqs.set(tew.getFrom().ID-1,eqs.get(tew.getFrom().ID-1)+" + "+tew.getInSequenceEq(curIndex));
+			eqs.set(tew.getTo().ID-1,eqs.get(tew.getTo().ID-1)+" + "+tew.getOutSequenceEq(curIndex));
 			//done
 			curIndex += teqs.length;
 		}

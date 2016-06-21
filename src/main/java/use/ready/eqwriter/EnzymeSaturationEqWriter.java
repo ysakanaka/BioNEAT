@@ -152,7 +152,7 @@ public class EnzymeSaturationEqWriter<E> {
 		while(it.hasNext()){
 			String temp = it.next();
 			baseIndexes.put(temp, curIndex);
-			String[] eqs = new TemplateEqWriter<String>(g, temp).getEqs(curIndex);
+			String[] eqs = new DefaultTemplateEqWriter<String>(g, temp).getEqs(curIndex);
 			for(int i=0; i<eqs.length; i++){
 				System.out.println(eqs[i]);
 			}

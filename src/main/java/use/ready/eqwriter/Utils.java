@@ -1,9 +1,8 @@
 package use.ready.eqwriter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
+import cern.colt.Arrays;
 import model.Constants;
 import model.OligoGraph;
 import model.SaturationEvaluator;
@@ -115,6 +114,12 @@ public class Utils {
 		return -1;
 	}
 	
+	public static void testTemplateEqWriter(TemplateEqWriter<?> tew, int index){
+		System.out.println(tew.getInSequenceEq(index));
+		System.out.println(tew.getOutSequenceEq(index));
+		System.out.println(tew.getInhibSequenceEq(index));
+		System.out.println(Arrays.toString(tew.getEqs(index)));
+	}
 	
 	public static void main(String[] args){
 		System.out.println(idToString(1));

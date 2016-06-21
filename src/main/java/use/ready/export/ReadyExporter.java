@@ -30,6 +30,8 @@ public class ReadyExporter {
     public static double templateDiffusion = 10.7;
     
     public static double[] enzymeDiffusions = {10.7, 0.0, 10.7, 0.0, 10.7, 6.4}; //pol, nick, exo TODO; current values are BS
+    
+    public static SaturationEvaluator<String> se = Utils.getDefaultSE();
 	
 	public static String beadToReady(Bead bead, int index){
 		StringBuilder st = new StringBuilder();
@@ -64,12 +66,10 @@ public class ReadyExporter {
 		StringBuilder st = new StringBuilder();
 		st.append("init = (\n");
 		//TODO: I need a much more generic approach to enzymes. Has to go in DACCAD
-		SaturationEvaluator<String> se = Utils.getDefaultSE();
+		
 		st.append("float4 PolConc = "+g.polConc+";\n");
 		st.append("float4 NickConc = "+g.nickConc+";\n");
 		st.append("float4 ExoConc = "+g.exoConc+";\n");
-		
-		
 		
 		st.append("float4 PolVm = "+Constants.polVm+";\n");
 		st.append("float4 NickVm = "+Constants.nickVm+";\n");
