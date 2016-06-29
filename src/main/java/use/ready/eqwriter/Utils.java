@@ -1,8 +1,8 @@
 package use.ready.eqwriter;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
-import cern.colt.Arrays;
 import model.Constants;
 import model.OligoGraph;
 import model.SaturationEvaluator;

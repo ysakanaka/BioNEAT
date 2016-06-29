@@ -23,7 +23,6 @@ import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
-import edu.uci.ics.jung.visualization.decorators.EdgeShape.IndexedRendering;
 import edu.uci.ics.jung.visualization.renderers.BasicRenderer;
 import edu.uci.ics.jung.visualization.transform.LensTransformer;
 import edu.uci.ics.jung.visualization.transform.MutableTransformer;
@@ -87,9 +86,9 @@ public class RNRenderer extends BasicRenderer<String, String> {
 
 			GraphicsDecorator g = rc.getGraphicsContext();
 			g.setStroke(new BasicStroke(1));
-			Point2D p = layout.transform(v);
-			Point2D p1 = layout.transform(v1);
-			Point2D p2 = layout.transform(v2);
+			Point2D p = layout.apply(v);
+			Point2D p1 = layout.apply(v1);
+			Point2D p2 = layout.apply(v2);
 
 			p = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p);
 			p1 = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p1);
@@ -156,13 +155,13 @@ public class RNRenderer extends BasicRenderer<String, String> {
 
 			// get Paints for filling and drawing
 			// (filling is done first so that drawing and label use same Paint)
-			Paint fill_paint = rc.getEdgeFillPaintTransformer().transform(e);
+			Paint fill_paint = rc.getEdgeFillPaintTransformer().apply(e);
 			if (fill_paint != null) {
 				g.setPaint(fill_paint);
 				g.fill(edgeShape);
 				g.fill(endShape);
 			}
-			Paint draw_paint = rc.getEdgeDrawPaintTransformer().transform(e);
+			Paint draw_paint = rc.getEdgeDrawPaintTransformer().apply(e);
 			if (draw_paint != null) {
 				g.setPaint(draw_paint);
 				g.draw(edgeShape);
@@ -188,8 +187,8 @@ public class RNRenderer extends BasicRenderer<String, String> {
 		int thickness = (int) (1 + graph.getEdgeConcentration((String) e) * 3 / 60);
 		g.setStroke(new BasicStroke(thickness));
 
-		Point2D p1 = layout.transform(v1);
-		Point2D p2 = layout.transform(v2);
+		Point2D p1 = layout.apply(v1);
+		Point2D p2 = layout.apply(v2);
 		p1 = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p1);
 		p2 = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p2);
 		float x1 = (float) p1.getX();
@@ -198,9 +197,8 @@ public class RNRenderer extends BasicRenderer<String, String> {
 		float y2 = (float) p2.getY();
 
 		boolean isLoop = v1.equals(v2);
-		Shape s2 = rc.getVertexShapeTransformer().transform(v2);
-		Shape edgeShape = rc.getEdgeShapeTransformer().transform(
-				Context.<Graph<String, String>, String> getInstance(graph, e));
+		Shape s2 = rc.getVertexShapeTransformer().apply(v2);
+		Shape edgeShape = rc.getEdgeShapeTransformer().apply(Context.getInstance(graph, e).element);
 
 		boolean edgeHit = true;
 		boolean arrowHit = true;
@@ -226,7 +224,7 @@ public class RNRenderer extends BasicRenderer<String, String> {
 				}
 			}
 			if (inhibited) {
-				Point2D p3 = layout.transform(inhibitionNode);
+				Point2D p3 = layout.apply(inhibitionNode);
 				p3 = rc.getMultiLayerTransformer().transform(Layer.LAYOUT, p3);
 				float x3 = (float) p3.getX();
 				float y3 = (float) p3.getY();
@@ -256,13 +254,13 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			float dx = x2 - x1;
 			float dy = y2 - y1;
 			int index = 0;
-			if (rc.getEdgeShapeTransformer() instanceof IndexedRendering) {
-				@SuppressWarnings("unchecked")
-				EdgeIndexFunction<String, String> peif = ((IndexedRendering<String, String>) rc
-						.getEdgeShapeTransformer()).getEdgeIndexFunction();
-				index = peif.getIndex(graph, e);
-				index *= 20;
-			}
+//			if (rc.getEdgeShapeTransformer() instanceof IndexedRendering) {
+//				@SuppressWarnings("unchecked")
+//				EdgeIndexFunction<String, String> peif = ((IndexedRendering<String, String>) rc
+//						.getEdgeShapeTransformer()).getEdgeIndexFunction();
+//				index = peif.getIndex(graph, e);
+//				index *= 20;
+//			}
 			GeneralPath gp = new GeneralPath();
 			gp.moveTo(0, 0);// the xform will do the translation to x1,y1
 			if (x1 > x2) {
@@ -323,12 +321,12 @@ public class RNRenderer extends BasicRenderer<String, String> {
 
 			// get Paints for filling and drawing
 			// (filling is done first so that drawing and label use same Paint)
-			Paint fill_paint = rc.getEdgeFillPaintTransformer().transform(e);
+			Paint fill_paint = rc.getEdgeFillPaintTransformer().apply(e);
 			if (fill_paint != null) {
 				g.setPaint(fill_paint);
 				g.fill(edgeShape);
 			}
-			Paint draw_paint = rc.getEdgeDrawPaintTransformer().transform(e);
+			Paint draw_paint = rc.getEdgeDrawPaintTransformer().apply(e);
 			if (draw_paint != null) {
 				g.setPaint(draw_paint);
 				g.draw(edgeShape);
@@ -340,18 +338,18 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			if (scalex < .3 || scaley < .3)
 				return;
 
-			if (rc.getEdgeArrowPredicate().evaluate(
+			if (rc.getEdgeArrowPredicate().apply(
 					Context.<Graph<String, String>, String> getInstance(graph,
 							e))) {
 
 				Stroke new_stroke = rc.getEdgeArrowStrokeTransformer()
-						.transform(e);
+						.apply(e);
 				Stroke old_stroke = g.getStroke();
 				if (new_stroke != null)
 					g.setStroke(new_stroke);
 
 				Shape destVertexShape = rc.getVertexShapeTransformer()
-						.transform(graph.getEndpoints(e).getSecond());
+						.apply(graph.getEndpoints(e).getSecond());
 
 				AffineTransform xf = AffineTransform.getTranslateInstance(x2,
 						y2);
@@ -368,13 +366,13 @@ public class RNRenderer extends BasicRenderer<String, String> {
 						return;
 					Shape arrow = rc
 							.getEdgeArrowTransformer()
-							.transform(
+							.apply(
 									Context.<Graph<String, String>, String> getInstance(
 											graph, e));
 					arrow = at.createTransformedShape(arrow);
-					g.setPaint(rc.getArrowFillPaintTransformer().transform(e));
+					g.setPaint(rc.getArrowFillPaintTransformer().apply(e));
 					g.fill(arrow);
-					g.setPaint(rc.getArrowDrawPaintTransformer().transform(e));
+					g.setPaint(rc.getArrowDrawPaintTransformer().apply(e));
 					g.draw(arrow);
 				}
 				// restore paint and stroke

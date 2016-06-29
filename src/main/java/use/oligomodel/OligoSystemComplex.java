@@ -61,8 +61,7 @@ public class OligoSystemComplex {
 			s.setInhib(n.type == Node.INHIBITING_SEQUENCE);
 			
 			graph.addSpecies(s,n.parameter,n.initialConcentration);
-			//custom exonuclease inhibition
-			graph.getCustomExoKm().put(s.toString(), (s.isInhib()?Constants.exoKmInhib:Constants.exoKmSimple));
+			
 		}
 		
 		//Third step: add connections
@@ -134,9 +133,10 @@ public class OligoSystemComplex {
 		}
 	}
 	
-	
 	protected void initGraph(){
 		final OligoGraph<SequenceVertex, String> g = new OligoGraph<SequenceVertex,String>();
+		
+		graph.setSaturations(new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
 	    g.initFactories(new VertexFactory<SequenceVertex>(g){
 	    	
 			public SequenceVertex create() {
@@ -197,7 +197,7 @@ public class OligoSystemComplex {
 	
 	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph,new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
+		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph);
 		myOligo.timeOut = timeOut;
 		double[][] timeTrace = myOligo.calculateTimeSeries();
 		for(Node n : this.network.nodes){

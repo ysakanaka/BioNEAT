@@ -7,7 +7,7 @@ import java.awt.Shape;
 
 import javax.swing.border.LineBorder;
 
-import org.apache.commons.collections15.Transformer;
+import com.google.common.base.Function;
 
 import edu.uci.ics.jung.algorithms.layout.ISOMLayout;
 import edu.uci.ics.jung.graph.Graph;
@@ -17,13 +17,14 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import edu.uci.ics.jung.visualization.util.ArrowFactory;
+import graphical.graphRendering.OligoRenderer;
 import reactionnetwork.ReactionNetwork;
 
 public class RNVisualizationViewerFactory {
 	public VisualizationViewer<String, String> createVisualizationViewer(
 			ReactionNetwork newNetwork) {
 		RNGraph g = new RNGraph(newNetwork); // initial graph
-
+        
 		ISOMLayout<String, String> layout = new ISOMLayout<String, String>(g);
 		layout.setSize(new Dimension(250, 250));
 		VisualizationViewer<String, String> vv = new VisualizationViewer<String, String>(
@@ -31,31 +32,29 @@ public class RNVisualizationViewerFactory {
 		vv.setPreferredSize(new Dimension(250, 250));
 		vv.setBorder(new LineBorder(new Color(0, 0, 0)));
 		// Setup up a new vertex to paint transformer...
-		Transformer<String, Paint> vertexPaint = new Transformer<String, Paint>() {
-			public Paint transform(String i) {
+		Function<String, Paint> vertexPaint = new Function<String, Paint>() {
+			public Paint apply(String i) {
 				return Color.GREEN;
 			}
 		};
 
 		vv.setBackground(Color.WHITE);
-		vv.setRenderer(new RNRenderer());
+		vv.setRenderer(new OligoRenderer<String,String>());
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 
 		vv.getRenderContext()
 				.setEdgeArrowTransformer(
-						new Transformer<Context<Graph<String, String>, String>, Shape>() {
+						new Function<Context<Graph<String, String>, String>, Shape>() {
 
-							public Shape transform(
+							public Shape apply(
 									Context<Graph<String, String>, String> input) {
-								// TODO Auto-generated method stub
 								return ArrowFactory.getWedgeArrow(10, 8);
 							}
 						});
 		vv.getRenderContext().setVertexLabelTransformer(
-				new Transformer<String, String>() {
+				new Function<String, String>() {
 
-					public String transform(String input) {
-						// TODO Auto-generated method stub
+					public String apply(String input) {
 						return input;
 					}
 				});

@@ -3,9 +3,10 @@ package reactionnetwork.visual;
 import java.awt.Color;
 import java.awt.Paint;
 
-import org.apache.commons.collections15.Transformer;
+import com.google.common.base.Function;
 
-public class RNVertexFillPaintTransformer implements Transformer<String, Paint> {
+
+public class RNVertexFillPaintTransformer implements Function<String, Paint> {
 
 	RNGraph graph;
 
@@ -13,7 +14,7 @@ public class RNVertexFillPaintTransformer implements Transformer<String, Paint> 
 		this.graph = graph;
 	}
 
-	public Paint transform(String input) {
+	public Paint apply(String input) {
 		double seqK = graph.getVertexK(input);
 		double min = Math.log(3e-4 / 0.2 * 100);
 		double max = Math.log(2e3 / 0.2 / 100);
