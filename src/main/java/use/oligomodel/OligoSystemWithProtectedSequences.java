@@ -198,12 +198,14 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		final double[] placeholder = this.initialConditions();
 		final OligoSystem<E> syst = this;
 		StopableEventHandler eventHandler = new StopableEventHandler();
-		eventHandler.setFire(timeOut);
+		TimeOutEventHandler timeOutHandler = new TimeOutEventHandler();
+		timeOutHandler.setFire(timeOut);
 		final StopableStepHandler handler = new StopableStepHandler(eventHandler);
 		
 		
 		myIntegrator.addStepHandler(handler);
 		myIntegrator.addEventHandler(eventHandler, 100, 1e-6, 100);
+		myIntegrator.addEventHandler(timeOutHandler, 100, 1e-6, 100);
 		try{
 		myIntegrator.integrate(syst, 0, placeholder, Constants.numberOfPoints,
 				placeholder);
