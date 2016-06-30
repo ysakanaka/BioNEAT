@@ -50,7 +50,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		if(s == ReporterIndicator.indicator){
 			return 0;
 		}
-		return super.getTotalCurrentFlux(s);
+		return super.getTotalCurrentFluxSimple(s);
 	}
 	
 	private double getTotalCurrentProtectedFlux(ProtectedSequenceVertex s) {

@@ -90,7 +90,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(erne.Constants.maxEvalClockTime);
 
 				// System could not reach stable time before 1000 minutes
-				if (timeSeries.entrySet().iterator().next().getValue().length >= erne.Constants.maxEvalTime) {
+				if (timeSeries.entrySet().iterator().next().getValue().length > erne.Constants.maxEvalTime) { //TODO: this cannot work
 					minFitness = true;
 					// Stop evaluation if we don't need to store timeseries
 					if (!doSaveSimulation()) {

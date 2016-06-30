@@ -136,7 +136,7 @@ public class OligoSystemComplex {
 	protected void initGraph(){
 		final OligoGraph<SequenceVertex, String> g = new OligoGraph<SequenceVertex,String>();
 		
-		graph.setSaturations(new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
+		g.setSaturations(new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
 	    g.initFactories(new VertexFactory<SequenceVertex>(g){
 	    	
 			public SequenceVertex create() {

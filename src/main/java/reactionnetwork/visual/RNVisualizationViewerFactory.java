@@ -17,7 +17,6 @@ import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import edu.uci.ics.jung.visualization.util.ArrowFactory;
-import graphical.graphRendering.OligoRenderer;
 import reactionnetwork.ReactionNetwork;
 
 public class RNVisualizationViewerFactory {
@@ -39,7 +38,7 @@ public class RNVisualizationViewerFactory {
 		};
 
 		vv.setBackground(Color.WHITE);
-		vv.setRenderer(new OligoRenderer<String,String>());
+		vv.setRenderer(new RNRenderer());
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 
 		vv.getRenderContext()
