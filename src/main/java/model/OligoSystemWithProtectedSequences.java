@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,7 +6,6 @@ import java.util.Iterator;
 import org.apache.commons.math3.ode.nonstiff.GraggBulirschStoerIntegrator;
 
 import model.Constants;
-import model.OligoGraph;
 import model.OligoSystem;
 import model.OligoSystemAllSats;
 import model.SaturationEvaluator;
@@ -15,6 +14,15 @@ import model.chemicals.SequenceVertex;
 import model.chemicals.Template;
 import model.input.AbstractInput;
 
+/**
+ * This class is a decorator for oligosystems, adding the possibility of protected sequences (that is, sequences not degraded by exonuclease)
+ * Everything else is delegated to the decorated system.
+ * 
+ * We also overwrite the template factory to suit our needs.
+ * @author naubertkato
+ *
+ * @param <E>
+ */
 public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> {
 
 	/**
@@ -23,48 +31,57 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 	private static final long serialVersionUID = 1L;
 	
 	public int timeOut = -1;
+	
+	protected OligoSystemAllSats<E> decoratedOligoSystem;
 
-	public OligoSystemWithProtectedSequences(OligoGraph<SequenceVertex, E> graph) {
-		super(graph,new ECFRNTemplateFactory<E>(graph));
+	public OligoSystemWithProtectedSequences(OligoSystemAllSats<E> toDecorate) {
+		super(toDecorate.getGraph(),new ECFRNTemplateFactory<E>(toDecorate.getGraph(), toDecorate.templateFactory));
+		this.decoratedOligoSystem = toDecorate;
 		for(SequenceVertex s : graph.getVertices()){
 			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
-				this.total++;//Those sequences need two slots
+				decoratedOligoSystem.total++;//Those sequences need two slots
 			}
 		}
+		this.total = decoratedOligoSystem.total;
+		decoratedOligoSystem.sequences = sequences;
+		decoratedOligoSystem.templateFactory = templateFactory;
+		decoratedOligoSystem.templates = templates;
+		
 		
 	}
 
 	public OligoSystemWithProtectedSequences(
-			OligoGraph<SequenceVertex, E> graph, SaturationEvaluator<E> se) {
-		super(graph, new ECFRNTemplateFactory<E>(graph), se);
+			OligoSystemAllSats<E> toDecorate, SaturationEvaluator<E> se) {
+		super(toDecorate.getGraph(),new ECFRNTemplateFactory<E>(toDecorate.getGraph(), toDecorate.templateFactory),se);
 		for(SequenceVertex s : graph.getVertices()){
 			if(ProtectedSequenceVertex.class.isAssignableFrom(s.getClass())){
-				this.total++; //Those sequences need two slots
+				decoratedOligoSystem.total++; //Those sequences need two slots
 			}
 		}
+		this.total = decoratedOligoSystem.total;
 	}
 
 	@Override
-	protected double getTotalCurrentFluxSimple(SequenceVertex s) {
+	public double getTotalCurrentFlux(SequenceVertex s) {
 		// As Input
 		if(s == ReporterIndicator.indicator){
 			return 0;
 		}
-		return super.getTotalCurrentFluxSimple(s);
+		return decoratedOligoSystem.getTotalCurrentFlux(s);
 	}
 	
-	private double getTotalCurrentProtectedFlux(ProtectedSequenceVertex s) {
+	protected double getTotalCurrentProtectedFlux(ProtectedSequenceVertex s) {
 		if (s.protectedSequence) {
 			// As Input
 			double flux = 0;
 			TemplateWithProtected<E> temp;
 			for(E e: graph.getOutEdges(s)){
-				temp = (TemplateWithProtected<E>) this.templates.get(e);
+				temp = (TemplateWithProtected<E>) decoratedOligoSystem.templates.get(e);
 				flux += temp.inputProtectedSequenceFlux();
 				}
 			// As Output
 			for (E e: graph.getInEdges(s)) {
-				temp = (TemplateWithProtected<E>) this.templates.get(e);
+				temp = (TemplateWithProtected<E>) decoratedOligoSystem.templates.get(e);
 				flux += temp.outputProtectedSequenceFlux();
 			}
 			
@@ -74,11 +91,10 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 	}
 	
 	public int getReporterIndex(SequenceVertex s){
-		ArrayList<Template<E>> arrs = new ArrayList<Template<E>>(templates.values());
+		ArrayList<Template<E>> arrs = new ArrayList<Template<E>>(decoratedOligoSystem.templates.values());
 		int soFar = 0;
 		for(int i = 0; i<arrs.size(); i++){
 			if(arrs.get(i).getFrom().equals(s) && arrs.get(i).getTo() == null){
-				//System.out.println(soFar);
 				return soFar;
 			}
 			soFar += arrs.get(i).getStates().length;
@@ -89,7 +105,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 	@Override
 	protected double[] getCurrentConcentration() {
 		double concentration[] = new double[total + inhTotal];
-		Iterator<SequenceVertex> it = this.sequences.iterator();
+		Iterator<SequenceVertex> it = decoratedOligoSystem.sequences.iterator();
 		int i=0;
 		while (it.hasNext()) {
 			SequenceVertex s = it.next();
@@ -111,7 +127,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		
 		int where = 0;
 		boolean saveActivity = (t >= this.time +1);
-		Iterator<SequenceVertex> it = this.sequences.iterator();
+		Iterator<SequenceVertex> it = decoratedOligoSystem.sequences.iterator();
 		while(it.hasNext()){
 			SequenceVertex s = it.next();
 						s.setConcentration(y[where]);
@@ -123,7 +139,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			}
 
 		double[] internal;
-		Iterator<Template<E>> it2 = this.templates.values().iterator();
+		Iterator<Template<E>> it2 = decoratedOligoSystem.templates.values().iterator();
 		while(it2.hasNext()) {
 			Template<E> templ = it2.next();
 			int length = templ.getStates().length;
@@ -142,29 +158,29 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		}
 		
 		if (graph.saturablePoly){
-			this.setObservedPolyKm();
+			decoratedOligoSystem.setObservedPolyKm();
 		}
 		if (graph.saturableNick){
-			this.setObservedNickKm();
+			decoratedOligoSystem.setObservedNickKm();
 		}
 		
 		if (saveActivity){
-			//System.out.println("Saving stuff "+this.time);
+			//TODO: have to clean up
 			this.time++;
 			//System.out.println("New pol activity: "+time+" "+this.templates.values().iterator().next().poly+" values:"+y[0]+" "+y[1]);
 			this.savedActivity[0][time] = graph.saturableExo?Constants.exoKmSimple/ this.computeExoKm(Constants.exoKmSimple):1;
 			//ret[where] = graph.saturablePoly?this.templates.values().iterator().next().poly:1;
-			this.savedActivity[1][0] = (graph.saturablePoly && !this.templates.isEmpty())?this.templates.values().iterator().next().getCurrentPoly()/(Constants.polVm/Constants.polKm):1;
+			this.savedActivity[1][time] = (graph.saturablePoly && !this.templates.isEmpty())?this.templates.values().iterator().next().getCurrentPoly()/(Constants.polVm/Constants.polKm):1;
 			//ret[where] = graph.saturablePoly?this.templates.values().iterator().next().nick:1;
-			this.savedActivity[2][0] = (graph.saturableNick && !this.templates.isEmpty())?this.templates.values().iterator().next().getCurrentNick()/(Constants.nickVm/Constants.nickKm):1;
+			this.savedActivity[2][time] = (graph.saturableNick && !this.templates.isEmpty())?this.templates.values().iterator().next().getCurrentNick()/(Constants.nickVm/Constants.nickKm):1;
 		}
 		
 		where = 0;
-		it = this.sequences.iterator();
+		it = decoratedOligoSystem.sequences.iterator();
 		SequenceVertex seq;
 		while(it.hasNext()){
 					seq = it.next();
-					ydot[where] = this.getTotalCurrentFlux(seq);
+					ydot[where] = this.getTotalCurrentFlux(seq); //HERE: trick
 					if(ProtectedSequenceVertex.class.isAssignableFrom(seq.getClass())){
 						where++; //The inputs goes on the protected seq
 						ydot[where] = this.getTotalCurrentProtectedFlux(((ProtectedSequenceVertex) seq));
@@ -176,7 +192,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 					where++;
 				}
 
-		it2 = this.templates.values().iterator();
+		it2 = decoratedOligoSystem.templates.values().iterator();
 		while(it2.hasNext()) {
 			internal = it2.next().flux();
 			for(int i=0; i<internal.length;i++){
@@ -194,6 +210,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 				1e-14, 1, Constants.absprec, Constants.relprec);
 		
 		this.reinitializeOiligoSystem();
+		//decoratedOligoSystem.reinitializeOiligoSystem();
 		
 		final double[] placeholder = this.initialConditions();
 		final OligoSystem<E> syst = this;
@@ -207,12 +224,12 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		myIntegrator.addEventHandler(eventHandler, 100, 1e-6, 100);
 		myIntegrator.addEventHandler(timeOutHandler, 100, 1e-6, 100);
 		try{
-		myIntegrator.integrate(syst, 0, placeholder, Constants.numberOfPoints,
+		myIntegrator.integrate(syst, 0, placeholder, erne.Constants.maxEvalTime,
 				placeholder);
 		} catch ( org.apache.commons.math3.exception.NumberIsTooSmallException e){
 			System.out.println("Integration error: min possible value is "+e.getMin());
 		}
-		//syst.displayProfiling();
+		//syst.displayProfiling(); //For debug
 		
 		return handler.getTimeSerie();
 		

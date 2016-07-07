@@ -18,14 +18,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import model.OligoSystemComplex;
+import model.PlotFactory;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
-import use.oligomodel.OligoSystemComplex;
-import use.oligomodel.PlotFactory;
 
 import javax.swing.JButton;
 

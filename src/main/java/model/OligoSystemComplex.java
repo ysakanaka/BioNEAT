@@ -1,12 +1,14 @@
-package use.oligomodel;
+package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import model.Constants;
-import model.OligoGraph;
+import model.PseudoTemplateGraph;
+import model.PseudoTemplateOligoSystem;
 import model.SaturationEvaluator;
+import model.chemicals.PseudoExtendedSequence;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
@@ -16,7 +18,7 @@ import utils.VertexFactory;
 
 public class OligoSystemComplex {
 	
-	protected OligoGraph<SequenceVertex,String> graph;
+	protected PseudoTemplateGraph<SequenceVertex,String> graph;
 	protected ReactionNetwork network; //redundant?
 	protected HashMap<String,SequenceVertex> equiv = new HashMap<String,SequenceVertex>();
 	protected double[] polKm = {0.0, Constants.polKm, 0.0, Constants.polKmBoth, 0.0,0.0,0.0,0.0};
@@ -61,6 +63,13 @@ public class OligoSystemComplex {
 			s.setInhib(n.type == Node.INHIBITING_SEQUENCE);
 			
 			graph.addSpecies(s,n.parameter,n.initialConcentration);
+			
+			//For pseudoTemplates
+			if(n.hasPseudoTemplate){
+				PseudoExtendedSequence newi = new PseudoExtendedSequence(s,0.0);
+				graph.setExtendedSpecies(s, newi);
+				graph.setTemplateConcentration(graph.getEdgeFactory().createEdge(s, newi), n.pseudoTemplateConcentration);
+			}
 			
 		}
 		
@@ -108,6 +117,8 @@ public class OligoSystemComplex {
 	    //	exoKm[SaturationEvaluator.TALONE] = Constants.exoKmTemplate;
 	    //}
 		
+		//TODO: other params that could (should?) be evolved: missing bases.
+		
 /*		for(String param: network.parameters.keySet()){
 			//only a few params are known:
 			if(param.equals("nick")){
@@ -134,7 +145,7 @@ public class OligoSystemComplex {
 	}
 	
 	protected void initGraph(){
-		final OligoGraph<SequenceVertex, String> g = new OligoGraph<SequenceVertex,String>();
+		final PseudoTemplateGraph<SequenceVertex, String> g = new PseudoTemplateGraph<SequenceVertex,String>();
 		
 		g.setSaturations(new SaturationEvaluatorProtected<String>(polKm,nickKm,exoKm));
 	    g.initFactories(new VertexFactory<SequenceVertex>(g){
@@ -155,8 +166,11 @@ public class OligoSystemComplex {
 				 ret.inputs = original.inputs;
 				 return ret;
 			} 	
-	    }, new EdgeFactory<SequenceVertex,String>(g){
+	    },new EdgeFactory<SequenceVertex,String>(g){
 	    	public String createEdge(SequenceVertex v1, SequenceVertex v2){
+	    		if(PseudoExtendedSequence.class.isAssignableFrom(v2.getClass())){
+	    			return "Pseudo"+v1.ID;
+	    		}
 	    		return v1.ID+"->"+v2.ID;
 	    	}
 	    	public String inhibitorName(String s){
@@ -192,12 +206,12 @@ public class OligoSystemComplex {
 	}
 
 	public Map<String, double[]> calculateTimeSeries() {
-		return calculateTimeSeries(-1); //for legagy/tests.
+		return calculateTimeSeries(-1); //for legacy/tests.
 	}
 	
 	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(graph);
+		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(new PseudoTemplateOligoSystem(graph));
 		myOligo.timeOut = timeOut;
 		double[][] timeTrace = myOligo.calculateTimeSeries();
 		for(Node n : this.network.nodes){
@@ -216,7 +230,7 @@ public class OligoSystemComplex {
 		return result;
 	}
 	
-	public OligoGraph<SequenceVertex,String> getGraph(){
+	public PseudoTemplateGraph<SequenceVertex,String> getGraph(){
 		return graph;
 	}
 	

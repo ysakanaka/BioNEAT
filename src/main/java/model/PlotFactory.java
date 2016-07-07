@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

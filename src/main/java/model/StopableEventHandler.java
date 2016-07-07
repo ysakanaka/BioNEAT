@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import org.apache.commons.math3.ode.events.EventHandler;
 

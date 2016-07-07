@@ -23,6 +23,9 @@ public class MutateParameter extends MutationRule {
 				if (rand.nextDouble() < probGeneMutation) {
 					node.parameter = mutateParam(node.parameter, Individual.minNodeValue, Individual.maxNodeValue);
 				}
+				if (node.hasPseudoTemplate && rand.nextDouble() < probGeneMutation) {
+					node.pseudoTemplateConcentration = mutateParam(node.parameter, Individual.minTemplateValue, Individual.maxTemplateValue);
+				}
 			}
 		}
 		for (Connection conn : indiv.getNetwork().connections) {

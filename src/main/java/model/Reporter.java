@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import model.Constants;
 import model.OligoGraph;
@@ -32,6 +32,7 @@ public class Reporter<E> extends Template<E> {
 	 */
 	public Reporter(OligoGraph<SequenceVertex, E> parent, double totalConcentration, SequenceVertex from) {
 		super(parent, totalConcentration, 1.0, 1.0, 1.0, from, null, null);
+		numberOfStates = 1;
 		//exoKm = Constants.exoKmSimple; //same length as a simple seq
 	}
 
@@ -103,7 +104,7 @@ public class Reporter<E> extends Template<E> {
 			}
 		}
 		// System.out.println("Template from "+from.ID+" (Simple) to "+to.getID()+(to.getClass()==SimpleSequence.class?"(Simple)":"(Inhibiting)")+" is being updated with values "+values[0]+" "+values[1]+" "+values[2]+" "+values[3]+" "+values[4]+" "+values[5]);
-		this.concentrationAlone = (this.totalConcentration-values[0])* Constants.exoKmTemplate / Constants.exoKmSimple;
+		this.concentrationAlone = (this.totalConcentration-values[0])* Constants.exoKmTemplate / Constants.exoKmSimple; //Hack to get the correct Exo inhibition. TODO: update to the correct interface.
 		this.concentrationWithInput = values[0];
 	}
 

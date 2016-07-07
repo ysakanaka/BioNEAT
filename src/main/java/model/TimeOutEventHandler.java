@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import org.apache.commons.math3.ode.events.EventHandler;
 
@@ -7,6 +7,7 @@ public class TimeOutEventHandler implements EventHandler {
 	private int fireTime = -1;
 	private int unit = 1000; //fireTime is in seconds
 	private long startTime;
+	private double lastT = -1;
 
 	
 	@Override
@@ -16,7 +17,13 @@ public class TimeOutEventHandler implements EventHandler {
 
 	@Override
 	public double g(double t, double[] y) {
-		return this.fireTime == -1 ? 1 : (fireTime*unit - startTime + 1);
+		double spentTime = System.currentTimeMillis() - startTime;
+		if(fireTime > -1 && lastT == -1 && spentTime > fireTime*unit){
+			lastT = t; // trick to have continuity
+			System.err.println("Evaluation timed out: spentTime "+spentTime+" lastT "+lastT+" fireTime "+fireTime);
+		}
+		
+		return fireTime == -1 || lastT<0.0? 1 : (lastT - t + 1);
 	}
 
 	@Override

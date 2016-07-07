@@ -6,9 +6,9 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import use.math.FitnessResult;
-import use.oligomodel.PlotFactory;
 import erne.AbstractFitnessResult;
 import erne.FitnessDisplayer;
+import model.PlotFactory;
 
 public class GaussianFitnessDisplayer implements FitnessDisplayer {
 	/**

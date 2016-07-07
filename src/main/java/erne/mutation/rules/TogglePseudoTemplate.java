@@ -2,8 +2,11 @@ package erne.mutation.rules;
 
 import erne.Individual;
 import erne.mutation.MutationRule;
+import reactionnetwork.Node;
 
 public class TogglePseudoTemplate extends MutationRule {
+	
+	public double probGeneMutation = 0.3;
 
 	public TogglePseudoTemplate(int weight) {
 		super(weight);
@@ -16,7 +19,13 @@ public class TogglePseudoTemplate extends MutationRule {
 
 	@Override
 	public Individual mutate(Individual indiv) {
-		//TODO Toggle pseudotemplates
+		for (Node node : indiv.getNetwork().nodes) {
+			if (node.type == Node.SIMPLE_SEQUENCE && !node.protectedSequence) { //Elongating protected sequences would be a mess...
+				if (rand.nextDouble() < probGeneMutation) {
+					node.hasPseudoTemplate = !node.hasPseudoTemplate;
+				}
+			}
+		}
 		return indiv;
 	}
 

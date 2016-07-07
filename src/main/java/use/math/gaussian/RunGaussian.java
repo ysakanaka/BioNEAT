@@ -10,8 +10,9 @@ public class RunGaussian {
 
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
 		GaussianFitnessFunction fitnessFunction = new GaussianFitnessFunction();
-        erne.Constants.maxEvalTime = 1000; //Actually the current default
-        erne.Constants.maxEvalClockTime = 2000;
+        erne.Constants.maxEvalTime = 3000; //Actually the current default
+        erne.Constants.maxEvalClockTime = -1;
+        
 		Evolver evolver = new Evolver(Library.startingMath, fitnessFunction, new GaussianFitnessDisplayer());
 		evolver.setGUI(true);
 		evolver.evolve();

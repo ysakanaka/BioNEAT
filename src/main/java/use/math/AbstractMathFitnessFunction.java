@@ -7,9 +7,9 @@ import java.util.TreeMap;
 
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.oligomodel.OligoSystemComplex;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
+import model.OligoSystemComplex;
 
 public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunction {
 
@@ -89,7 +89,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				OligoSystemComplex oligoSystem = new OligoSystemComplex(network);
 				Map<String, double[]> timeSeries = oligoSystem.calculateTimeSeries(erne.Constants.maxEvalClockTime);
 
-				// System could not reach stable time before 1000 minutes
+				// System could not reach stable time before max time
 				if (timeSeries.entrySet().iterator().next().getValue().length > erne.Constants.maxEvalTime) { //TODO: this cannot work
 					minFitness = true;
 					// Stop evaluation if we don't need to store timeseries

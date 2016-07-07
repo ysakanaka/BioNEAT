@@ -3,7 +3,9 @@ package reactionnetwork.visual;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
@@ -18,12 +20,14 @@ public class RNGraph extends DirectedSparseGraph<String, String> {
 	protected Map<String, MyPair<String, String>> inhibitions;
 	protected Map<String, Double> edgesConcentration;
 	protected Map<String, Double> verticesK;
+	protected Set<String> withPseudoTemplate;
 
 	public RNGraph() {
 		super();
 		inhibitions = new HashMap<String, MyPair<String, String>>();
 		edgesConcentration = new HashMap<String, Double>();
 		verticesK = new HashMap<String, Double>();
+		withPseudoTemplate = new HashSet<String>();
 	}
 
 	public RNGraph(ReactionNetwork network) {
@@ -31,6 +35,7 @@ public class RNGraph extends DirectedSparseGraph<String, String> {
 		for (Node node : network.nodes) {
 			this.addVertex(node.name);
 			this.addVertexK(node.name, node.parameter);
+			if(node.hasPseudoTemplate) withPseudoTemplate.add(node.name);
 		}
 		for (Connection connection : network.connections) {
 			if (connection.enabled) {
@@ -86,5 +91,9 @@ public class RNGraph extends DirectedSparseGraph<String, String> {
 
 	public MyPair<String, String> getInhibition(String inh) {
 		return inhibitions.get(inh);
+	}
+	
+	public boolean hasPseudoTemplate(String s){
+		return withPseudoTemplate.contains(s);
 	}
 }

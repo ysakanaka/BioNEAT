@@ -2,6 +2,9 @@ package reactionnetwork;
 
 import java.io.Serializable;
 
+import erne.Individual;
+import erne.util.Randomizer;
+
 public class Node implements Serializable {
 
 	/**
@@ -18,6 +21,8 @@ public class Node implements Serializable {
 	public boolean protectedSequence = false;
 	public String DNAString = "";
 	public boolean reporter = false;
+	public boolean hasPseudoTemplate = false;
+	public double pseudoTemplateConcentration = Randomizer.getRandomLogScale(Individual.minTemplateValue, Individual.maxTemplateValue);
 
 	public Node(String name) {
 		this.name = name;

@@ -5,11 +5,11 @@ import java.util.Iterator;
 
 import model.Constants;
 import model.OligoGraph;
+import model.OligoSystemComplex;
 import model.SaturationEvaluator;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
-import use.oligomodel.OligoSystemComplex;
 import utils.EdgeFactory;
 import utils.VertexFactory;
 

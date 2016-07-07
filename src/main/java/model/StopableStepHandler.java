@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import java.util.ArrayList;
 import model.Constants;
@@ -13,6 +13,7 @@ public class StopableStepHandler implements StepHandler {
 	private double changeThresholdStable = 5E-3;
 	private int startedStable;
 	private StopableEventHandler myEventHandler;
+	private boolean timedOut = false;
 
 	public StopableStepHandler(StopableEventHandler myEventHandler) {
 		this.myEventHandler = myEventHandler;
@@ -21,6 +22,10 @@ public class StopableStepHandler implements StepHandler {
 	@Override
 	public void handleStep(StepInterpolator step, boolean isLastStep) {
 		StepInterpolator localCopy = step.copy();
+		//First of all, did we time out?
+		if(isLastStep && step.getCurrentTime() < timeToCheckStability){
+			timedOut = true;
+		}
 		if (step.getCurrentTime() >= time + 1 && time < Constants.numberOfPoints - 1) {
 			time++;
 			localCopy.setInterpolatedTime(time);
@@ -47,9 +52,15 @@ public class StopableStepHandler implements StepHandler {
 					}
 				} else {
 					startedStable = 0;
+					if(isLastStep && step.getCurrentTime() < erne.Constants.maxEvalTime){
+						//We aren't stable and we aren't at the end
+						timedOut = true;
+						System.err.println("Evaluation cancelled");
+					}
 				}
 			}
 		}
+		
 
 	}
 
@@ -65,11 +76,15 @@ public class StopableStepHandler implements StepHandler {
 
 	public double[][] getTimeSerie() {
 		double[][] timeSeries = new double[timeSerie.get(0).length][timeSerie.size()];
-		for (int i = 0; i < timeSerie.size(); i++) {
-			double[] expression = timeSerie.get(i);
-			for (int j = 0; j < expression.length; j++) {
-				timeSeries[j][i] = expression[j];
+		if(!timedOut){
+			for (int i = 0; i < timeSerie.size(); i++) {
+				double[] expression = timeSerie.get(i);
+				for (int j = 0; j < expression.length; j++) {
+					timeSeries[j][i] = expression[j];
+				}
 			}
+		} else {
+			System.err.println("ERROR: timed out");
 		}
 		return timeSeries;
 	}

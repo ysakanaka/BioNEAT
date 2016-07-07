@@ -1,4 +1,4 @@
-package use.oligomodel;
+package model;
 
 import model.chemicals.SequenceVertex;
 

@@ -39,6 +39,7 @@ public class RNVisualizationViewerFactory {
 
 		vv.setBackground(Color.WHITE);
 		vv.setRenderer(new RNRenderer());
+		vv.getRenderer().setVertexRenderer(new VertexWithPseudoTemplateRenderer(g));
 		vv.getRenderContext().setVertexFillPaintTransformer(vertexPaint);
 
 		vv.getRenderContext()
