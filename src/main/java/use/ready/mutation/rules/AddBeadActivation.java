@@ -20,7 +20,6 @@ public class AddBeadActivation extends MutationRule {
 	
 	public AddBeadActivation(int weight) {
 		super(weight);
-		// TODO Auto-generated constructor stub
 	}
 
 
@@ -53,6 +52,12 @@ public class AddBeadActivation extends MutationRule {
 			}
 		}
 		return indiv;
+	}
+
+
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		return true;
 	}
 
 }

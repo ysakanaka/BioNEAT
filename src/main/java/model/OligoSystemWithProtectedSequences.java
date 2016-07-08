@@ -35,6 +35,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 	protected OligoSystemAllSats<E> decoratedOligoSystem;
 
 	public OligoSystemWithProtectedSequences(OligoSystemAllSats<E> toDecorate) {
+		//TODO: interface is incompatible. Should add a protected dummy constructor in the OligoSystem class
 		super(toDecorate.getGraph(),new ECFRNTemplateFactory<E>(toDecorate.getGraph(), toDecorate.templateFactory));
 		this.decoratedOligoSystem = toDecorate;
 		for(SequenceVertex s : graph.getVertices()){
@@ -43,9 +44,9 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 			}
 		}
 		this.total = decoratedOligoSystem.total;
-		decoratedOligoSystem.sequences = sequences;
+		sequences = decoratedOligoSystem.sequences;
 		decoratedOligoSystem.templateFactory = templateFactory;
-		decoratedOligoSystem.templates = templates;
+		templates = decoratedOligoSystem.templates;
 		
 		
 	}
@@ -67,6 +68,7 @@ public class OligoSystemWithProtectedSequences<E> extends OligoSystemAllSats<E> 
 		if(s == ReporterIndicator.indicator){
 			return 0;
 		}
+		
 		return decoratedOligoSystem.getTotalCurrentFlux(s);
 	}
 	

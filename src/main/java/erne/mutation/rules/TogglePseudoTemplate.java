@@ -20,13 +20,21 @@ public class TogglePseudoTemplate extends MutationRule {
 	@Override
 	public Individual mutate(Individual indiv) {
 		for (Node node : indiv.getNetwork().nodes) {
-			if (node.type == Node.SIMPLE_SEQUENCE && !node.protectedSequence) { //Elongating protected sequences would be a mess...
+			if (node.type == Node.SIMPLE_SEQUENCE && !node.protectedSequence && !node.reporter) { //Elongating protected sequences would be a mess... Reporter would give wrong readouts
 				if (rand.nextDouble() < probGeneMutation) {
 					node.hasPseudoTemplate = !node.hasPseudoTemplate;
 				}
 			}
 		}
 		return indiv;
+	}
+
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		for (Node node : indiv.getNetwork().nodes) {
+			if (node.type == Node.SIMPLE_SEQUENCE && !node.protectedSequence && !node.reporter) return true;
+		}
+		return false;
 	}
 
 }

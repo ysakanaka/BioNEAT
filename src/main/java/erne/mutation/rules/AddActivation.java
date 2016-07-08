@@ -22,17 +22,7 @@ public class AddActivation extends MutationRule {
 
 	@Override
 	public Individual mutate(Individual indiv) {
-		ArrayList<Pair<Node>> possibleActivations = new ArrayList<Pair<Node>>();
-		for (Node from : indiv.getNetwork().nodes) {
-			if (from.type != Node.INHIBITING_SEQUENCE) {
-				for (Node to : indiv.getNetwork().nodes) {
-					Connection connection = indiv.getNetwork().getConnectionByEnds(from, to);
-					if (connection == null || !connection.enabled) {
-						possibleActivations.add(new Pair<Node>(from, to));
-					}
-				}
-			}
-		}
+		ArrayList<Pair<Node>> possibleActivations = getPossibleActivations(indiv);
 		if (possibleActivations.size() > 0) {
 			int index = rand.nextInt(possibleActivations.size());
 			Pair<Node> nodes = possibleActivations.get(index);
@@ -45,5 +35,26 @@ public class AddActivation extends MutationRule {
 			}
 		}
 		return indiv;
+	}
+	
+	protected ArrayList<Pair<Node>> getPossibleActivations(Individual indiv){
+		ArrayList<Pair<Node>> possibleActivations = new ArrayList<Pair<Node>>();
+		for (Node from : indiv.getNetwork().nodes) {
+			if (from.type != Node.INHIBITING_SEQUENCE) {
+				for (Node to : indiv.getNetwork().nodes) {
+					Connection connection = indiv.getNetwork().getConnectionByEnds(from, to);
+					if (connection == null || !connection.enabled) {
+						possibleActivations.add(new Pair<Node>(from, to));
+					}
+				}
+			}
+		}
+		return possibleActivations;
+	}
+
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		
+		return (getPossibleActivations(indiv).size()>0);
 	}
 }

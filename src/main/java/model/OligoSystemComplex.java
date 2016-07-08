@@ -14,6 +14,7 @@ import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import utils.EdgeFactory;
+import utils.PseudoTemplateCapableTemplateFactory;
 import utils.VertexFactory;
 
 public class OligoSystemComplex {
@@ -211,7 +212,7 @@ public class OligoSystemComplex {
 	
 	public Map<String, double[]> calculateTimeSeries(int timeOut) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(new PseudoTemplateOligoSystem(graph));
+		OligoSystemWithProtectedSequences<String> myOligo = new OligoSystemWithProtectedSequences<String>(new PseudoTemplateOligoSystem(graph,new ECFRNTemplateFactory<String>(graph, new PseudoTemplateCapableTemplateFactory<String>(graph)),graph.se));
 		myOligo.timeOut = timeOut;
 		double[][] timeTrace = myOligo.calculateTimeSeries();
 		for(Node n : this.network.nodes){

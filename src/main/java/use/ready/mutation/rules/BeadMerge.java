@@ -31,4 +31,13 @@ public class BeadMerge extends MutationRule {
 		return indiv;
 	}
 
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		if(ReadyReactionNetwork.class.isAssignableFrom(indiv.getNetwork().getClass())){
+			ReadyReactionNetwork rrn = (ReadyReactionNetwork) indiv.getNetwork();
+			return rrn.templateOnBeads.size() > 1;
+		}
+		return false;
+	}
+
 }

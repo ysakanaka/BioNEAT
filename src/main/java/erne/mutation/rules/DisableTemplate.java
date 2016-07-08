@@ -30,4 +30,12 @@ public class DisableTemplate extends MutationRule {
 		}
 		return indiv;
 	}
+
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		for (Connection conn : indiv.getNetwork().connections) {
+			if (conn.enabled) return true;
+		}
+		return false;
+	}
 }

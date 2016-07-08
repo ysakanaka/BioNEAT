@@ -19,7 +19,6 @@ public class BeadSplit extends MutationRule {
 
 	public BeadSplit(int weight) {
 		super(weight);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -44,8 +43,9 @@ public class BeadSplit extends MutationRule {
 		return indiv;
 	}
 
-	public static void main(String[] args){
-		
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		return true;
 	}
 	
 }

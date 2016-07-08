@@ -9,6 +9,7 @@ import use.ready.eqwriter.FullEqsWriter;
 import use.ready.eqwriter.Utils;
 import model.Constants;
 import model.OligoGraph;
+import model.PseudoTemplateGraph;
 import model.SaturationEvaluator;
 import model.SaturationEvaluator.ENZYME;
 import model.SlowdownConstants;
@@ -93,8 +94,6 @@ public class ReadyExporter {
 			
 		}
 		
-		//TODO: add diffusion for enzymes
-		
 		st.append(")\n");
 		return st.toString();
 	}
@@ -177,12 +176,20 @@ public class ReadyExporter {
 	
 	public static String allSimulationParams(OligoGraph<SequenceVertex,String> g){
 		StringBuilder st = new StringBuilder();
+		
+		boolean withPT = PseudoTemplateGraph.class.isAssignableFrom(g.getClass());
+		
 		//Basic params
 		st.append("float4 kdup = "+Constants.Kduplex+";\n");
 		st.append("float4 ratioleft = "+Double.toString(Constants.ratioToeholdLeft)+";\n");
 		st.append("float4 ratioright = "+Double.toString(Constants.ratioToeholdRight)+";\n");
 		st.append("float4 alpha = "+Double.toString(SlowdownConstants.inhibDangleSlowdown*Constants.alphaBase)+";\n");
 		st.append("float4 displ = "+ Double.toString(Constants.displ)+";\n");
+		
+		if (withPT){
+			st.append("float4 outputInvasionRate = "+ Double.toString(Constants.ratioToeholdRight)+";\n");
+			st.append("float4 defaultStack = "+ Double.toString(1.0)+";\n"); //For cases where no stacking. A bit of a misnamer...
+		}
 		
 		for(SequenceVertex s : g.getVertices()){
 			st.append("float4 k"+Utils.idToString(s.ID-1)+" = "+g.K.get(s)+";\n");
@@ -192,6 +199,19 @@ public class ReadyExporter {
 			st.append("float4 dangleL"+edge.replace("->", "to")+" = "+g.getDangleL(edge)+";\n");
 			st.append("float4 dangleR"+edge.replace("->", "to")+" = "+g.getDangleR(edge)+";\n");
 			st.append("float4 stack"+edge.replace("->", "to")+" = "+g.getStacking(edge)+";\n");
+			
+			if (withPT) st.append("float4 mbSlowdown"+edge.replace("->", "to")+" = "+((PseudoTemplateGraph<SequenceVertex,String>) g).getInputSlowdown(edge)+";\n");
+		}
+		
+		if (withPT){
+			for(SequenceVertex s : ((PseudoTemplateGraph<SequenceVertex,String>) g).getAllSpeciesWithPseudoTemplate()){
+				SequenceVertex extS = ((PseudoTemplateGraph<SequenceVertex,String>) g).getExtendedSpecies(s);
+				if(extS != null){
+					String edge = ((PseudoTemplateGraph<SequenceVertex,String>) g).getPseudoTemplate(s);
+					st.append("float4 mbSlowdown"+edge.replace("->", "to")+" = "+((PseudoTemplateGraph<SequenceVertex,String>) g).getInputSlowdown(edge)+";\n");
+					st.append("float4 dangleL"+edge.replace("->", "to")+" = "+((PseudoTemplateGraph<SequenceVertex,String>) g).getDangleL(edge)+";\n");
+				}
+			}
 		}
 		
 		return st.toString();

@@ -57,7 +57,7 @@ public class Evolver implements Serializable {
 	public static final int DEFAULT_POP_SIZE = 50;
 	public static final int MAX_GENERATIONS = 200;
 	private static final Mutator DEFAULT_MUTATOR = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
-			new DisableTemplate(1), new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5), new TogglePseudoTemplate(0) })));
+			new DisableTemplate(1), new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5), new TogglePseudoTemplate(5) })));
 	public static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
 
 	private transient boolean readerMode = false;

@@ -147,4 +147,11 @@ public class AddNode extends MutationRule {
 		return conn;
 
 	}
+
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		//It's always possible to add a connection.
+		//This should be modified if we want to implement a maximum system size.
+		return true;
+	}
 }

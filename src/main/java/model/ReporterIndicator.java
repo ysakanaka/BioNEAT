@@ -5,7 +5,7 @@ import model.chemicals.SequenceVertex;
 /**
  * Used to indicate that the target of the template is
  * not a real species
- * @author dextra
+ * @author naubert
  *
  */
 public class ReporterIndicator extends SequenceVertex {
@@ -15,7 +15,6 @@ public class ReporterIndicator extends SequenceVertex {
 	
 	public ReporterIndicator(Integer i) {
 		super(i);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

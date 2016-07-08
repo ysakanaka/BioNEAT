@@ -100,7 +100,7 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			return result;
 		} catch (Exception ex) {
 			System.err.println("Warning: Gaussian fitness calculation failure");
-			ex.printStackTrace();
+			if(ex.getClass() != org.apache.commons.math3.exception.TooManyIterationsException.class) ex.printStackTrace();
 			System.err.println("==========================================================");
 			result.minFitness = true;
 			result.tests = tests;

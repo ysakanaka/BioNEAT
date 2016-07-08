@@ -1,16 +1,18 @@
 package use.ready.eqwriter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import model.OligoGraph;
+import model.PseudoTemplateGraph;
 import model.chemicals.SequenceVertex;
 import use.ready.test.GraphMaker;
+import utils.SequenceVertexComparator;
 
 public class PseudoTemplateEqWriter<E> implements TemplateEqWriter<E> {
 	
 	public static List<String> structPos = Arrays.asList(new String[] {"alone", "in", "ext"});
-	public OligoGraph<SequenceVertex,E> graph;
+	public PseudoTemplateGraph<SequenceVertex,E> graph;
 	public E template;
 	SequenceVertex from;
 	SequenceVertex to;
@@ -26,13 +28,18 @@ public class PseudoTemplateEqWriter<E> implements TemplateEqWriter<E> {
 	String missingBaseSlowdown = "mbSlowdown"; //should take into account the dangles, if relevant
 	String outputInvasionRate = "outputInvasionRate";
 
-	public PseudoTemplateEqWriter(OligoGraph<SequenceVertex,E> g, E t){
+	public PseudoTemplateEqWriter(PseudoTemplateGraph<SequenceVertex,E> g, E t){
 		graph = g;
 		template = t;
-		from = graph.getSource(t);
-		to = graph.getDest(t);
+		from = graph.getPseudoTemplateInput(t);
+		to = graph.getExtendedSpecies(from);
 		namein = Utils.idToString(from.ID-1);
-		nameout = Utils.idToString(to.ID-1);
+		//here is a trick: all the ext species will come after the normal species
+		//otherwise, both species have the same id, so we would wrongly get the same name
+		//NOTE: inefficient computation...
+		ArrayList<SequenceVertex> extSpecs = new ArrayList<SequenceVertex>(g.getAllExtendedSpecies());
+		extSpecs.sort(new SequenceVertexComparator());
+		nameout = Utils.idToString(g.getVertexCount()+extSpecs.indexOf(to)+1);
 		kdup = "kdup";
 		kin = "k"+namein;
 		dangleL = "dangleL"+(t.toString().replace("->", "to"));
@@ -46,7 +53,7 @@ public class PseudoTemplateEqWriter<E> implements TemplateEqWriter<E> {
 
 	private String getInTempEq(int baseIndex) {
 		String ret =  missingBaseSlowdown+" * "+kdup+" * "+namein+" * "+Utils.idToString(structPos.indexOf("alone")+baseIndex)+
-			      " - "+ Utils.idToString(structPos.indexOf("in")+baseIndex) +" * ( "+kin+" * "+kdup+" + "+pol+" + "+
+			      " - "+ Utils.idToString(structPos.indexOf("in")+baseIndex) +" * ( "+dangleL+" * "+kin+" * "+kdup+" + "+pol+" + "+
 			     outputInvasionRate+" * "+kdup+" * "+nameout+" )";
 		return ret;
 	}
@@ -58,7 +65,7 @@ public class PseudoTemplateEqWriter<E> implements TemplateEqWriter<E> {
 	}
 
 	private String getAloneTempEq(int baseIndex) {
-		String ret = kdup+" * "+kin+" * "+Utils.idToString(structPos.indexOf("in")+baseIndex)+" + "+
+		String ret = kdup+" * "+dangleL+" * "+kin+" * "+Utils.idToString(structPos.indexOf("in")+baseIndex)+" + "+
 			      outputExtraStab+" * "+kdup+" * "+kin+" * "+Utils.idToString(structPos.indexOf("ext")+baseIndex)+
 			      " - "+kdup+" * "+ Utils.idToString(structPos.indexOf("alone")+baseIndex)+" * ( "
 			      +missingBaseSlowdown+" * "+namein+" + "+nameout+" )";
@@ -101,10 +108,11 @@ public class PseudoTemplateEqWriter<E> implements TemplateEqWriter<E> {
 	}
 
 	public static void main(String[] args){
-		OligoGraph<SequenceVertex,String> g = GraphMaker.makeAutocatalyst();
-		PseudoTemplateEqWriter<String> ptew = new PseudoTemplateEqWriter<String>(g, g.getEdges().iterator().next());
-		ptew.nameout = "b";
-		Utils.testTemplateEqWriter(ptew, 2);
+		PseudoTemplateGraph<SequenceVertex,String> g = GraphMaker.makeAutocatalystWithPT();
+		SequenceVertex s = g.getVertices().iterator().next();
+		PseudoTemplateEqWriter<String> ptew = new PseudoTemplateEqWriter<String>(g, g.getEdgeFactory().createEdge(s, g.getExtendedSpecies(s)));
+		int tempIndex = g.getVertexCount()+g.getAllExtendedSpecies().size() + 5; //5 cannot be determined statically, I need to implement the previous template. Oh well, fine for now.
+		Utils.testTemplateEqWriter(ptew, tempIndex);
 	}
 	
 }

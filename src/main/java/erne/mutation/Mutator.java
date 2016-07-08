@@ -31,11 +31,11 @@ public class Mutator implements Serializable {
 	public Individual mutate(Individual indiv) {
 		int totalMutationWeight = 0;
 		for (MutationRule mutationRule : mutationRules) {
-			totalMutationWeight += mutationRule.getWeight();
+			totalMutationWeight += mutationRule.getWeight(indiv);
 		}
 		int randomizedInt = rand.nextInt(totalMutationWeight);
 		for (MutationRule mutationRule : mutationRules) {
-			if (mutationRule.getWeight() > randomizedInt) {
+			if (mutationRule.getWeight(indiv) > randomizedInt) {
 				try {
 					Individual ret = mutationRule.mutate(indiv);
 					ret.sanitize();	
@@ -46,7 +46,7 @@ public class Mutator implements Serializable {
 					return indiv;
 				}
 			} else {
-				randomizedInt -= mutationRule.getWeight();
+				randomizedInt -= mutationRule.getWeight(indiv);
 			}
 		}
 		return indiv;

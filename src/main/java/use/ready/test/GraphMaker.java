@@ -2,6 +2,8 @@ package use.ready.test;
 
 import use.ready.eqwriter.Utils;
 import model.OligoGraph;
+import model.PseudoTemplateGraph;
+import model.chemicals.PseudoExtendedSequence;
 import model.chemicals.SequenceVertex;
 
 public class GraphMaker {
@@ -12,6 +14,17 @@ public class GraphMaker {
 		g.addSpecies(s1, 10.0, 5.0);
 		String edge = g.getEdgeFactory().createEdge(s1, s1);
 		g.addActivation(edge, s1, s1);
+		return g;
+	}
+	
+	public static PseudoTemplateGraph<SequenceVertex,String> makeAutocatalystWithPT(){
+		PseudoTemplateGraph<SequenceVertex,String> g = Utils.initPseudoTemplateGraph();
+		SequenceVertex s1 = g.getVertexFactory().create();
+		g.addSpecies(s1, 10.0, 5.0);
+		String edge = g.getEdgeFactory().createEdge(s1, s1);
+		g.addActivation(edge, s1, s1);
+		PseudoExtendedSequence newi = new PseudoExtendedSequence(s1,0.0);
+		g.setExtendedSpecies(s1, newi);
 		return g;
 	}
 	

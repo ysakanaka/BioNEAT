@@ -88,4 +88,10 @@ public class AddInhibition extends MutationRule {
 
 		return indiv;
 	}
+
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

@@ -46,4 +46,10 @@ public class MutateParameter extends MutationRule {
 		return mutatedParam;
 	}
 
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		// Always possible
+		return true;
+	}
+
 }

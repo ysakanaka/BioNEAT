@@ -18,8 +18,18 @@ public abstract class MutationRule implements Serializable {
 	}
 
 	public abstract Individual mutate(Individual indiv);
+	
+	public abstract boolean isApplicable(Individual indiv);
 
-	public int getWeight() {
+	/**
+	 * Return the weight given to the mutation for a given individual.
+	 * The most common need is to give a weight of 0 to mutations that are not applicable
+	 * @param indiv
+	 * @return
+	 */
+	public int getWeight(Individual indiv) {
+		if(!isApplicable(indiv)) return 0;
+		
 		return this.weight;
 	}
 }

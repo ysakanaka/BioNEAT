@@ -6,7 +6,9 @@ import java.util.Iterator;
 import model.Constants;
 import model.OligoGraph;
 import model.OligoSystemComplex;
+import model.PseudoTemplateGraph;
 import model.SaturationEvaluator;
+import model.chemicals.PseudoExtendedSequence;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
@@ -57,6 +59,40 @@ public class Utils {
 			} 	
 	    }, new EdgeFactory<SequenceVertex,String>(g){
 	    	public String createEdge(SequenceVertex v1, SequenceVertex v2){
+	    		return v1.ID+"->"+v2.ID;
+	    	}
+	    	public String inhibitorName(String s){
+	    		return "Inhib"+s;
+	    	}
+	    });
+	    return g;
+	}
+	
+	public static PseudoTemplateGraph<SequenceVertex, String> initPseudoTemplateGraph(){
+		PseudoTemplateGraph<SequenceVertex, String> g = new PseudoTemplateGraph<SequenceVertex,String>();
+	    g.initFactories(new VertexFactory<SequenceVertex>(g){
+	    	
+			public SequenceVertex create() {
+				SequenceVertex newvertex = associatedGraph.popAvailableVertex();
+				if (newvertex == null){
+					newvertex = new SequenceVertex(associatedGraph.getVertexCount() + 1);
+				} else {
+					newvertex = new SequenceVertex(newvertex.ID);
+				}
+				return newvertex;
+			}
+
+			@Override
+			public SequenceVertex copy(SequenceVertex original) {
+				 SequenceVertex ret = new SequenceVertex(original.ID);
+				 ret.inputs = original.inputs;
+				 return ret;
+			} 	
+	    }, new EdgeFactory<SequenceVertex,String>(g){
+	    	public String createEdge(SequenceVertex v1, SequenceVertex v2){
+	    		if(PseudoExtendedSequence.class.isAssignableFrom(v2.getClass())){
+	    			return "Pseudo"+v1.ID;
+	    		}
 	    		return v1.ID+"->"+v2.ID;
 	    	}
 	    	public String inhibitorName(String s){

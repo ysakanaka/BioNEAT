@@ -1,7 +1,7 @@
 package use.ready.eqwriter;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
 import model.Constants;
 import model.OligoGraph;
@@ -18,7 +18,7 @@ import use.ready.test.GraphMaker;
  */
 public class DefaultTemplateEqWriter<E> implements TemplateEqWriter<E>{
 
-	public static List<String> structPos = Arrays.asList(new String[] {"alone", "in", "out", "both", "ext", "inhib"});
+	public ArrayList<String> structPos = new ArrayList<String>(Arrays.asList(new String[] {"alone", "in", "out", "both", "ext", "inhib"}));
 	public OligoGraph<SequenceVertex,E> graph;
 	public E template;
 	SequenceVertex inhib;
@@ -111,6 +111,7 @@ public class DefaultTemplateEqWriter<E> implements TemplateEqWriter<E>{
 			stack = "stack"+(t.toString().replace("->", "to"));
 			selfstart = "selfstart";
 		}
+		if (inhib == null) structPos.remove("inhib");
 	}
 	
 	public String getInhibSequenceEq(int baseIndex){
@@ -163,7 +164,7 @@ public class DefaultTemplateEqWriter<E> implements TemplateEqWriter<E>{
     }
     
     public String getInTempEq(int baseIndex){
-        String eq = kdup+" * ( "+namein+" * "+Utils.idToString(structPos.indexOf("alone")+baseIndex)+" + "+stack+" / "+dangleR
+        String eq = kdup+" * ( "+namein+" * "+Utils.idToString(structPos.indexOf("alone")+baseIndex)+" + "+stack+" / "+dangleL
         	+" * "+kout+" * "+Utils.idToString(structPos.indexOf("both")+baseIndex)+" - "
         	+Utils.idToString(structPos.indexOf("in")+baseIndex)+" * ( "+dangleL+" * "+kin+" + "+nameout+" ) "; 
         if (inhib != null) eq += " + "+ratioleft+" * "+namein+" * "+Utils.idToString(structPos.indexOf("inhib")+baseIndex)
@@ -173,7 +174,7 @@ public class DefaultTemplateEqWriter<E> implements TemplateEqWriter<E>{
     }
     
     public String getOutTempEq(int baseIndex){
-        String eq = kdup+" * ( "+nameout+" * "+Utils.idToString(structPos.indexOf("alone")+baseIndex)+" + "+stack+" / "+dangleL
+        String eq = kdup+" * ( "+nameout+" * "+Utils.idToString(structPos.indexOf("alone")+baseIndex)+" + "+stack+" / "+dangleR
         	+" * "+kin+" * "+Utils.idToString(structPos.indexOf("both")+baseIndex)+" - "
         	+Utils.idToString(structPos.indexOf("out")+baseIndex)+" * ( "+dangleR+" * "+kout+" + "+namein+" ) "; 
         if (inhib != null) eq += " + "+ratioright+" * "+nameout+" * "+Utils.idToString(structPos.indexOf("inhib")+baseIndex)
