@@ -1,8 +1,11 @@
 package use.math.step;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.apache.commons.math3.special.Erf;
@@ -37,7 +40,11 @@ public class StepFitnessDisplayer implements FitnessDisplayer {
 			for (int k = 0; k < xData.length; k++) {
 				xData[k] = fitnessResult.inputs[k];
 			}
-			return new PlotFactory().createTimeSeriesPanel(timeSeries, xData, false, "Input concentration", "Output concentration");
+			JPanel panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+			panel.add(new PlotFactory().createTimeSeriesPanel(timeSeries, xData, false, "Input concentration", "Output concentration"));
+			panel.add(new JLabel(Arrays.toString(fitnessResult.actualFittingParams)));
+			return panel;
 		} else {
 			return new JPanel();
 		}

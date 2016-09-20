@@ -20,6 +20,7 @@ import com.google.gson.GsonBuilder;
 
 import common.Static;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import erne.FitnessDisplayer;
 import model.OligoSystemComplex;
 import model.PlotFactory;
 import reactionnetwork.Connection;
@@ -28,6 +29,7 @@ import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
+import use.math.gaussian.GaussianFitnessDisplayer;
 import use.math.gaussian.GaussianFitnessFunction;
 
 import javax.swing.JButton;
@@ -67,6 +69,7 @@ public class TestGUI {
 	public TestGUI() {
 		initialize();
 	}
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -105,7 +108,7 @@ public class TestGUI {
 		btnSimulate = new JButton("Simulate");
 		btnSimulate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panelBehavior.removeAll();
+				//tabbedPane.removeAll(); TODO:
 				String json = txtrTest.getText();
 				Gson gson = new GsonBuilder().setPrettyPrinting()
 						.registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
@@ -118,7 +121,7 @@ public class TestGUI {
 				panelTopology.add(vv, BorderLayout.CENTER);
 				panelTopology.revalidate();
 				
-				panelBehavior.add(getBehaviorPanel(network), BorderLayout.CENTER);
+				
 				panelBehavior.revalidate();
 			}
 		});
@@ -174,7 +177,7 @@ public class TestGUI {
 		return clone;
 	}
 	
-	public void displayEvaluationResults(ReactionNetwork network, FitnessResult fitnessResult){
+	public void displayEvaluationResults(ReactionNetwork network, FitnessResult fitnessResult, FitnessDisplayer fitnessDisplayer){
 		RNVisualizationViewerFactory factory = new RNVisualizationViewerFactory();
 		VisualizationViewer<String, String> vv = factory.createVisualizationViewer(network);
 		panelTopology.add(vv, BorderLayout.CENTER);
@@ -182,31 +185,20 @@ public class TestGUI {
 		txtrTest.setText(Static.gson.toJson(network));
 
 		Map<String, double[]> timeSeries = new HashMap<String, double[]>();
-		JPanel timeSeriesPanel;
+		JPanel timeSeriesPanel = fitnessDisplayer.drawVisualization(fitnessResult);
 		PlotFactory plotFactory = new PlotFactory();
 		 
-			double[] targetOutputs = new double[fitnessResult.inputs.length];
-			for (int k = 0; k < targetOutputs.length; k++) {
-				targetOutputs[k] = GaussianFitnessFunction.targetCoeff[0]
-						* Math.exp((-Math.pow(Math.log(fitnessResult.inputs[k]) - GaussianFitnessFunction.targetCoeff[1], 2))
-								/ (2 * Math.pow(GaussianFitnessFunction.targetCoeff[2], 2)));
-			}
-			timeSeries.put("Actual outputs", fitnessResult.actualOutputs);
-			if (!fitnessResult.minFitness) timeSeries.put("Fitted outputs", fitnessResult.targetOutputs);
-			timeSeries.put("Target outputs", targetOutputs);
-			double[] xData = new double[fitnessResult.inputs.length];
-			for (int k = 0; k < xData.length; k++) {
-				xData[k] = fitnessResult.inputs[k];
-			}
-			timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries, xData, true);
-			tabbedPane.addTab("Matching", null, timeSeriesPanel, null);
+		tabbedPane.addTab("Matching", null, timeSeriesPanel, null);
 		
 		for (Double input : AbstractMathFitnessFunction.simulationResults.keySet()) {
 			timeSeries = AbstractMathFitnessFunction.simulationResults.get(input);
 			timeSeriesPanel = plotFactory.createTimeSeriesPanel(timeSeries);
 			tabbedPane.addTab(Static.df2.format(input), null, timeSeriesPanel, null);
 		}
+	}
 	
+	public void displayEvaluationResults(ReactionNetwork network, FitnessResult fitnessResult){
+		displayEvaluationResults(network,fitnessResult,new GaussianFitnessDisplayer());
 	}
 
 }
