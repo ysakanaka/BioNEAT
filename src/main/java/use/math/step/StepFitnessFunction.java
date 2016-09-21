@@ -25,8 +25,8 @@ public class StepFitnessFunction extends AbstractMathFitnessFunction{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	static boolean hysteresis = false;
-	static boolean diff = false;
+	public static boolean hysteresis = false;
+	public static boolean diff = false;
 	static double offsetHack = 0.0001; //Some hashmaps are index by inputvalues
 	
 	static final double[] initialGuess = new double[] { 100.0, 50.0, 0.1 , 5.0}; //we need a high error factor (last param), or wrong fit
