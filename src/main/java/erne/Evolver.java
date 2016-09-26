@@ -3,7 +3,10 @@ package erne;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -61,7 +64,7 @@ public class Evolver implements Serializable {
 	public static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
 
 	private transient boolean readerMode = false;
-	private transient boolean noGUI = false; //there IS a GUI
+	private transient boolean noGUI = !hasGUI(); //there IS a GUI
 	private static ReflectionUI reflectionUI = new ReflectionUI();
 	
 	public void setGUI(boolean gui){
@@ -211,5 +214,34 @@ public class Evolver implements Serializable {
 						speciesFactory.getSpeciesColors((ChartPanel) speciesVisualPanel)));
 		window.getPanelFitness().revalidate();
 
+	}
+	
+	public static boolean hasGUI(){
+		File config = new File("global.config");
+		System.out.println(config.getAbsolutePath());
+		if(!config.exists()){
+			System.out.println("Couldn't find a configuration file");
+			return false;
+		}
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(config));
+			String s;
+			while((s = br.readLine()) != null){
+				String[] sp = s.split("\\s*=\\s*");
+				if(sp[0].equalsIgnoreCase("GUI")){
+					br.close();
+					return Boolean.parseBoolean(sp[1]);
+				}
+			}
+			System.out.println("No GUI setting. Assuming false");
+			br.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
