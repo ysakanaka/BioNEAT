@@ -189,7 +189,7 @@ public class Evolver implements Serializable {
 		Species[] species = populationInfo.getSpecies();
 
 		for (int j = 0; j < species.length; j++) {
-			FitnessResult fitnessResult = (FitnessResult) species[j].getBestIndividual().getFitnessResult();
+			AbstractFitnessResult fitnessResult = species[j].getBestIndividual().getFitnessResult();
 			VisualizationViewer<String, String> vv = factory.createVisualizationViewer(species[j].getBestIndividual().getNetwork());
 
 			JPanel panelSpecie = new JPanel();
