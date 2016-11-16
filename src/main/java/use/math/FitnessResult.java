@@ -19,7 +19,7 @@ public class FitnessResult extends AbstractFitnessResult {
 
 	public boolean minFitness = false;
 	
-	public static double firstStepReward = 1000000;
+	public static double firstStepReward =   100000;
 	public static double secondStepReward = 1000000;
 	public static double cutOff = 0.9*firstStepReward;
 
@@ -35,27 +35,24 @@ public class FitnessResult extends AbstractFitnessResult {
 		
 		double result1 = 0.0;
 		if (targetFittingParams != null) {
+			
 			for (int i = 0; i < targetFittingParams.length; i++) {
 				result1 += Math.pow(Math.abs(10 * (actualFittingParams[i] - targetFittingParams[i]) / targetFittingParams[i]),2);
 			}
 			result1 = firstStepReward/ Math.max(result1, 1.0);
 			result += result1;
-		
-		
-		
 
 		if(result > cutOff){
+			
 			for (int i = 0; i < actualOutputs.length; i++) {
 				double error = Math.abs(actualOutputs[i] - targetOutputs[i]);
 				result += Math.pow(error, 2);
 			}
 			result +=  secondStepReward/ Math.max(result, 1.0);
-			}
-			
 			
 		}
 		result *= Math.pow(getSDV(actualOutputs),2);
-
+		}
 		return result;
 	}
 

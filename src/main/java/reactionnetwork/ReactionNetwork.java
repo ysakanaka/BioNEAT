@@ -2,6 +2,7 @@ package reactionnetwork;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,5 +118,52 @@ public class ReactionNetwork implements Serializable {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o.getClass()!= this.getClass()){
+			return false;
+		}
+		ReactionNetwork rn = (ReactionNetwork) o;
+		
+		ArrayList<Connection> fake = new ArrayList<Connection>(connections);
+		
+		for(Connection c : rn.connections){
+			if(!fake.contains(c)){
+				return false;
+			}
+			fake.remove(c);
+		}
+		
+		ArrayList<Node> fake2 = new ArrayList<Node>(nodes);
+		
+		for(Node n : rn.nodes){
+			if(!fake2.contains(n)){
+				return false;
+			}
+			fake2.remove(n);
+		}
+		
+		return fake.isEmpty()&&fake2.isEmpty();
+	}
+	
+	@Override
+	public int hashCode(){
+		int result = 349;
+		int prime = 37;
+		for(Connection c : connections){
+			result = prime*result + c.hashCode();
+		}
+		for(Node n : nodes){
+			result = prime*result + n.hashCode();
+		}
+		return result;
+	}
+	
+	public static void main(String[] args){
+		ReactionNetwork rn = Library.oldGaussian.clone();
+		System.out.println(rn.hashCode()+" "+Library.oldGaussian.hashCode()+" "+rn.equals(Library.oldGaussian));
+		System.out.println(rn);
 	}
 }

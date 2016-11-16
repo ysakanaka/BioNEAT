@@ -19,6 +19,8 @@ import utils.VertexFactory;
 
 public class OligoSystemComplex {
 	
+	public static boolean selfStart = false; //transmitted to the embedded graph.
+	
 	protected PseudoTemplateGraph<SequenceVertex,String> graph;
 	protected ReactionNetwork network; //redundant?
 	protected HashMap<String,SequenceVertex> equiv = new HashMap<String,SequenceVertex>();
@@ -178,6 +180,7 @@ public class OligoSystemComplex {
 	    		return "Inhib"+s;
 	    	}
 	    });
+	    g.selfStart = selfStart;
 	    this.graph = g;
 	}
 	

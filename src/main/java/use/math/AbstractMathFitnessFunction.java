@@ -21,7 +21,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 
 	double minInputValue = 0.1;
 	double maxInputValue = 100;
-	int nTests = 11;
+	public int nTests = 11;
 
 	String INPUT_SEQUENCE = "a";
 	String OUTPUT_SEQUENCE = "b";
