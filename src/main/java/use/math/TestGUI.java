@@ -30,7 +30,6 @@ import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.math.gaussian.GaussianFitnessDisplayer;
-import use.math.gaussian.GaussianFitnessFunction;
 
 import javax.swing.JButton;
 
