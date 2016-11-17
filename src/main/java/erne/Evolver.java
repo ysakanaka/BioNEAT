@@ -25,7 +25,6 @@ import org.jfree.chart.ChartPanel;
 
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
-import use.math.FitnessResult;
 import xy.reflect.ui.ReflectionUI;
 import common.Static;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
