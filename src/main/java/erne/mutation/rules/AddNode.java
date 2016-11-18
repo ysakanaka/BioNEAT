@@ -94,10 +94,10 @@ public class AddNode extends MutationRule {
 
 				indiv.addConnection(newNode, connection.to, connection.parameter);
 
-				String oldNodeName = "I" + connection.from.name + connection.to.name;
+				String oldNodeName = "I" + connection.from.name + "T" + connection.to.name;
 				for (Node node : indiv.getNetwork().nodes) {
 					if (node.name.equals(oldNodeName)) {
-						node.name = "I" + connection.from.name + newNode.name;
+						node.name = "I" + connection.from.name + "T" + newNode.name;
 						for (Connection conn : indiv.getNetwork().connections) {
 							if (conn.to == node) {
 								String key = conn.from.name + "->" + conn.to.name;
