@@ -59,6 +59,7 @@ dependencies {
 	compile 'com.hazelcast:hazelcast:3.5'
 	compile 'ch.qos.logback:logback-classic:1.1.3'
 	compile 'org.apache.commons:commons-lang3:3.4'
+        compile name: 'core'
 	
 	// for object refection
 	compile name: 'reflection-ui-1.1'
