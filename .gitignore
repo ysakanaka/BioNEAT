@@ -5,3 +5,4 @@ bin/
 .settings/org.eclipse.jdt.core.prefs
 build/
 result/
+/global.config

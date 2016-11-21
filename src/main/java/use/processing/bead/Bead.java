@@ -1,19 +1,24 @@
 package use.processing.bead;
 import java.util.Random;
+import java.io.Serializable;
 import java.util.ArrayList;
 import model.chemicals.Template;
 import model.Constants;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDSystem;
 
-public class Bead {
+public class Bead implements Serializable{
  
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
   protected float x;
   protected float y;
   protected float radius;
-  protected RDSystem system;
+  transient protected RDSystem system;
   Aggregate parent = null;
-  protected ArrayList<Template<String>> temps;
+  transient protected ArrayList<Template<String>> temps;
   
   public static Random rand = new Random();
   
@@ -26,7 +31,7 @@ public class Bead {
   
   public Bead(RDSystem system, float x, float y, float radius, ArrayList<Template<String>> temps){ //I should also define a set of conc
     this.system = system;
-	  this.x = x;
+	  this.x = x; //  0.5f*RDConstants.hsize; // for line debug
     this.y = y;
     this.radius = radius;
     this.temps = temps;

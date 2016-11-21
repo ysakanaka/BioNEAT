@@ -16,7 +16,9 @@ import use.processing.parallel.DiffusionDispatcher;
  * @author naubertkato
  *
  */
-public class RDSystem {
+public class RDSystem{
+	
+
 	public float[] diffRate;	
 
 	public int chemicalSpecies;
@@ -28,7 +30,7 @@ public class RDSystem {
 
 	public int[][][] neighbors;
 
-	DiffusionDispatcher dd;
+	transient DiffusionDispatcher dd;
 	//BeadDispatcher bd;
 
 	
@@ -37,7 +39,7 @@ public class RDSystem {
 
 	public ArrayList<Aggregate> aggregates = new ArrayList<Aggregate>();
 
-	public OligoSystem<String> os;
+	transient public OligoSystem<String> os;
 	
 	public void init(boolean GUI){
 		  chemicalSpecies = os.getDimension();

@@ -18,8 +18,13 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 		this.conc = conc;
 		this.pattern = pattern;
 		this.beadIndex = beadIndex;
+		if(RDConstants.useMatchFitness){
+			fitness = ((PatternEvaluator.matchOnPattern(pattern, PatternEvaluator.detectBeads(conc[beadIndex])))
+					*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
+		} else {
 		fitness = RDConstants.hsize*RDConstants.wsize/((PatternEvaluator.distance(pattern, 
 				PatternEvaluator.detectBeads(conc[beadIndex])))*RDConstants.spaceStep*RDConstants.spaceStep);
+		}
 		fitness = Math.max(0.0, fitness - randomFit);
 	}
 

@@ -1,13 +1,18 @@
 package use.processing.bead;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDSystem;
 
-public class Aggregate {
+public class Aggregate implements Serializable{
 
-  ArrayList<Bead> beads = new ArrayList<Bead>();
-  RDSystem system;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+ArrayList<Bead> beads = new ArrayList<Bead>();
+  transient RDSystem system;
   
   public Aggregate(RDSystem system){
 	  this.system = system;

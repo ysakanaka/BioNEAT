@@ -1,12 +1,18 @@
 package utils;
 
+import java.io.Serializable;
+
 import model.OligoGraph;
 import model.chemicals.PadiracTemplate;
 import model.chemicals.SequenceVertex;
 import model.chemicals.Template;
 
-public class PadiracTemplateFactory extends TemplateFactory<String> {
-	 protected OligoGraph<SequenceVertex,String> graph;
+public class PadiracTemplateFactory extends TemplateFactory<String> implements Serializable{
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected OligoGraph<SequenceVertex,String> graph;
 	  
 	  public PadiracTemplateFactory(OligoGraph<SequenceVertex,String> graph){
 	    this.graph = graph;

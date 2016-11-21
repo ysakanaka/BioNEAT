@@ -23,7 +23,11 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 	public RDFitnessFunction(boolean[][] pattern){
 		this.pattern = pattern;
 		if(RDConstants.evalRandomDistance){
-			randomFitness =RDConstants.hsize*RDConstants.wsize/(PatternEvaluator.distanceRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep);
+			if (RDConstants.useMatchFitness){
+				randomFitness = PatternEvaluator.matchRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep/(RDConstants.hsize*RDConstants.wsize);
+			} else {
+			    randomFitness =RDConstants.hsize*RDConstants.wsize/(PatternEvaluator.distanceRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep);
+			}
 			System.out.println("Random fitness evaluation done: "+randomFitness);
 		} else {
 			randomFitness = RDConstants.defaultRandomFitness;

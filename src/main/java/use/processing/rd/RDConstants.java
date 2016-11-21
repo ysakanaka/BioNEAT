@@ -4,13 +4,13 @@ public class RDConstants {
 	
     public static boolean debug = false;
 
-	public static int maxTimeEval = 10000; //in time steps
+	public static int maxTimeEval = 15000; //in time steps
 	public static double timePerStep = 1.0;
 	public static float spaceStep = 2.0f;
 	public static int hsize = 160;
 	public static int wsize = 160;
 	
-	public static int maxBeads = 50;
+	public static int maxBeads = 100;
 	public static double beadScale = 1e0;
     public static float beadRadius = 10.0f;
 	
@@ -40,6 +40,7 @@ public class RDConstants {
 	
 	public static String[] gradientsName = {"a", "b"};
 	
+	public static boolean useMatchFitness = true; // Check how good we cover the pattern, rather than using a distance based approach. Useful if we can barely cover the pattern.
 	public static boolean evalRandomDistance = true; //before starting, check the distance between a random dist and the pattern.
 	public static double defaultRandomFitness = 2.0; //if not, use this one
 	public static int trials = 10; //Average over how many attempts?
