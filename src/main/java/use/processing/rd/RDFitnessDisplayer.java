@@ -3,13 +3,18 @@ package use.processing.rd;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import erne.AbstractFitnessResult;
 import erne.FitnessDisplayer;
+import use.processing.bead.Bead;
 
 public class RDFitnessDisplayer implements FitnessDisplayer {
 
@@ -53,7 +58,7 @@ public class RDFitnessDisplayer implements FitnessDisplayer {
 			}
 		}
 		
-		RDPatternFitnessResult res = new RDPatternFitnessResult(conc,target,0,0.0);
+		RDPatternFitnessResult res = new RDPatternFitnessResult(conc,target,HashBasedTable.<Integer,Integer,ArrayList<Bead>>create(),0.0);
 		
 		JFrame display = new JFrame("Visual test");
 		display.add(new RDFitnessDisplayer().drawVisualization(res));
@@ -88,8 +93,9 @@ public class RDFitnessDisplayer implements FitnessDisplayer {
 			      float val2 = 0.0f;
 			      float val3 = 0.0f;
 			      if(RDConstants.showBeads){
-			    	  int pos = res.getBeadIndex();
-			    	  boolean here = conc[pos][x][y]>0;
+			    	  Table<Integer,Integer,ArrayList<Bead>> beads = res.getBeads();
+			    	  //int pos = res.getBeadIndex();
+			    	  boolean here = (beads.get(x, y)!=null);
 			    	  
 			    	  val = here?1.0f:(patt[x][y]?RDConstants.greyTargetScale:0.0f);
 			    	  val2 = here?1.0f:(patt[x][y]?RDConstants.greyTargetScale:0.0f);

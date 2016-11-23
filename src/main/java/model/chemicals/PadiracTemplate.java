@@ -12,37 +12,24 @@ public class PadiracTemplate extends Template<String> {
 
 public PadiracTemplate(OligoGraph<SequenceVertex, String> parent, double totalConcentration,SequenceVertex from, SequenceVertex to, SequenceVertex inhib){
     super(parent, totalConcentration, 1.0, 1.0, 1.0, from, to, inhib);
-    numberOfStates = 1;
+    numberOfStates = 0;
   }
   
   @Override
    public double[] flux() {
-    double[] ans = {0.0}; //We only consider the total concentration
+    double[] ans = {}; //We only consider the total concentration
     return ans;
   }
   
    @Override
    public double[] getStates() {
-    double[] ans = new double[]{concentrationAlone}; //We only consider the total concentration
+    double[] ans = new double[]{}; //We only consider the total concentration
     return ans;
   }
   
   @Override
   public void setStates(double[] values) throws InvalidConcentrationException {
-    if (values.length != numberOfStates) {
-      System.err
-        .println("Error: wrong internal values setting for template " + 
-        this);
-      return;
-    }
-    for (int i = 0; i < numberOfStates; i++) {
-      if ((values[i] < 0.0D) || (values[i] > this.totalConcentration+1))
-      {
-        values[i] = 0.0D;
-      }
-    }
-
-    this.concentrationAlone = values[0];
+    return; //Nothing should happen
   }
   
   @Override
@@ -92,6 +79,7 @@ public PadiracTemplate(OligoGraph<SequenceVertex, String> parent, double totalCo
    return debug;
   }
   
+  //For RD
   public double outputSequenceFlux(double tempConc, double concin, double concout, double concinhib){
    double kinhib;
     

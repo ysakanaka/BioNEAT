@@ -29,9 +29,15 @@ public class RDApplet extends PApplet{
 	
 	float time = 0.0f;
 	float maxTime = 1000;
-	int bigTimeStep = 10; //How many step do we do between two call of draw.
-	
+	static int bigTimeStep = 10; //How many step do we do between two call of draw.
+	static int offset = RDConstants.speciesOffset; //for display
 
+	//For timing
+	long startTime = System.currentTimeMillis();
+	long realTime = startTime;
+	long totalRender = 0;
+	
+	
 	
 	RDSystem system = new RDSystem();
 	static ReactionNetwork reac = null; 
@@ -51,6 +57,18 @@ public class RDApplet extends PApplet{
 		}
 		}
 		
+		RDConstants.hsize = 160;
+		RDConstants.wsize = 160;
+		RDConstants.spaceStep = 2.0f;
+		RDConstants.timePerStep = 0.1f;
+		RDConstants.concScale = 10.0f;
+		RDConstants.beadExclusion = true;
+		RDConstants.bounceRatePerBead = 1.4;
+		RDConstants.concChemostat = 100.0f;
+		RDConstants.maxBeads = 300;
+		RDConstants.maxTimeEval = 100000/bigTimeStep;
+		offset = 2;
+		
         PApplet.main("use.processing.rd.RDApplet");
 
     }
@@ -64,16 +82,20 @@ public class RDApplet extends PApplet{
 		  setTestGraph(); //We are not being called from somewhere else
 		  system.init(true);
 		  System.out.println("Params: "+system.conc.length+" "+system.conc[0].length+" "+system.conc[0][0].length);
-		  
+		  if(RDConstants.timing){
+			  System.out.println("Start time: "+startTime);
+			  System.out.println("totalSetup: "+(System.currentTimeMillis()-realTime));
+		  }
+		  realTime = System.currentTimeMillis();
 		  noStroke();
 		}
 
 	public void draw(){
 		  //System.out.println(time);
 		  //background(255);
+		  realTime = System.currentTimeMillis();
 		  int base = g.fillColor;
 		  //int speciesOffset = 2;
-		  int offset = RDConstants.speciesOffset;
 		  for (int x = 0; x < system.conc[0].length; x++){
 		    for (int y = 0; y < system.conc[0][x].length; y++){
 		      float val = min(1.0f,system.conc[0+offset][x][y]/RDConstants.concScale)*255;
@@ -81,18 +103,26 @@ public class RDApplet extends PApplet{
 		      float val3 = 0.0f;
 		      if (system.chemicalSpecies >= 2+offset) val2 = min(1.0f,system.conc[1+offset][x][y]/RDConstants.concScale)*255;
 		      if (system.chemicalSpecies >= 3+offset) val3 = min(1.0f,system.conc[2+offset][x][y]/RDConstants.concScale)*255;
-		     // System.out.println(val);
+		      //System.out.println(val);
 		      fill(color(val,val2,val3));
 		      rect(x*RDConstants.spaceStep,y*RDConstants.spaceStep,RDConstants.spaceStep,RDConstants.spaceStep);
 		    }
 		  }
 		  fill(base);
+		  totalRender += System.currentTimeMillis() - realTime;
 		  for(int i=0; i<bigTimeStep; i++){
 		    system.update();
 		  }
 		  time++;
 		  
 		  if(time >= maxTime){
+			  if(RDConstants.timing){
+				  System.out.println("total time: "+(System.currentTimeMillis()-startTime));
+				  System.out.println("total rendering:"+totalRender);
+				  System.out.println("total bead update:"+system.totalBeads);
+				  System.out.println("total conc update:"+system.totalConc);
+				  exit();
+			  }
 			  saveFrame();
 			  time = 0.0f;
 		  }
@@ -103,7 +133,8 @@ public class RDApplet extends PApplet{
 		public void setTestGraph(){
 		  OligoGraph<SequenceVertex,String> g;
 		  if(reac == null){
-		    g = GraphMaker.line();
+		    g = GraphMaker.gradBAgain();
+			//g = GraphMaker.makeAutocatalyst();
 		  
 		  } else {
 			g = GraphMaker.fromReactionNetwork(reac);

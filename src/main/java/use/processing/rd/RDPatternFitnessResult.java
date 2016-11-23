@@ -1,6 +1,12 @@
 package use.processing.rd;
 
+import java.util.ArrayList;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import erne.AbstractFitnessResult;
+import use.processing.bead.Bead;
 
 public class RDPatternFitnessResult extends AbstractFitnessResult {
 
@@ -11,19 +17,19 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 	
 	protected float[][][] conc;
 	protected boolean[][] pattern;
-	protected int beadIndex;//index of the first template species, indicating bead positions;
+	protected Table<Integer,Integer,ArrayList<Bead>> beads;//index of the first template species, indicating bead positions;
 	protected double fitness;
 	
-	public RDPatternFitnessResult(float[][][] conc, boolean[][] pattern, int beadIndex, double randomFit){
+	public RDPatternFitnessResult(float[][][] conc, boolean[][] pattern, HashBasedTable<Integer,Integer,ArrayList<Bead>> beads, double randomFit){
 		this.conc = conc;
 		this.pattern = pattern;
-		this.beadIndex = beadIndex;
+		this.beads = beads;
 		if(RDConstants.useMatchFitness){
-			fitness = ((PatternEvaluator.matchOnPattern(pattern, PatternEvaluator.detectBeads(conc[beadIndex])))
+			fitness = ((PatternEvaluator.matchOnPattern(pattern, PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads)))
 					*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
 		} else {
 		fitness = RDConstants.hsize*RDConstants.wsize/((PatternEvaluator.distance(pattern, 
-				PatternEvaluator.detectBeads(conc[beadIndex])))*RDConstants.spaceStep*RDConstants.spaceStep);
+				PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads)))*RDConstants.spaceStep*RDConstants.spaceStep);
 		}
 		fitness = Math.max(0.0, fitness - randomFit);
 	}
@@ -41,8 +47,8 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 		return pattern;
 	}
 	
-	public int getBeadIndex(){
-		return beadIndex;
+	public Table<Integer,Integer,ArrayList<Bead>> getBeads(){
+		return beads;
 	}
 
 }

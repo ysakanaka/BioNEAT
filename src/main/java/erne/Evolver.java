@@ -6,8 +6,11 @@ import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -66,6 +69,8 @@ public class Evolver implements Serializable {
 	private transient boolean noGUI = !hasGUI(); //there IS a GUI
 	private static ReflectionUI reflectionUI = new ReflectionUI();
 	
+	protected transient String extraConfig;
+	
 	public void setGUI(boolean gui){
 		this.noGUI = !gui;
 	}
@@ -75,6 +80,11 @@ public class Evolver implements Serializable {
 		this.resultDirectory = resultDirectory;
 		this.readerMode = true;
 		this.noGUI = false;
+	}
+	
+	// In case we want to save an extra file
+	public void setExtraConfig(String conf){
+		extraConfig = conf;
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction) throws IOException {
@@ -117,6 +127,11 @@ public class Evolver implements Serializable {
 			}
 			Serializer.serialize(resultDirectory + "/version", Version.version);
 			Serializer.serialize(resultDirectory + "/evolver", this);
+			if(extraConfig != null){
+				PrintWriter fileOut = new PrintWriter(resultDirectory + "/extraConfig");
+				fileOut.write(extraConfig);
+				fileOut.close();
+			}
 		}
 		if (!noGUI){
 

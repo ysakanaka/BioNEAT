@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.google.common.collect.HashBasedTable;
+
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
 import model.chemicals.Template;
@@ -19,6 +21,10 @@ import use.processing.parallel.DiffusionDispatcher;
 public class RDSystem{
 	
 
+	public long totalBeads = 0; //for timing
+	public long totalConc = 0;
+	public long realTime = System.currentTimeMillis();
+	
 	public float[] diffRate;	
 
 	public int chemicalSpecies;
@@ -27,6 +33,8 @@ public class RDSystem{
 
 	public HashMap<SequenceVertex,Integer> seqAddress; //Connect addr in conc and Seq in Graph  
 	public HashMap<Template<String>,Integer> tempAddress; //Connect addr in conc and Temp in Graph  
+	
+	public HashBasedTable<Integer, Integer, ArrayList<Bead>> beadsOnSpot;
 
 	public int[][][] neighbors;
 
@@ -46,10 +54,13 @@ public class RDSystem{
 		  setSeqAddress();
 		  
 		  conc = new float[chemicalSpecies][(int) (RDConstants.wsize/RDConstants.spaceStep)][(int) (RDConstants.hsize/RDConstants.spaceStep)];
+		  beadsOnSpot = HashBasedTable.create((int) (RDConstants.wsize/RDConstants.spaceStep),(int) (RDConstants.hsize/RDConstants.spaceStep));
 		  diffRate = new float[chemicalSpecies];
 		  defaultDiff();
 		  for(int i = RDConstants.glueIndex; i<(os.total+os.inhTotal); i++) diffRate[i] = RDConstants.fastDiff; //gradients are processed independently 
+		  if(RDConstants.timing) realTime = System.currentTimeMillis();
 		  initBeads(RDConstants.maxBeads);
+		  if(RDConstants.timing) totalBeads+=System.currentTimeMillis() - realTime;
 		  dd = new DiffusionDispatcher(GUI?RDConstants.nicenessGUIEval:RDConstants.nicenessEvoEval,this);
 		  //bd = new BeadDispatcher(this);
 		  neighbors = new int[conc[0].length][conc[0][0].length][4]; //Basic neighborhood.
@@ -57,19 +68,30 @@ public class RDSystem{
 		  setGradients();
 		  for(int i = RDConstants.gradients?2:0; i<(os.total+os.inhTotal); i++) initConc(i,0,0);//blob of species 0 at the origin
 		  
+		  if(RDConstants.timing) realTime = System.currentTimeMillis();
 		  for(Bead bead : beads) updateConcFromBead(bead);
+		  if(RDConstants.timing) totalBeads+=System.currentTimeMillis() - realTime;
 	}
 	
 	public void update(){
-		for(Bead bead : beads) cleanConcFromBead(bead);
+		if(RDConstants.timing) realTime = System.currentTimeMillis();
+		//for(Bead bead : beads) cleanConcFromBead(bead);
+		cleanConcFromBead();
+		setNeighbors();
+		for(Bead bead: beads)  updateConcFromBead(bead);
 	    ArrayList<Aggregate> fakeAggre = new ArrayList<Aggregate>(aggregates);
 	    for(Aggregate aggr : fakeAggre) aggr.update();
 	    //bd.updateBeads();
-	    for(Bead bead : beads) {
-	      bead.update(conc);
-	      updateConcFromBead(bead);
+	    for(Bead bead : beads) bead.updateMove((int)(conc[0].length*RDConstants.spaceStep),(int)(conc[0][0].length*RDConstants.spaceStep));
+	    
+	    for(Bead bead: beads) bead.updateGlue(conc);
+	    
+	    if(RDConstants.timing) {
+	      totalBeads+=System.currentTimeMillis() - realTime;
+	      realTime = System.currentTimeMillis();
 	    }
 	    dd.updateConc();
+	    if(RDConstants.timing) totalConc += System.currentTimeMillis() - realTime;
 	}
 	
 	public void setGradients(){
@@ -151,7 +173,8 @@ public class RDSystem{
 		  }
 		}
 
-		public void cleanConcFromBead(Bead b){
+		@Deprecated
+		public void cleanConcFromBeadOld(Bead b){
 			int realx = (int) (b.getX()/RDConstants.spaceStep);
 			int realy = (int) (b.getY()/RDConstants.spaceStep);
 			int radius = (int) (b.getRadius()/RDConstants.spaceStep);
@@ -164,8 +187,38 @@ public class RDSystem{
 			 }
 			  
 			}
+		
+		public void cleanConcFromBead(){
+			
+			  
+			  
+			 //for (int i = os.inhTotal+os.total; i < conc.length; i++){
+			 // conc[i] = new float[conc[i].length][conc[i][0].length];
+			 //}
+			 
+			 beadsOnSpot = HashBasedTable.create((int) (RDConstants.wsize/RDConstants.spaceStep),(int) (RDConstants.hsize/RDConstants.spaceStep));
+			 //for(Bead b: beads){
+			 //	 b.cleanSpot();
+			 //}
+			
+			}
+		
+		public void setNeighbors(){
+			for(Bead b: beads) b.resetNeighbors();
+			for(int i = 0; i<beads.size()-1; i++){
+				Bead b = beads.get(i);
+				for (int j= i+1;j<beads.size(); j++){
+					Bead bp = beads.get(j);
+					if(b.distance(bp.getX(), bp.getY())<1.01*RDConstants.beadRadius){
+						b.addNeighbor(bp);
+						bp.addNeighbor(b);
+					}
+				}
+				
+			}
+		}
 
-
+            @Deprecated
 			public void updateConcFromBead(Bead b){
 
 			//first, figure out where it is
@@ -174,11 +227,15 @@ public class RDSystem{
 			int realy = (int) (b.getY()/RDConstants.spaceStep);
 			int radius = (int) (b.getRadius()/RDConstants.spaceStep);
 
-			for (int i = -radius/2; i <= radius/2; i++){
-			  for (int j = -radius/2; j <= radius/2; j++){
+			for (int i = -radius/2-2; i <= radius/2+1; i++){
+			  if (realx +i < 0 || realx+i >= conc[0].length) continue;
+			  for (int j = -radius/2-2; j <= radius/2 +1; j++){
+				 if (realy +j < 0 || realy+j >= conc[0][0].length) continue;
 			    if (b.distance((realx+i)*RDConstants.spaceStep,(realy+j)*RDConstants.spaceStep)<=(radius*RDConstants.spaceStep)/2){
-			      for(Template<String> t: b.getTemplates()) conc[tempAddress.get(t)][wrapCoord(realx+i)][wrapCoord(realy+j)] += t.totalConcentration;
-			    } 
+			      //for(Template<String> t: b.getTemplates()) conc[tempAddress.get(t)][wrapCoord(realx+i)][wrapCoord(realy+j)] += t.totalConcentration;
+			      if(beadsOnSpot.get(realx+i, realy+j) == null) beadsOnSpot.put(realx+i, realy+j, new ArrayList<Bead>());
+			      if(!beadsOnSpot.get(realx+i, realy+j).contains(b)) beadsOnSpot.get(realx+i, realy+j).add(b);
+			    }
 			  }
 			}
 

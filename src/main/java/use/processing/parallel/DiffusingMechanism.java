@@ -26,15 +26,16 @@ public class DiffusingMechanism extends GenericThreadComputation<Boolean>{
   protected void react(int x, int y){ 
   
   //Computing derivatives: for each template, add its local contribution
-  
-  for(Template<String> t : system.os.getTemplates()){
-    if (PadiracTemplate.class.isAssignableFrom(t.getClass())){
-      PadiracTemplate pt = (PadiracTemplate) t;
-      double conctemp = system.conc[system.tempAddress.get(t)][x][y];
-      double concin = system.conc[system.seqAddress.get(pt.getFrom())][x][y];
-      double concout = system.conc[system.seqAddress.get(pt.getTo())][x][y];
-      double concinhib = pt.getInhib()!=null?system.conc[system.seqAddress.get(pt.getInhib())][x][y]:0.0;
-      concTemp[system.seqAddress.get(pt.getTo())][x][y] += RDConstants.timePerStep*pt.outputSequenceFlux(conctemp,concin,concout,concinhib);
+  if(system.beadsOnSpot.get(x, y)!=null){ //Beads have templates
+    for(Template<String> t : system.os.getTemplates()){
+      if (PadiracTemplate.class.isAssignableFrom(t.getClass())){
+        PadiracTemplate pt = (PadiracTemplate) t;
+        double conctemp = system.beadsOnSpot.get(x, y).size()*pt.totalConcentration;//system.conc[system.tempAddress.get(t)][x][y];
+        double concin = system.conc[system.seqAddress.get(pt.getFrom())][x][y];
+        double concout = system.conc[system.seqAddress.get(pt.getTo())][x][y];
+        double concinhib = pt.getInhib()!=null?system.conc[system.seqAddress.get(pt.getInhib())][x][y]:0.0;
+        concTemp[system.seqAddress.get(pt.getTo())][x][y] += RDConstants.timePerStep*pt.outputSequenceFlux(conctemp,concin,concout,concinhib);
+      }
     }
   }
   
@@ -45,11 +46,6 @@ public class DiffusingMechanism extends GenericThreadComputation<Boolean>{
     		*system.os.getGraph().exoConc*Constants.exoVm/exoKm;
   }
   
-  
-  //test.os.computeDerivatives(0.0,myConc,concDot);
-  //for (int i = 0; i<myConc.length; i++) concTemp[i][x][y] += 0.002*test.timePerStep*concDot[i];
-    //concTemp[0][x][y] += 0.04*test.conc[0][x][y]*test.conc[1][x][y]/(1+test.conc[0][x][y]) - 0.001*test.conc[0][x][y];
-    //concTemp[1][x][y] += 0.0005*conc[0][x][y]*conc[1][x][y]/(1+conc[1][x][y]) - 0.00004*conc[1][x][y];
   }
   
   @Override

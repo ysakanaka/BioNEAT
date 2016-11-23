@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-import erne.AbstractFitnessFunction;
 import erne.Evolver;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
@@ -17,7 +16,6 @@ import use.processing.mutation.rules.AddNodeWithGradients;
 import use.processing.rd.RDBeadPositionFitnessFunction;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
-import use.processing.rd.RDFitnessFunction;
 import utils.RDLibrary;
 
 /**
@@ -49,6 +47,7 @@ public class RDLine {
     			new DisableTemplate(2), new MutateParameter(10), new AddNodeWithGradients(2), new AddActivationWithGradients(2), new AddInhibitionWithGradients(5)})));
 		Evolver evolver = new Evolver(Evolver.DEFAULT_POP_SIZE, Evolver.MAX_GENERATIONS, RDLibrary.rdstart, fitnessFunction, mutator, new RDFitnessDisplayer());
 		//evolver.setGUI(false);
+		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();
         System.out.println("Evolution completed.");
         //System.exit(0);

@@ -1,18 +1,24 @@
 package use.processing.rd;
 
+import java.lang.reflect.Field;
+import java.util.Date;
+
 public class RDConstants {
 	
     public static boolean debug = false;
+    public static boolean timing = true;
 
-	public static int maxTimeEval = 15000; //in time steps
-	public static double timePerStep = 1.0;
+	public static int maxTimeEval = 10000; //in time steps
+	public static double timePerStep = 0.1;
 	public static float spaceStep = 2.0f;
 	public static int hsize = 160;
 	public static int wsize = 160;
 	
-	public static int maxBeads = 100;
+	public static int maxBeads = 300;
 	public static double beadScale = 1e0;
     public static float beadRadius = 10.0f;
+    public static boolean beadExclusion = true;
+    public static double bounceRatePerBead = beadScale*1.4; //value is pretty random, means 30% increase per bead
 	
 
 	public static boolean wrap = false; //whether we wrap around the diffusion arena
@@ -23,7 +29,7 @@ public class RDConstants {
 	
 	public static float concScale = 1.0f; //for display, concentration scaling. [c] > scale saturates the color
 	public static float greyTargetScale = 0.3f; //To display the target area in grey
-	public static boolean showBeads = true; //Display beads instead of chemicals
+	public static boolean showBeads = false; //Display beads instead of chemicals
 	
 	public static boolean gradients = true;
 	public static float concChemostat = 100.0f;//for gradients
@@ -45,5 +51,28 @@ public class RDConstants {
 	public static double defaultRandomFitness = 2.0; //if not, use this one
 	public static int trials = 10; //Average over how many attempts?
 	//TODO add a function to read parameters from outside
+	
+	public static String configsToString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(new Date(System.currentTimeMillis()).toString()+"\n");
+		
+		Field[] f = RDConstants.class.getFields();
+		
+		
+		for(int i=0; i<f.length; i++){
+			try {
+				sb.append(f[i].getName()+"="+f[i].get(null)+"\n"); //Only valid for static methods
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return sb.toString();
+	}
+	
+	public static void main(String[] args){
+		System.out.println(configsToString());
+	}
 	
 }

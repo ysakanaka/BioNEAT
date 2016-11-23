@@ -32,7 +32,7 @@ public class DiffusionDispatcher extends Dispatcher<Boolean> {
 	        for (int x = 0; x < parent.conc[species].length; x++){
 	          for (int y = 0; y < parent.conc[species][x].length; y++){
 	            //System.out.println(x+" "+y+" "+conc[x][y]+" "+concTempGlobal[x][y]);
-	        	  parent.conc[species][x][y] = concTempGlobal[species][x][y];
+	        	  parent.conc[species][x][y] = Math.max(0.0f, concTempGlobal[species][x][y]);
 	          }
 	        }
 	      }

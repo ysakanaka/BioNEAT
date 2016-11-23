@@ -215,6 +215,90 @@ public class GraphMaker {
 		return g;
   }
   
+  public static OligoGraph<SequenceVertex,String> gradB(){
+	  OligoGraph<SequenceVertex,String> g = initGraph();
+		SequenceVertex grad1 = g.getVertexFactory().create();
+		g.addSpecies(grad1, 10.0, 5.0);
+		SequenceVertex grad2 = g.getVertexFactory().create();
+		g.addSpecies(grad2, 10.0, 5.0);
+		SequenceVertex glue = g.getVertexFactory().create();
+		g.addSpecies(glue, 100.0, 5.0);
+		String autoGlue = g.getEdgeFactory().createEdge(glue, glue);
+		g.addActivation(autoGlue, glue, glue, 30.0);
+		
+		SequenceVertex s1 = g.getVertexFactory().create();
+		g.addSpecies(s1, 10.0, 5.0);
+		String autos1 = g.getEdgeFactory().createEdge(s1, s1);
+		g.addActivation(autos1, s1, s1, 10.0);
+		
+		SequenceVertex antiGlue = g.getVertexFactory().create();
+		antiGlue.setInhib(true);
+		g.addSpecies(antiGlue, 1.0, 5.0);
+		g.addInhibition(autoGlue, antiGlue);
+		
+		SequenceVertex as1 = g.getVertexFactory().create();
+		as1.setInhib(true);
+		g.addSpecies(as1, 1.0, 5.0);
+		g.addInhibition(autos1, as1);
+		
+		String edge1 = g.getEdgeFactory().createEdge(grad2, antiGlue);
+		g.addActivation(edge1, grad2, antiGlue,5);
+		String edge2 = g.getEdgeFactory().createEdge(grad2, as1);
+		g.addActivation(edge2, grad2, as1,100);
+		
+		
+		
+		
+		String edge3 = g.getEdgeFactory().createEdge(s1, antiGlue);
+		g.addActivation(edge3, s1, antiGlue,30.0);
+		
+		
+		return g;
+  }
+  
+  
+  public static OligoGraph<SequenceVertex,String> gradBAgain(){
+	  OligoGraph<SequenceVertex,String> g = initGraph();
+		SequenceVertex grad1 = g.getVertexFactory().create();
+		g.addSpecies(grad1, 10.0, 5.0);
+		SequenceVertex grad2 = g.getVertexFactory().create();
+		g.addSpecies(grad2, 10.0, 5.0);
+		SequenceVertex glue = g.getVertexFactory().create();
+		g.addSpecies(glue, 100.0, 5.0);
+		String autoGlue = g.getEdgeFactory().createEdge(glue, glue);
+		g.addActivation(autoGlue, glue, glue, 25.0);
+		
+		SequenceVertex s1 = g.getVertexFactory().create();
+		g.addSpecies(s1, 10.0, 5.0);
+		String autos1 = g.getEdgeFactory().createEdge(s1, s1);
+		g.addActivation(autos1, s1, s1, 10.0);
+		
+		SequenceVertex antiGlue = g.getVertexFactory().create();
+		antiGlue.setInhib(true);
+		g.addSpecies(antiGlue, 1.0, 5.0);
+		g.addInhibition(autoGlue, antiGlue);
+		
+		SequenceVertex as1 = g.getVertexFactory().create();
+		as1.setInhib(true);
+		g.addSpecies(as1, 1.0, 5.0);
+		g.addInhibition(autos1, as1);
+		
+		String edge1 = g.getEdgeFactory().createEdge(grad2, antiGlue);
+		g.addActivation(edge1, grad2, antiGlue,6);
+		String edge2 = g.getEdgeFactory().createEdge(grad2, as1);
+		g.addActivation(edge2, grad2, as1,100);
+		
+		
+		
+		
+		String edge3 = g.getEdgeFactory().createEdge(s1, antiGlue);
+		g.addActivation(edge3, s1, antiGlue,30.0);
+		
+		
+		return g;
+  }
+  
+  
   //Addapted from the original bioneat code
   public static OligoGraph<SequenceVertex,String> fromReactionNetwork(ReactionNetwork network){
 	  OligoGraph<SequenceVertex,String> graph = initGraph();

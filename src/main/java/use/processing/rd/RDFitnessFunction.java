@@ -1,5 +1,9 @@
 package use.processing.rd;
 
+import java.util.ArrayList;
+
+import com.google.common.collect.HashBasedTable;
+import use.processing.bead.Bead;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import model.OligoGraph;
@@ -18,7 +22,7 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 	
 	protected boolean[][] pattern;
 	protected double randomFitness;
-	protected static final RDPatternFitnessResult minFitness = new RDPatternFitnessResult(new float[1][1][1], new boolean[1][1],0,0.0);
+	protected static final RDPatternFitnessResult minFitness = new RDPatternFitnessResult(new float[1][1][1], new boolean[1][1],HashBasedTable.<Integer,Integer,ArrayList<Bead>>create(),0.0);
 	
 	public RDFitnessFunction(boolean[][] pattern){
 		this.pattern = pattern;
@@ -42,6 +46,7 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
+		long startTime = System.currentTimeMillis();
 		RDSystem syst = new RDSystem();
 		 OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(network);
 		  g.exoConc = RDConstants.exoConc;
@@ -54,8 +59,12 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 		  for(int step=0; step<RDConstants.maxTimeEval; step++){
 			  syst.update();
 		  }
-		  
-		return new RDPatternFitnessResult(syst.conc,pattern,syst.os.total+syst.os.inhTotal, randomFitness);
+		  if(RDConstants.timing){
+			  System.out.println("total time: "+(System.currentTimeMillis()-startTime));
+			  System.out.println("total bead update:"+syst.totalBeads);
+			  System.out.println("total conc update:"+syst.totalConc);
+		  }
+		return new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
 	}
 
 	@Override

@@ -1,8 +1,13 @@
 package use.processing.rd;
 
+import java.util.ArrayList;
+
+import com.google.common.collect.Table;
+
 import model.OligoGraph;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
+import use.processing.bead.Bead;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 import utils.RDLibrary;
@@ -50,12 +55,11 @@ public class PatternEvaluator {
 		return match;
 	}
 	
-	public static boolean[][] detectBeads(float[][] concBead){
-		boolean[][] res = new boolean[concBead.length][];
-		for(int i = 0; i<concBead.length; i++){
-			res[i] = new boolean[concBead[i].length];
-			for(int j=0; j<concBead[i].length;j++){
-				res[i][j] = concBead[i][j]>0.0;
+	public static boolean[][] detectBeads(int sizex, int sizey, Table<Integer,Integer,ArrayList<Bead>> beads){
+		boolean[][] res = new boolean[sizex][sizey];
+		for(int i = 0; i<sizex; i++){
+			for(int j=0; j<sizey;j++){
+				res[i][j] = (beads.get(i, j)!= null);
 			}
 		}
 		return res;
@@ -69,7 +73,7 @@ public class PatternEvaluator {
 			RDSystem syst = new RDSystem();
 			syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
 			syst.init(false);
-			avgdist += distance(pattern,detectBeads(syst.conc[syst.os.total+syst.os.inhTotal]));
+			avgdist += distance(pattern,detectBeads(syst.conc[0].length, syst.conc[0][0].length,syst.beadsOnSpot));
 		}
 		return avgdist/(double)RDConstants.trials;
 	}
@@ -82,7 +86,7 @@ public class PatternEvaluator {
 			RDSystem syst = new RDSystem();
 			syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
 			syst.init(false);
-			avgdist += matchOnPattern(pattern,detectBeads(syst.conc[syst.os.total+syst.os.inhTotal]));
+			avgdist += matchOnPattern(pattern,detectBeads(syst.conc[0].length, syst.conc[0][0].length,syst.beadsOnSpot));
 		}
 		return avgdist/(double)RDConstants.trials;
 	}

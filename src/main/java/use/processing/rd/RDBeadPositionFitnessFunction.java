@@ -26,6 +26,7 @@ public class RDBeadPositionFitnessFunction extends AbstractFitnessFunction {
 	
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
+		long startTime = System.currentTimeMillis();
 		RDSystem syst = new RDSystem();
 		 OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(network);
 		  g.exoConc = RDConstants.exoConc;
@@ -38,8 +39,13 @@ public class RDBeadPositionFitnessFunction extends AbstractFitnessFunction {
 		  for(int step=0; step<RDConstants.maxTimeEval; step++){
 			  syst.update();
 		  }
+		  if(RDConstants.timing){
+			  System.out.println("total time: "+(System.currentTimeMillis()-startTime));
+			  System.out.println("total bead update:"+syst.totalBeads);
+			  System.out.println("total conc update:"+syst.totalConc);
+		  }
 		  
-		return new RDBeadPositionFitnessResult(syst.conc,pattern,syst.os.total+syst.os.inhTotal, 0.0,target,syst.beads);
+		return new RDBeadPositionFitnessResult(syst.conc,pattern,syst.beadsOnSpot, 0.0,target,syst.beads);
 	}
 
 	@Override
