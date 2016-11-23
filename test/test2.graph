@@ -1,0 +1,101 @@
+{
+  "nodes": [
+    {
+      "name": "a",
+      "parameter": 40.0,
+      "initialConcentration": 10.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "b",
+      "parameter": 50.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "c",
+      "parameter": 50.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "IcTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 53.84213953650103
+    },
+    {
+      "name": "dg",
+      "parameter": 99.37211324146394,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 148.3890327389491
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 0,
+      "enabled": true,
+      "parameter": 5.0,
+      "from": "c",
+      "to": "c"
+    },
+    {
+      "innovation": 9,
+      "enabled": false,
+      "parameter": 34.187820634853836,
+      "from": "a",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 15,
+      "enabled": true,
+      "parameter": 24.492688979493124,
+      "from": "b",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 44,
+      "enabled": true,
+      "parameter": 1.2451137581499803,
+      "from": "a",
+      "to": "dg"
+    },
+    {
+      "innovation": 45,
+      "enabled": true,
+      "parameter": 34.187820634853836,
+      "from": "dg",
+      "to": "IcTc"
+    }
+  ],
+  "parameters": {
+    "nick": 10.0,
+    "pol": 10.0,
+    "exo": 10.0
+  }
+}

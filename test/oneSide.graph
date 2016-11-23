@@ -1,0 +1,101 @@
+{
+  "nodes": [
+    {
+      "name": "a",
+      "parameter": 111.7665415180495,
+      "initialConcentration": 10.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "b",
+      "parameter": 63.20900426315886,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "c",
+      "parameter": 10.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "IcTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 21.454959248088066
+    },
+    {
+      "name": "dl",
+      "parameter": 177.64707746781767,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 82.20562165055728
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 0,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "c",
+      "to": "c"
+    },
+    {
+      "innovation": 6,
+      "enabled": true,
+      "parameter": 5.0,
+      "from": "c",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 10,
+      "enabled": true,
+      "parameter": 100.0,
+      "from": "b",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 56,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "b",
+      "to": "dl"
+    },
+    {
+      "innovation": 57,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "dl",
+      "to": "c"
+    }
+  ],
+  "parameters": {
+    "nick": 10.0,
+    "pol": 10.0,
+    "exo": 10.0
+  }
+}
