@@ -93,9 +93,9 @@ public class RDFitnessDisplayer implements FitnessDisplayer {
 			      float val2 = 0.0f;
 			      float val3 = 0.0f;
 			      if(RDConstants.showBeads){
-			    	  Table<Integer,Integer,ArrayList<Bead>> beads = res.getBeads();
+			    	  //Table<Integer,Integer,ArrayList<Bead>> beads = res.getBeads();
 			    	  //int pos = res.getBeadIndex();
-			    	  boolean here = (beads.get(x, y)!=null);
+			    	  boolean here = res.getPositions()[x][y];
 			    	  
 			    	  val = here?1.0f:(patt[x][y]?RDConstants.greyTargetScale:0.0f);
 			    	  val2 = here?1.0f:(patt[x][y]?RDConstants.greyTargetScale:0.0f);

@@ -126,5 +126,12 @@ public class AddNodeWithGradients extends AddNode {
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean isApplicable(Individual indiv) {
+		//It's always possible to add a connection.
+		//This should be modified if we want to implement a maximum system size.
+		return !RDConstants.ceilingNodes || indiv.getNetwork().nodes.size() < RDConstants.maxNodes;
+	}
 
 }

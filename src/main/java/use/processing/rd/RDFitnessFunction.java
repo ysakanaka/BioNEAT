@@ -22,7 +22,7 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 	
 	protected boolean[][] pattern;
 	protected double randomFitness;
-	protected static final RDPatternFitnessResult minFitness = new RDPatternFitnessResult(new float[1][1][1], new boolean[1][1],HashBasedTable.<Integer,Integer,ArrayList<Bead>>create(),0.0);
+	protected static final RDPatternFitnessResult minFitness = RDPatternFitnessResult.getMinFitness();
 	
 	public RDFitnessFunction(boolean[][] pattern){
 		this.pattern = pattern;
@@ -36,6 +36,7 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 		} else {
 			randomFitness = RDConstants.defaultRandomFitness;
 		}
+		if (randomFitness < 0) randomFitness = 0.0;
 	}
 
 	public static void main(String[] args) {

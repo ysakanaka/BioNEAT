@@ -49,7 +49,7 @@ public class PatternEvaluator {
 				return Double.MAX_VALUE;
 			}
 			for (int j=0; j<results[i].length; j++){
-				if (results[i][j]&&pattern[i][j]) match += 1.0;
+				if (results[i][j]) match += pattern[i][j]?RDConstants.matchBonus:RDConstants.matchPenalty;
 			}
 		}
 		return match;
@@ -60,6 +60,16 @@ public class PatternEvaluator {
 		for(int i = 0; i<sizex; i++){
 			for(int j=0; j<sizey;j++){
 				res[i][j] = (beads.get(i, j)!= null);
+			}
+		}
+		return res;
+	}
+	
+	public static boolean[][] detectGlue(float conc[][]){
+		boolean[][] res = new boolean[conc.length][conc[0].length];
+		for(int i = 0; i<conc.length; i++){
+			for(int j=0; j<conc[i].length;j++){
+				res[i][j] = (conc[i][j]>RDConstants.cutOff);
 			}
 		}
 		return res;
@@ -86,7 +96,10 @@ public class PatternEvaluator {
 			RDSystem syst = new RDSystem();
 			syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
 			syst.init(false);
-			avgdist += matchOnPattern(pattern,detectBeads(syst.conc[0].length, syst.conc[0][0].length,syst.beadsOnSpot));
+			for(int j=0; j<RDConstants.maxTimeEval; j++) syst.update();
+			boolean[][] positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(syst.conc[RDConstants.glueIndex])
+					:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,syst.beadsOnSpot));
+			avgdist += matchOnPattern(pattern,positions);
 		}
 		return avgdist/(double)RDConstants.trials;
 	}

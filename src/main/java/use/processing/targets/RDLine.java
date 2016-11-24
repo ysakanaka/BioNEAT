@@ -16,6 +16,7 @@ import use.processing.mutation.rules.AddNodeWithGradients;
 import use.processing.rd.RDBeadPositionFitnessFunction;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
+import use.processing.rd.RDFitnessFunction;
 import utils.RDLibrary;
 
 /**
@@ -40,8 +41,8 @@ public class RDLine {
 		
 		
 		
-		RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-		//RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);
+		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
+		RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);
 		
         Mutator mutator = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
     			new DisableTemplate(2), new MutateParameter(10), new AddNodeWithGradients(2), new AddActivationWithGradients(2), new AddInhibitionWithGradients(5)})));

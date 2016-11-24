@@ -8,7 +8,7 @@ public class RDConstants {
     public static boolean debug = false;
     public static boolean timing = true;
 
-	public static int maxTimeEval = 10000; //in time steps
+	public static int maxTimeEval = 2000; //in time steps
 	public static double timePerStep = 0.1;
 	public static float spaceStep = 2.0f;
 	public static int hsize = 160;
@@ -27,7 +27,7 @@ public class RDConstants {
 	public static float initConc = 1.0f;
 	public static float ratio = 1; //what fraction of the area should be spiked (i.e. activation on the side versus full act.
 	
-	public static float concScale = 1.0f; //for display, concentration scaling. [c] > scale saturates the color
+	public static float concScale = 10.0f; //for display, concentration scaling. [c] > scale saturates the color
 	public static float greyTargetScale = 0.3f; //To display the target area in grey
 	public static boolean showBeads = false; //Display beads instead of chemicals
 	
@@ -36,6 +36,9 @@ public class RDConstants {
 	public static double gradientScale = 4e-2; //to stabilize the gradient concentrations, equal to sqrt(exo/diff)
 	public static int glueIndex = 2; //which species is the glue?
 	public static int speciesOffset = 2; //to prevent seeing gradients or some basic species
+	
+	public static boolean useGlueAsTarget = true; //If true, then use concentration of glue (as defined by the glue index) instead of bead position
+	public static float cutOff = 1e-1f; //Below this concentration, beads are unlikely to aggregate (although, K dependent...) so not taken into account
 	
 	public static double polConc = 1.0;
 	public static double nickConc = 1.0;
@@ -49,7 +52,13 @@ public class RDConstants {
 	public static boolean useMatchFitness = true; // Check how good we cover the pattern, rather than using a distance based approach. Useful if we can barely cover the pattern.
 	public static boolean evalRandomDistance = true; //before starting, check the distance between a random dist and the pattern.
 	public static double defaultRandomFitness = 2.0; //if not, use this one
+	public static double matchBonus = 1.0;
+	public static double matchPenalty = -0.1; // we expect a lot more penalties
 	public static int trials = 10; //Average over how many attempts?
+	
+	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?
+	public static int maxNodes = 10;
+	
 	//TODO add a function to read parameters from outside
 	
 	public static String configsToString(){

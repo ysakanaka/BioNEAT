@@ -19,19 +19,40 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 	protected boolean[][] pattern;
 	protected Table<Integer,Integer,ArrayList<Bead>> beads;//index of the first template species, indicating bead positions;
 	protected double fitness;
+	protected boolean[][] positions;
+	
+	protected RDPatternFitnessResult(){
+		fitness = 0.0;
+	}
 	
 	public RDPatternFitnessResult(float[][][] conc, boolean[][] pattern, HashBasedTable<Integer,Integer,ArrayList<Bead>> beads, double randomFit){
 		this.conc = conc;
 		this.pattern = pattern;
 		this.beads = beads;
+		positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(conc[RDConstants.glueIndex])
+				:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads));
 		if(RDConstants.useMatchFitness){
-			fitness = ((PatternEvaluator.matchOnPattern(pattern, PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads)))
+			fitness = ((PatternEvaluator.matchOnPattern(pattern, positions))
 					*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
 		} else {
 		fitness = RDConstants.hsize*RDConstants.wsize/((PatternEvaluator.distance(pattern, 
-				PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads)))*RDConstants.spaceStep*RDConstants.spaceStep);
+				positions))*RDConstants.spaceStep*RDConstants.spaceStep);
 		}
 		fitness = Math.max(0.0, fitness - randomFit);
+	}
+	
+	/**
+	 * For child classes, skipping fitness evaluation, just setting params.
+	 * @param conc
+	 * @param pattern
+	 * @param beads
+	 */
+	protected RDPatternFitnessResult(float[][][] conc, boolean[][] pattern, HashBasedTable<Integer,Integer,ArrayList<Bead>> beads){
+		this.conc = conc;
+		this.pattern = pattern;
+		this.beads = beads;
+		positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(conc[RDConstants.glueIndex])
+				:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads));
 	}
 
 	@Override
@@ -49,6 +70,14 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 	
 	public Table<Integer,Integer,ArrayList<Bead>> getBeads(){
 		return beads;
+	}
+	
+	public boolean[][] getPositions(){
+		return positions;
+	}
+	
+	public static RDPatternFitnessResult getMinFitness(){
+		return new RDPatternFitnessResult();
 	}
 
 }

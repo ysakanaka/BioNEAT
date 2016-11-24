@@ -26,7 +26,7 @@ public class RDBeadPositionFitnessResult extends RDPatternFitnessResult {
 	}
 			
 	public RDBeadPositionFitnessResult(float[][][] conc, boolean[][] pattern, HashBasedTable<Integer,Integer,ArrayList<Bead>> beadSpots, double randomFit, BeadPositionTarget target, ArrayList<Bead> beads){
-		super(conc,pattern,beadSpots,randomFit); //Mostly for display
+		super(conc,pattern,beadSpots); //Mostly for display
 		this.target = target;
 		this.beadslist = beads; //TODO: I can improve that, now...
 	}

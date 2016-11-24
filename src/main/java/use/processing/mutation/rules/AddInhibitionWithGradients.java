@@ -107,7 +107,7 @@ public class AddInhibitionWithGradients extends MutationRule {
 	
 	@Override
 	public boolean isApplicable(Individual indiv) {
-		// TODO Auto-generated method stub
-		return true;
+		
+		return !RDConstants.ceilingNodes || indiv.getNetwork().nodes.size() < RDConstants.maxNodes;
 	}
 }
