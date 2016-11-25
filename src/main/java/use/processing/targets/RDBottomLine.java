@@ -13,34 +13,29 @@ import erne.mutation.rules.MutateParameter;
 import use.processing.mutation.rules.AddActivationWithGradients;
 import use.processing.mutation.rules.AddInhibitionWithGradients;
 import use.processing.mutation.rules.AddNodeWithGradients;
-import use.processing.rd.RDBeadPositionFitnessFunction;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
 import use.processing.rd.RDFitnessFunction;
 import utils.RDLibrary;
 
-/**
- * Defines a target with a centered line of ratio width compared to the whole area
- * @author naubertkato
- *
- */
-public class RDLine {
+public class RDBottomLine {
 	
-	public static float width = 0.15f; //not used right now
-	public static float offset = 0.5f*RDConstants.hsize;
-	
-	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
-		boolean[][] target = new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+	public static float width = 0.3f;
+
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException, ExecutionException {
+boolean[][] target = new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
 		
 		for(int i = 0; i<target.length; i++){
 			for(int j = 0; j<target[i].length;j++){
-				target[i][j] = (i>=target.length*(0.5f-width/2.0f)&&i<=target.length*(0.5f+width/2.0f));
+				target[i][j] = (j>=target.length*(1.0f-width));
 			}
 		}
 		
+		RDConstants.evalRandomDistance = false;
+		RDConstants.defaultRandomFitness = 0.0;
+		RDConstants.matchPenalty = -0.5;
 		
-		
-		
+		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);
 		
@@ -57,5 +52,7 @@ public class RDLine {
 		evolver.evolve();
         System.out.println("Evolution completed.");
         //System.exit(0);
+
 	}
+
 }

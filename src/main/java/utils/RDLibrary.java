@@ -41,7 +41,7 @@ public class RDLibrary {
 				"    {\n" + 
 				"      \"innovation\": 0,\n" + 
 				"      \"enabled\": true,\n" + 
-				"      \"parameter\": 10.0,\n" + 
+				"      \"parameter\": 5.0,\n" + 
 				"      \"from\": \"c\",\n" + 
 				"      \"to\": \"c\"\n" + 
 				"    }\n" + 

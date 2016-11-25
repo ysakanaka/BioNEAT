@@ -5,6 +5,7 @@ import erne.AbstractFitnessResult;
 import model.OligoGraph;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
+import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import use.processing.targets.BeadPositionTarget;
 import utils.GraphMaker;

@@ -57,8 +57,8 @@ public class RDApplet extends PApplet{
 		}
 		}
 		
-		RDConstants.hsize = 160;
-		RDConstants.wsize = 160;
+		RDConstants.hsize = 200;
+		RDConstants.wsize = 200;
 		RDConstants.spaceStep = 2.0f;
 		RDConstants.timePerStep = 0.1f;
 		RDConstants.concScale = 10.0f;
@@ -67,6 +67,7 @@ public class RDApplet extends PApplet{
 		RDConstants.concChemostat = 100.0f;
 		RDConstants.maxBeads = 300;
 		RDConstants.maxTimeEval = 100000/bigTimeStep;
+		RDConstants.timing = false;
 		offset = 2;
 		
         PApplet.main("use.processing.rd.RDApplet");
@@ -133,7 +134,8 @@ public class RDApplet extends PApplet{
 		public void setTestGraph(){
 		  OligoGraph<SequenceVertex,String> g;
 		  if(reac == null){
-		    g = GraphMaker.gradBAgain();
+			  g = GraphMaker.bottomLine();
+		   // g = GraphMaker.line();
 			//g = GraphMaker.makeAutocatalyst();
 		  
 		  } else {

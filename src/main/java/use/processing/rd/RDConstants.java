@@ -8,7 +8,7 @@ public class RDConstants {
     public static boolean debug = false;
     public static boolean timing = true;
 
-	public static int maxTimeEval = 2000; //in time steps
+	public static int maxTimeEval = 3000; //in time steps
 	public static double timePerStep = 0.1;
 	public static float spaceStep = 2.0f;
 	public static int hsize = 160;
@@ -57,7 +57,18 @@ public class RDConstants {
 	public static int trials = 10; //Average over how many attempts?
 	
 	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?
-	public static int maxNodes = 10;
+	public static int maxNodes = 6;
+	
+	
+	//For evolution
+	public static int weightDisableTemplate = 5;
+	public static int weightMutateParameter = 20;
+	public static int weightAddNodeWithGradients = 1;
+	public static int weightAddActivationWithGradients = 1;
+	public static int weightAddInhibitionWithGradients = 2;
+	
+	public static int populationSize = 50;
+	public static int maxGeneration = 200;
 	
 	//TODO add a function to read parameters from outside
 	

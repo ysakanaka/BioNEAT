@@ -48,13 +48,17 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 			// calculate inhK using 7_6 rules
 			for (Node node : network.nodes) {
 				if (node.type == Node.INHIBITING_SEQUENCE) {
-					for (Node n1 : network.nodes) {
-						for (Node n2 : network.nodes) {
-							if (node.name.equals("I" + n1.name + n2.name)) {
-								node.parameter = (double) 1 / 100 * Math.exp((Math.log(n1.parameter) + Math.log(n2.parameter)) / 2);
-							}
-						}
+					Node from ;
+					Node to;
+					if(node.name.contains("T")){
+						String[] names = node.name.substring(1).split("T");
+						from = network.getNodeByName(names[0]); // TODO: warning, very implementation dependent
+						to = network.getNodeByName(names[1]);
+					} else {
+					from = network.getNodeByName(""+node.name.charAt(1)); // TODO: warning, very implementation dependent
+					to = network.getNodeByName(""+node.name.charAt(2));
 					}
+					node.parameter = (double) 1 / 100 * Math.exp((Math.log(from.parameter) + Math.log(to.parameter)) / 2);
 				}
 			}
 
