@@ -38,7 +38,7 @@ public class RDConstants {
 	public static int speciesOffset = 2; //to prevent seeing gradients or some basic species
 	
 	public static boolean useGlueAsTarget = true; //If true, then use concentration of glue (as defined by the glue index) instead of bead position
-	public static float cutOff = 1e-1f; //Below this concentration, beads are unlikely to aggregate (although, K dependent...) so not taken into account
+	public static float cutOff = 1e0f; //Below this concentration, beads are unlikely to aggregate (although, K dependent...) so not taken into account
 	
 	public static double polConc = 1.0;
 	public static double nickConc = 1.0;
@@ -49,11 +49,14 @@ public class RDConstants {
 	
 	public static String[] gradientsName = {"a", "b"};
 	
-	public static boolean useMatchFitness = true; // Check how good we cover the pattern, rather than using a distance based approach. Useful if we can barely cover the pattern.
-	public static boolean evalRandomDistance = true; //before starting, check the distance between a random dist and the pattern.
-	public static double defaultRandomFitness = 2.0; //if not, use this one
+	public static boolean useMatchFitness = false; // Check how good we cover the pattern, rather than using a distance based approach. Useful if we can barely cover the pattern.
 	public static double matchBonus = 1.0;
 	public static double matchPenalty = -0.1; // we expect a lot more penalties
+	public static boolean useHellingerDistance = true; // false means hamming
+	public static int horizontalBins = 1; //used to bin the Hellinger distance. Too little bins mean no pattern coverage. Too much means too much penalty for holes
+	public static int verticalBins = 3;
+	public static boolean evalRandomDistance = true; //before starting, check the distance between a random dist and the pattern.
+	public static double defaultRandomFitness = 2.0; //if not, use this one
 	public static int trials = 10; //Average over how many attempts?
 	
 	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?

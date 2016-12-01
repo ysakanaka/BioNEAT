@@ -31,7 +31,8 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 			if (RDConstants.useMatchFitness){
 				randomFitness = PatternEvaluator.matchRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep/(RDConstants.hsize*RDConstants.wsize);
 			} else {
-			    randomFitness =RDConstants.hsize*RDConstants.wsize/(PatternEvaluator.distanceRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep);
+			    randomFitness = RDConstants.useHellingerDistance?1.0-PatternEvaluator.hellingerDistanceRandomDistribution(pattern):
+			    		RDConstants.hsize*RDConstants.wsize/(PatternEvaluator.distanceRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep);
 			}
 			System.out.println("Random fitness evaluation done: "+randomFitness);
 		} else {

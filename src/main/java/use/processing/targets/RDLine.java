@@ -26,7 +26,7 @@ import utils.RDLibrary;
  */
 public class RDLine {
 	
-	public static float width = 0.15f; //not used right now
+	public static float width = 0.3f; 
 	public static float offset = 0.5f*RDConstants.hsize;
 	
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
@@ -41,6 +41,15 @@ public class RDLine {
 		
 		
 		
+		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
+		RDConstants.evalRandomDistance = true;
+		//RDConstants.defaultRandomFitness = 0.0;
+		//RDConstants.matchPenalty = -0.2;
+		RDConstants.maxGeneration = 200;
+		RDConstants.maxTimeEval = 3000;
+		RDConstants.maxNodes = 16;
+		
+		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);
 		

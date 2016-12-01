@@ -17,7 +17,7 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 	
 	protected float[][][] conc;
 	protected boolean[][] pattern;
-	protected Table<Integer,Integer,ArrayList<Bead>> beads;//index of the first template species, indicating bead positions;
+	//protected Table<Integer,Integer,ArrayList<Bead>> beads;//index of the first template species, indicating bead positions;
 	protected double fitness;
 	protected boolean[][] positions;
 	
@@ -26,14 +26,18 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 	}
 	
 	public RDPatternFitnessResult(float[][][] conc, boolean[][] pattern, HashBasedTable<Integer,Integer,ArrayList<Bead>> beads, double randomFit){
-		this.conc = conc;
+		//this.concGlue = conc[RDConstants.glueIndex];
+		this.conc = new float[Math.min(conc.length, RDConstants.glueIndex+2)][][];
+		for(int i = 0; i<this.conc.length; i++) this.conc[i] = conc[i];
 		this.pattern = pattern;
-		this.beads = beads;
+		//this.beads = beads;
 		positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(conc[RDConstants.glueIndex])
 				:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads));
 		if(RDConstants.useMatchFitness){
 			fitness = ((PatternEvaluator.matchOnPattern(pattern, positions))
 					*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
+		} else if(RDConstants.useHellingerDistance){
+		    fitness = 1.0 - PatternEvaluator.hellingerDistance(conc[RDConstants.glueIndex], pattern);
 		} else {
 		fitness = RDConstants.hsize*RDConstants.wsize/((PatternEvaluator.distance(pattern, 
 				positions))*RDConstants.spaceStep*RDConstants.spaceStep);
@@ -48,9 +52,10 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 	 * @param beads
 	 */
 	protected RDPatternFitnessResult(float[][][] conc, boolean[][] pattern, HashBasedTable<Integer,Integer,ArrayList<Bead>> beads){
-		this.conc = conc;
+		this.conc = new float[Math.min(conc.length, RDConstants.glueIndex+2)][][];
+		for(int i = 0; i<this.conc.length; i++) this.conc[i] = conc[i];
 		this.pattern = pattern;
-		this.beads = beads;
+		//this.beads = beads;
 		positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(conc[RDConstants.glueIndex])
 				:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads));
 	}
@@ -68,9 +73,9 @@ public class RDPatternFitnessResult extends AbstractFitnessResult {
 		return pattern;
 	}
 	
-	public Table<Integer,Integer,ArrayList<Bead>> getBeads(){
-		return beads;
-	}
+	//public Table<Integer,Integer,ArrayList<Bead>> getBeads(){
+	//	return beads;
+	//}
 	
 	public boolean[][] getPositions(){
 		return positions;
