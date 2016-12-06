@@ -44,7 +44,7 @@ public class RDLine {
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = true;
 		//RDConstants.defaultRandomFitness = 0.0;
-		//RDConstants.matchPenalty = -0.2;
+		RDConstants.matchPenalty = -0.45;
 		RDConstants.maxGeneration = 200;
 		RDConstants.maxTimeEval = 3000;
 		RDConstants.maxNodes = 16;

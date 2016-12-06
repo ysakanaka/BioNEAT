@@ -57,15 +57,16 @@ public class RDApplet extends PApplet{
 		}
 		}
 		
-		RDConstants.hsize = 200;
-		RDConstants.wsize = 200;
+		RDConstants.hsize = 250;
+		RDConstants.wsize = 250;
 		RDConstants.spaceStep = 2.0f;
 		RDConstants.timePerStep = 0.1f;
 		RDConstants.concScale = 10.0f;
 		RDConstants.beadExclusion = true;
 		RDConstants.bounceRatePerBead = 1.4;
 		RDConstants.concChemostat = 100.0f;
-		RDConstants.maxBeads = 300;
+		RDConstants.gradientScale /= 1.6;
+		RDConstants.maxBeads = 700;
 		RDConstants.maxTimeEval = 100000/bigTimeStep;
 		RDConstants.timing = false;
 		offset = 2;
