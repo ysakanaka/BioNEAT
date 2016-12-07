@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import erne.Evolver;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
+import erne.mutation.PruningMutator;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
 import use.processing.mutation.rules.AddActivationWithGradients;
@@ -53,12 +54,23 @@ public class RDLine {
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);
 		
-        Mutator mutator = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
+Mutator mutator;
+        
+        if(RDConstants.hardTrim){
+        	mutator = new PruningMutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
+        			new DisableTemplate(RDConstants.weightDisableTemplate), 
+        			new MutateParameter(RDConstants.weightMutateParameter), 
+        			new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients), 
+        			new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
+        			new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
+        } else {
+            mutator = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
     			new DisableTemplate(RDConstants.weightDisableTemplate), 
     			new MutateParameter(RDConstants.weightMutateParameter), 
     			new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients), 
     			new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
     			new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
+        }
 		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
 				fitnessFunction, mutator, new RDFitnessDisplayer());
 		//evolver.setGUI(false);

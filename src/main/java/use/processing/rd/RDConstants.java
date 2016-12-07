@@ -61,14 +61,18 @@ public class RDConstants {
 	
 	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?
 	public static int maxNodes = 6;
+	public static boolean hardTrim = true; //If true, any species that is not produced by the system is removed from the
+	//individual. This is may prevent some specific patterns that affect a system's "initialization" phase, but will also
+	//greatly prevent bloating
 	
 	
 	//For evolution
 	public static int weightDisableTemplate = 10;
 	public static int weightMutateParameter = 20;
 	public static int weightAddNodeWithGradients = 1;
-	public static int weightAddActivationWithGradients = 1;
+	public static int weightAddActivationWithGradients = 3;
 	public static int weightAddInhibitionWithGradients = 1;
+	
 	
 	public static int populationSize = 50;
 	public static int maxGeneration = 200;

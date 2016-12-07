@@ -23,7 +23,7 @@ public class RDLibrary {
 				"      \"parameter\": 10.0,\n" + 
 				"      \"initialConcentration\": 5.0,\n" + 
 				"      \"type\": 1,\n" + 
-				"      \"protectedSequence\": false,\n" + 
+				"      \"protectedSequence\": true,\n" + 
 				"      \"DNAString\": \"\",\n" + 
 				"      \"reporter\": false\n" + 
 				"    },\n" + 
@@ -32,7 +32,7 @@ public class RDLibrary {
 				"      \"parameter\": 100.0,\n" + 
 				"      \"initialConcentration\": 5.0,\n" + 
 				"      \"type\": 1,\n" + 
-				"      \"protectedSequence\": false,\n" + 
+				"      \"protectedSequence\": true,\n" + 
 				"      \"DNAString\": \"\",\n" + 
 				"      \"reporter\": false\n" + 
 				"    }\n" + 

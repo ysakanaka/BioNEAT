@@ -1,0 +1,198 @@
+{
+  "nodes": [
+    {
+      "name": "a",
+      "parameter": 100.0,
+      "initialConcentration": 10.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "b",
+      "parameter": 100.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "c",
+      "parameter": 10.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "IaTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 21.454959248088066
+    },
+    {
+      "name": "dh",
+      "parameter": 177.64707746781767,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 82.20562165055728
+    },
+    {
+      "name": "IdhTdh",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 21.454959248088066
+    },
+    {
+      "name": "IcTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 21.454959248088066
+    },
+    {
+      "name": "df",
+      "parameter": 50.0,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 82.20562165055728
+    },
+    {
+      "name": "IaTdf",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 21.454959248088066
+    },
+    {
+      "name": "IbTdf",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 21.454959248088066
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 0,
+      "enabled": true,
+      "parameter": 30.0,
+      "from": "a",
+      "to": "c"
+    },
+    {
+      "innovation": 1,
+      "enabled": true,
+      "parameter": 13.0,
+      "from": "dh",
+      "to": "dh"
+    },
+    {
+      "innovation": 2,
+      "enabled": true,
+      "parameter": 100.0,
+      "from": "dh",
+      "to": "IaTc"
+    },
+    {
+      "innovation": 3,
+      "enabled": true,
+      "parameter": 10.0,
+      "from": "b",
+      "to": "IdhTdh"
+    },
+    {
+      "innovation": 4,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "b",
+      "to": "IaTc"
+    },
+    {
+      "innovation": 5,
+      "enabled": true,
+      "parameter": 20.0,
+      "from": "c",
+      "to": "c"
+    },
+    {
+      "innovation": 6,
+      "enabled": true,
+      "parameter": 200.0,
+      "from": "df",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 7,
+      "enabled": true,
+      "parameter": 150.0,
+      "from": "a",
+      "to": "IbTdf"
+    },
+    {
+      "innovation": 8,
+      "enabled": true,
+      "parameter": 150.0,
+      "from": "b",
+      "to": "IaTdf"
+    },
+    {
+      "innovation": 9,
+      "enabled": true,
+      "parameter": 15.0,
+      "from": "a",
+      "to": "df"
+    },
+    {
+      "innovation": 10,
+      "enabled": true,
+      "parameter": 15.0,
+      "from": "b",
+      "to": "df"
+    }
+  ],
+  "parameters": {
+    "nick": 10.0,
+    "pol": 10.0,
+    "exo": 10.0
+  }
+}

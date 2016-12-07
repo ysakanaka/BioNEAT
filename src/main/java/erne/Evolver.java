@@ -256,4 +256,18 @@ public class Evolver implements Serializable {
 		}
 		return false;
 	}
+	
+	public static double[] getBestFitnessOverTime(String resultDirectory) throws ClassNotFoundException, IOException{
+		double[] ret;
+		Population population;
+		
+		population = (Population) Serializer.deserialize(resultDirectory + "/population");
+		ret = new double[population.getTotalGeneration()];
+		for(int i = 0; i<population.getTotalGeneration(); i++){
+			PopulationInfo info = population.getPopulationInfo(i);
+			ret[i] = info.getBestIndividual().getFitnessResult().getFitness();
+		}
+		
+		return ret;
+	}
 }
