@@ -57,7 +57,7 @@ Create IntelliJ project
 Run the Demo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-main class of use.math.Run
+main class of use.processing.target.RDLine
 
 
 Production
@@ -80,4 +80,3 @@ Version info
 ::
 
   ./gradlew version
-
