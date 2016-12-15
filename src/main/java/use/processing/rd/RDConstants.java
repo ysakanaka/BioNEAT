@@ -77,6 +77,8 @@ public class RDConstants {
 	public static int populationSize = 50;
 	public static int maxGeneration = 200;
 	
+	public static double comparisonThreshold = 0.1; //Since we are manipulating doubles, we want to make sure fitnesses are different enough to sort them
+	
 	//TODO add a function to read parameters from outside
 	
 	public static String configsToString(){

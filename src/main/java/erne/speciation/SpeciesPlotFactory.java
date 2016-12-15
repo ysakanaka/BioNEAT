@@ -56,6 +56,7 @@ public class SpeciesPlotFactory {
 		}
 		JFreeChart chart = ChartFactory.createXYLineChart("", "Evaluations", "Fitness", dataset, PlotOrientation.VERTICAL, true, false,
 				false);
+		chart.removeLegend();
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		XYPlot plot = (XYPlot) chart.getPlot();
 		plot.setBackgroundPaint(Color.white);
@@ -64,7 +65,7 @@ public class SpeciesPlotFactory {
 		}
 
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
-
+        chartPanel.setMinimumSize(new java.awt.Dimension(500, 300));
 		JPanel ret = new JPanel();
 		ret.setLayout(new BoxLayout(ret, BoxLayout.Y_AXIS));
 		ret.add(chartPanel);
@@ -90,12 +91,14 @@ public class SpeciesPlotFactory {
 		}
 
 		JFreeChart chart = createChart(dataset);
+		chart.removeLegend();
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 		for (int i = 0; i < dataset.getRowCount(); i++) {
 			plot.getRenderer().setSeriesPaint(i, colors[i % colors.length]);
 		}
 		ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+		 chartPanel.setMinimumSize(new java.awt.Dimension(500, 270));
 		return chartPanel;
 	}
 
