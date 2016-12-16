@@ -1,9 +1,12 @@
 package use.processing.rd;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import com.google.common.collect.Table;
 
+import edu.uci.ics.jung.graph.util.Pair;
 import model.OligoGraph;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
@@ -163,5 +166,46 @@ public class PatternEvaluator {
 			avgdist += matchOnPattern(pattern,positions);
 		}
 		return avgdist/(double)RDConstants.trials;
+	}
+	
+	public static int[][] getDistanceMatrix(boolean[][] pattern){
+		int[][] dists = new int[pattern.length][pattern[0].length];
+		HashSet<Pair<Integer>> toExploreNext = new HashSet<Pair<Integer>>();
+		
+		for(int i = 0; i< pattern.length; i++){
+			for(int j=0; j<pattern[0].length; j++){
+				if(pattern[i][j]){
+					//dists[i][j] = 1;
+					toExploreNext.add(new Pair<Integer>(i,j));
+				}
+				
+			}
+		}
+		
+		if(toExploreNext.isEmpty()) return dists;
+		
+		//Not the most efficient, which would be dynamic programming, but good enough since we do it once
+		for(int i = 0; i< pattern.length; i++){
+			for(int j=0; j<pattern[0].length; j++){
+				Iterator<Pair<Integer>> it = toExploreNext.iterator();
+				int val = RDConstants.useEuclDistance?distEucl(new Pair<Integer>(i,j),it.next()):distInf(new Pair<Integer>(i,j),it.next());
+				while(it.hasNext()){
+					val = Math.min(val, RDConstants.useEuclDistance?distEucl(new Pair<Integer>(i,j),it.next()):distInf(new Pair<Integer>(i,j),it.next()));
+					if (val == 0) break;
+				}
+				dists[i][j] = val;
+			}
+		}
+		
+		return dists;
+	}
+	
+	protected static int distEucl(Pair<Integer> p1,Pair<Integer> p2){
+		return (int) Math.floor(Math.sqrt((p1.getFirst()-p2.getFirst())*(p1.getFirst()-p2.getFirst())
+				+(p1.getSecond()-p2.getSecond())*(p1.getSecond()-p2.getSecond())));
+	}
+	
+	protected static int distInf(Pair<Integer> p1,Pair<Integer> p2){
+		return (int) Math.min(Math.abs(p1.getFirst()-p2.getFirst()),Math.abs(p1.getSecond()-p2.getSecond()));
 	}
 }
