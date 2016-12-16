@@ -79,6 +79,6 @@ Mutator mutator;
 		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();
         System.out.println("Evolution completed.");
-        //System.exit(0);
+        if(!Evolver.hasGUI()) System.exit(0);
 	}
 }

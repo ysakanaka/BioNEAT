@@ -52,5 +52,6 @@ public class RDLineIbuki3 {
 	  evolver.setExtraConfig(RDConstants.configsToString());
 	  evolver.evolve();
 	  System.out.println("Evolution completed.");
+	  if(!Evolver.hasGUI()) System.exit(0);
 	 }
 }
