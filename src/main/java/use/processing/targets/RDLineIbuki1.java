@@ -49,7 +49,7 @@ public class RDLineIbuki1{
    mutator=new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[]{new DisableTemplate(RDConstants.weightDisableTemplate),new MutateParameter(RDConstants.weightMutateParameter),new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients),new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients),new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
   }
   Evolver evolver=new Evolver(RDConstants.populationSize,RDConstants.maxGeneration,RDLibrary.rdstart,fitnessFunction,mutator,new RDFitnessDisplayer());
-  evolver.setGUI(true);
+  //evolver.setGUI(true);
   evolver.setExtraConfig(RDConstants.configsToString());
   evolver.evolve();
   System.out.println("Evolution completed.");
