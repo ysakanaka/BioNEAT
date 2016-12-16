@@ -25,6 +25,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   // this.beads = beads;
   positions=(RDConstants.useGlueAsTarget ? PatternEvaluator.detectGlue(conc[RDConstants.glueIndex]) : PatternEvaluator.detectBeads(pattern.length,pattern[0].length,beads));
 // I chose one of my distances
+// you can also choose!!
 // fitness=distanceTopology(pattern,positions);
   fitness=distanceBlurExponential(pattern,positions);
   fitness=Math.max(0.0,fitness-randomFit);
