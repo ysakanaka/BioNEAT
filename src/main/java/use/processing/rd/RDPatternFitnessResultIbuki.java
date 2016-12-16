@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -335,5 +336,6 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }catch(Exception e){
    e.printStackTrace();
   }
+
  }
 }

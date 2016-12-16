@@ -31,6 +31,7 @@ public class RDLineIbuki1{
     target[i][j]=(i>=target.length*(0.5f-width/2.0f)&&i<=target.length*(0.5f+width/2.0f));
    }
   }
+
 //  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
   RDConstants.evalRandomDistance=true;
@@ -39,6 +40,7 @@ public class RDLineIbuki1{
   RDConstants.populationSize=10;
   RDConstants.maxGeneration=100;
   RDConstants.maxTimeEval=500;
+
   RDConstants.maxNodes=16;
   // RDConstants.showBeads = true;
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);

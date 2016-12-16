@@ -43,12 +43,14 @@ public class RDLine {
 		
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-		RDConstants.evalRandomDistance = true;
-		//RDConstants.defaultRandomFitness = 0.0;
-		RDConstants.matchPenalty = -0.45;
-		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 3000;
-		RDConstants.maxNodes = 16;
+		RDConstants.evalRandomDistance = false;
+		RDConstants.defaultRandomFitness = 0.0;
+		RDConstants.useHellingerDistance = false;
+		RDConstants.useMatchFitness = true;
+		RDConstants.matchPenalty = -0.48;
+		RDConstants.maxGeneration = 300;
+		RDConstants.maxTimeEval = 10000;
+		RDConstants.maxNodes = 20;
 		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
