@@ -16,6 +16,7 @@ import use.processing.mutation.rules.AddNodeWithGradients;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
 import use.processing.rd.RDFitnessFunctionIbuki;
+import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
 /**
@@ -25,21 +26,17 @@ public class RDLineIbuki1{
  public static float width=0.2f;
  public static float offset=0.5f*RDConstants.hsize;
  public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-  boolean[][] target=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
-  for(int i=0;i<target.length;i++){
-   for(int j=0;j<target[i].length;j++){
-    target[i][j]=(i>=target.length*(0.5f-width/2.0f)&&i<=target.length*(0.5f+width/2.0f));
-   }
-  }
-
+//  boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
 //  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
+  boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
   RDConstants.evalRandomDistance=true;
   // RDConstants.defaultRandomFitness = 0.0;
   RDConstants.matchPenalty=-0.1;
   RDConstants.populationSize=10;
   RDConstants.maxGeneration=100;
-  RDConstants.maxTimeEval=500;
+  RDConstants.maxTimeEval=2000;
+  RDConstants.weightDisableTemplate=3;
 
   RDConstants.maxNodes=16;
   // RDConstants.showBeads = true;

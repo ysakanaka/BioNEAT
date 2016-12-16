@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,16 +34,16 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   */
  protected static double getFitnessBasic(boolean[][] target,boolean[][] positions){
   // This is the basic fitness function.
-  // I copied the code of Nat.
   // My fitness function recursively calls this method.
-  return ((PatternEvaluator.matchOnPattern(target,positions))*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
+  // it is exactly the same as the Nat code.
+  return (PatternEvaluator.matchOnPattern(target,positions)*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
  }
  public static int binX=5;// x
  public static int binY=5;// y
  public static int binA=5;// angle
  public static double ratioShiftX=0.8;
  public static double ratioShiftY=0.8;
- public static double weightExponential=2./3.;
+ public static double weightExponential=1./2.;
  public static double distanceTopology(boolean[][] pattern,boolean[][] positions){
   double fitnessBestMatchNormalize=0.;
   double fitnessBestMatch=0.;
@@ -223,9 +222,17 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
-// boolean[][] pattern=getCenterLine();
-  boolean[][] pattern=getSmileyFace();
-  drawPattern(pattern,"images"+File.separatorChar+"pattern.pbm");
+  RDConstants.matchPenalty=-.1;
+  // here are patterns
+  boolean[][] pattern=getCenterLine();
+// boolean[][] pattern=getTopLine();
+// boolean[][] pattern=getSmileyFace();
+// drawPattern(pattern,"images"+File.separatorChar+"pattern.pbm");
+// here are to check the correctness of the distance
+  System.out.println(getFitnessBasic(pattern,pattern));
+  System.out.println(distanceTopology(pattern,pattern));
+  System.out.println(distanceBlurExponential(pattern,pattern));
+  System.out.println(distanceBlurLinear(pattern,pattern));
 // you can check the function by drawing the pictures
 // drawAllPatterns(pattern);
 // drawBlurredPattern(pattern);
@@ -273,6 +280,77 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
    }
   }
   return smileyFace;
+ }
+ public static boolean[][] getTopLine(){
+  double width=0.2;
+  boolean[][] topLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  for(int i=0;i<topLine.length;i++){
+   for(int j=0;j<topLine[i].length;j++){
+    topLine[i][j]=(j<=topLine[0].length*width);
+   }
+  }
+  return topLine;
+ }
+ public static boolean[][] getBottomLine(){
+  double width=0.2;
+  boolean[][] bottomLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  for(int i=0;i<bottomLine.length;i++){
+   for(int j=0;j<bottomLine[i].length;j++){
+    bottomLine[i][j]=(j>=bottomLine[0].length*(1.-width));
+   }
+  }
+  return bottomLine;
+ }
+ public static boolean[][] getLeftLine(){
+  double width=0.2;
+  boolean[][] leftLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  for(int i=0;i<leftLine.length;i++){
+   for(int j=0;j<leftLine[i].length;j++){
+    leftLine[i][j]=(i<=leftLine.length*width);
+   }
+  }
+  return leftLine;
+ }
+ public static boolean[][] getRightLine(){
+  double width=0.2;
+  boolean[][] rightLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  for(int i=0;i<rightLine.length;i++){
+   for(int j=0;j<rightLine[i].length;j++){
+    rightLine[i][j]=(i<=rightLine.length*(1.-width));
+   }
+  }
+  return rightLine;
+ }
+ public static boolean[][] getThresholdingArcLeft(){
+  boolean[][] thresholdArcLeft=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  double min=Math.min(thresholdArcLeft.length,thresholdArcLeft[0].length);
+  double radiusSquareMin=Math.pow(0.5*min,2);
+  double radiusSquareMax=Math.pow(0.6*min,2);
+  for(int i=0;i<thresholdArcLeft.length;i++){
+   for(int j=0;j<thresholdArcLeft[i].length;j++){
+    double distanceSquare=Math.pow(i,2.)+Math.pow(j,2.);
+    if(distanceSquare>radiusSquareMin&&distanceSquare<radiusSquareMax){
+     thresholdArcLeft[i][j]=true;
+    }
+   }
+  }
+  return thresholdArcLeft;
+ }
+ public static boolean[][] getThresholdingArcRight(){
+  boolean[][] thresholdArcRight=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  double min=Math.min(thresholdArcRight.length,thresholdArcRight[0].length);
+  double centerX=thresholdArcRight.length;
+  double radiusSquareMin=Math.pow(0.5*min,2);
+  double radiusSquareMax=Math.pow(0.6*min,2);
+  for(int i=0;i<thresholdArcRight.length;i++){
+   for(int j=0;j<thresholdArcRight[i].length;j++){
+    double distanceSquare=Math.pow(i-centerX,2.)+Math.pow(j,2.);
+    if(distanceSquare>radiusSquareMin&&distanceSquare<radiusSquareMax){
+     thresholdArcRight[i][j]=true;
+    }
+   }
+  }
+  return thresholdArcRight;
  }
  protected static void drawAllPatterns(boolean[][] pattern){
   drawPattern(pattern,"images"+File.separator+"original.pbm");
@@ -336,6 +414,5 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }catch(Exception e){
    e.printStackTrace();
   }
-
  }
 }
