@@ -1,5 +1,7 @@
 package use.processing.rd;
 
+import java.util.Arrays;
+
 import erne.AbstractFitnessResult;
 import model.OligoGraph;
 import model.OligoSystem;
@@ -74,4 +76,23 @@ public class RDFitnessBlurFunction extends RDFitnessFunction {
 	}
 	
 
+	public static void main(String[] args){
+		boolean[][] pattern = new boolean[7][7];
+		float width = 0.3f;
+		
+		for(int i = 0; i<pattern.length; i++){
+			for(int j = 0; j<pattern[i].length;j++){
+				pattern[i][j] = (i>=pattern.length*(0.5f-width/2.0f)&&i<=pattern.length*(0.5f+width/2.0f));
+			}
+		}
+		
+		RDFitnessBlurFunction fun = new RDFitnessBlurFunction(pattern);
+		
+		for(int i = 0; i<fun.dists.length;i++) System.out.println(Arrays.toString(fun.pattern[i]));
+		
+		System.out.println(" ");
+		
+		for(int i = 0; i<fun.dists.length;i++) System.out.println(Arrays.toString(fun.dists[i]));
+	}
+	
 }

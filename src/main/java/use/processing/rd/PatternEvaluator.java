@@ -174,8 +174,11 @@ public class PatternEvaluator {
 		
 		for(int i = 0; i< pattern.length; i++){
 			for(int j=0; j<pattern[0].length; j++){
-				if(pattern[i][j]) dists[i][j] = 1;
-				toExploreNext.add(new Pair<Integer>(i,j));
+				if(pattern[i][j]){
+					//dists[i][j] = 1;
+					toExploreNext.add(new Pair<Integer>(i,j));
+				}
+				
 			}
 		}
 		
