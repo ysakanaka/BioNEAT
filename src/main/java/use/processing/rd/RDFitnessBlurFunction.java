@@ -1,7 +1,5 @@
 package use.processing.rd;
 
-
-import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import model.OligoGraph;
 import model.OligoSystem;
@@ -10,43 +8,29 @@ import reactionnetwork.ReactionNetwork;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 
-public class RDFitnessFunction extends AbstractFitnessFunction {
+public class RDFitnessBlurFunction extends RDFitnessFunction {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8422873429506377841L;
+	private static final long serialVersionUID = 1L;
 	
-	protected boolean[][] pattern;
-	protected double randomFitness;
-	protected static final RDPatternFitnessResult minFitness = RDPatternFitnessResult.getMinFitness();
+	protected int[][] dists;
 	
-	protected RDFitnessFunction(){
+	public RDFitnessBlurFunction(boolean[][] pattern) {
+		this.pattern = pattern;
+		this.dists = PatternEvaluator.getDistanceMatrix(pattern);
+		
+		if (RDConstants.evalRandomDistance){
+			// we always use the blur fitness
+			System.err.println("WARNING: random distance evaluation not implemented yet for this distance");
+		}
+		
+		this.randomFitness = RDConstants.defaultRandomFitness;
 		
 	}
+
 	
-	public RDFitnessFunction(boolean[][] pattern){
-		this.pattern = pattern;
-		if(RDConstants.evalRandomDistance){
-			if (RDConstants.useMatchFitness){
-				randomFitness = PatternEvaluator.matchRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep/(RDConstants.hsize*RDConstants.wsize);
-			} else {
-			    randomFitness = RDConstants.useHellingerDistance?1.0-PatternEvaluator.hellingerDistanceRandomDistribution(pattern):
-			    		RDConstants.hsize*RDConstants.wsize/(PatternEvaluator.distanceRandomDistribution(pattern)*RDConstants.spaceStep*RDConstants.spaceStep);
-			}
-			System.out.println("Random fitness evaluation done: "+randomFitness);
-		} else {
-			randomFitness = RDConstants.defaultRandomFitness;
-		}
-		if (randomFitness < 0) randomFitness = 0.0;
-	}
-
-	public static void main(String[] args) {
-		//TODO
-
-	}
-	
-
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
 		long startTime = System.currentTimeMillis();
@@ -68,9 +52,10 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 			  System.out.println("total bead update:"+syst.totalBeads);
 			  System.out.println("total conc update:"+syst.totalConc);
 		  }
-		return new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+		return new RDPatternBlurFitnessResult(syst.conc,dists,syst.beadsOnSpot, randomFitness);
 	}
 	
+	@Override
 	public AbstractFitnessResult evaluate(OligoGraph<SequenceVertex,String> g){
 		long startTime = System.currentTimeMillis();
 		RDSystem syst = new RDSystem();
@@ -85,13 +70,8 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 			  System.out.println("total bead update:"+syst.totalBeads);
 			  System.out.println("total conc update:"+syst.totalConc);
 		  }
-		return new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+		return new RDPatternBlurFitnessResult(syst.conc,dists,syst.beadsOnSpot, randomFitness);
 	}
-
-	@Override
-	public AbstractFitnessResult minFitness() {
-		
-		return minFitness;
-	}
+	
 
 }
