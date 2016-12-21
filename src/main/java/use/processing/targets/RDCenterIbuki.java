@@ -30,9 +30,9 @@ public class RDCenterIbuki {
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	  
 	  RDConstants.matchPenalty=-0.1;
-	  RDConstants.populationSize=10;
-	  RDConstants.maxGeneration=100;
-	  RDConstants.maxTimeEval=2000;
+	  RDConstants.populationSize=50;
+	  RDConstants.maxGeneration=200;
+	  RDConstants.maxTimeEval=3000;
 	  RDConstants.weightDisableTemplate=3;
 	  
 	  RDConstants.targetName = "IbukiCenter";
@@ -48,7 +48,7 @@ public class RDCenterIbuki {
 
 	   System.out.println("Default random fitness: "+RDConstants.defaultRandomFitness);
 	   
-	  RDConstants.maxNodes=16;
+	  RDConstants.maxNodes=25;
 	  // RDConstants.showBeads = true;
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	  RDFitnessFunctionIbuki fitnessFunction=new RDFitnessFunctionIbuki(target);
