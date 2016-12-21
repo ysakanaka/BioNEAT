@@ -223,7 +223,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
-  RDConstants.matchPenalty=0.0;
+  RDConstants.matchPenalty=-0.1;
   // here are patterns
   boolean[][] pattern=getCenterLine();
   
@@ -240,6 +240,23 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	  System.out.println(distanceBlurLinear(pattern,blurredPatterns.get(i)));
 	  System.out.println("");
   }
+  
+  boolean[][] testPattern = new boolean[pattern.length][pattern[0].length];
+  for(int i = 0; i<blurredPatterns.size(); i++){
+	  boolean[][] p = blurredPatterns.get(i);
+	  for(int j = 0; j<pattern.length; j++){
+		  for(int k= 0; k<pattern[0].length; k++){
+			  if(p[j][k]) testPattern[j][k] = true;
+		  }
+	  }
+	  System.out.println("==== Distance of full pattern number "+i+" ====");
+	  System.out.println(getFitnessBasic(pattern,testPattern));
+	  System.out.println(distanceTopology(pattern,testPattern));
+	  System.out.println(distanceBlurExponential(pattern,testPattern));
+	  System.out.println(distanceBlurLinear(pattern,testPattern));
+	  System.out.println("");
+  }
+  
   
   
 // you can check the function by drawing the pictures
