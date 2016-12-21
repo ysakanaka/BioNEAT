@@ -30,8 +30,8 @@ public class RDLineIbuki1{
 //  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
   boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-  RDConstants.evalRandomDistance=true;
-  // RDConstants.defaultRandomFitness = 0.0;
+  RDConstants.evalRandomDistance=false;
+   RDConstants.defaultRandomFitness = 0.0;
   RDConstants.matchPenalty=-0.1;
   RDConstants.populationSize=10;
   RDConstants.maxGeneration=100;

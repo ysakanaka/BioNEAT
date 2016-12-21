@@ -8,7 +8,8 @@ import java.util.concurrent.ExecutionException;
 
 public class BatchResultReader {
 
-	public static int maxGen = 50;
+	public static int maxGen = 100;
+	public static boolean getAllVals = true;
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException, ExecutionException {
 		File folder = new File(args[0]);
@@ -18,9 +19,13 @@ public class BatchResultReader {
 		allVals = new double[files.length][];
 		for(int i=0; i<files.length; i++){
 			if(files[i].isDirectory()){
-		
-		      allVals[i] = Evolver.getBestFitnessOverTime(files[i].getAbsolutePath());
-		      
+				
+				try{
+					allVals[i] = Evolver.getBestFitnessOverTime(files[i].getAbsolutePath());
+				} catch(Exception e){
+					System.err.println("Warning: could not read");
+					allVals[i] = new double[maxGen];
+				}
 			}
 		}
 		} else {
@@ -47,8 +52,15 @@ public class BatchResultReader {
 		int indexBest = allVals.length-1;
 		
 		for(int i=0;i<sortedList.length; i++){
+			if (getAllVals){
+				for (int j = 0; j<sortedList[i].length; j++){
+					sb.append(sortedList[i][j]+" ");
+				}
+				sb.append("\n");
+			} else {
 			sb.append(sortedList[i][indexWorst]+"\t"+sortedList[i][indexQ1]+"\t"+sortedList[i][indexMed]
 					    +"\t"+sortedList[i][indexQ3]+"\t"+sortedList[i][indexBest]+"\n");
+			}
 		}
 		
 		PrintWriter fileOut = new PrintWriter(folder.getAbsolutePath() + "/result.dat");

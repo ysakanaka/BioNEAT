@@ -118,7 +118,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   else return pattern[x][y];
  }
  public static double distanceBlurExponential(boolean[][] pattern,boolean[][] positions){
-  List<boolean[][]> blurredPatterns=getBlurredPatters(pattern);
+  List<boolean[][]> blurredPatterns=getBlurredPatterns(pattern);
   double fitness=0.;
   int farthestDistance=blurredPatterns.size();
   double currentWeight=weightExponential;
@@ -130,7 +130,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return fitness;
  }
  public static double distanceBlurLinear(boolean[][] pattern,boolean[][] positions){
-  List<boolean[][]> blurredPatterns=getBlurredPatters(pattern);
+  List<boolean[][]> blurredPatterns=getBlurredPatterns(pattern);
   double fitness=0.;
   int farthestDistance=blurredPatterns.size();
   double currentWeight=farthestDistance;
@@ -167,7 +167,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
    this.y=y;
   }
  }
- protected static List<boolean[][]> getBlurredPatters(boolean[][] pattern){
+ protected static List<boolean[][]> getBlurredPatterns(boolean[][] pattern){
   List<boolean[][]> patternsByStep=new ArrayList<boolean[][]>();
   patternsByStep.add(pattern);// only link to the given pattern
   Set<XY> setOfNeighbor=new HashSet<XY>();
@@ -223,17 +223,25 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
-  RDConstants.matchPenalty=-.1;
+  RDConstants.matchPenalty=0.0;
   // here are patterns
   boolean[][] pattern=getCenterLine();
+  
+  List<boolean[][]> blurredPatterns = getBlurredPatterns(pattern);
 // boolean[][] pattern=getTopLine();
 // boolean[][] pattern=getSmileyFace();
 // drawPattern(pattern,"images"+File.separatorChar+"pattern.pbm");
 // here are to check the correctness of the distance
-  System.out.println(getFitnessBasic(pattern,pattern));
-  System.out.println(distanceTopology(pattern,pattern));
-  System.out.println(distanceBlurExponential(pattern,pattern));
-  System.out.println(distanceBlurLinear(pattern,pattern));
+  for(int i = 0; i<blurredPatterns.size(); i++){
+	  System.out.println("==== Distance of blur number "+i+" ====");
+	  System.out.println(getFitnessBasic(pattern,blurredPatterns.get(i)));
+	  System.out.println(distanceTopology(pattern,blurredPatterns.get(i)));
+	  System.out.println(distanceBlurExponential(pattern,blurredPatterns.get(i)));
+	  System.out.println(distanceBlurLinear(pattern,blurredPatterns.get(i)));
+	  System.out.println("");
+  }
+  
+  
 // you can check the function by drawing the pictures
 // drawAllPatterns(pattern);
 // drawBlurredPattern(pattern);
@@ -392,7 +400,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }
  }
  protected static void drawBlurredPattern(boolean[][] pattern){
-  List<boolean[][]> blurredPatterns=getBlurredPatters(pattern);
+  List<boolean[][]> blurredPatterns=getBlurredPatterns(pattern);
   try{
    PrintWriter pw=new PrintWriter(new BufferedWriter(new FileWriter(new File("images"+File.separator+"blur.pgm"))));
    pw.println("P2");
