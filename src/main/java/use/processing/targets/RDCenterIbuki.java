@@ -28,8 +28,8 @@ public class RDCenterIbuki {
 	//  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
 	 // boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-	  
-	  RDConstants.matchPenalty=-0.1;
+	 RDPatternFitnessResultIbuki.weightExponential = 1.0/3.0;
+	 RDConstants.matchPenalty=-RDPatternFitnessResultIbuki.weightExponential;
 	  RDConstants.populationSize=50;
 	  RDConstants.maxGeneration=200;
 	  RDConstants.maxTimeEval=3000;

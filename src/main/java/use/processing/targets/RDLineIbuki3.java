@@ -30,7 +30,7 @@ public class RDLineIbuki3 {
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	  //RDConstants.evalRandomDistance=true;
 	  // RDConstants.defaultRandomFitness = 0.0;
-	  RDPatternFitnessResultIbuki.weightExponential = 2.0/3.0;
+	  RDPatternFitnessResultIbuki.weightExponential = 1.0/3.0;
 	  RDConstants.matchPenalty=-RDPatternFitnessResultIbuki.weightExponential;
 	  RDConstants.populationSize=10;
 	  RDConstants.maxGeneration=100;

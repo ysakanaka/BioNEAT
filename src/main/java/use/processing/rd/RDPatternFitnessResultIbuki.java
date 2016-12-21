@@ -223,6 +223,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
+  weightExponential = 1.0/3.0;
   RDConstants.matchPenalty=- weightExponential ;
   // here are patterns
   boolean[][] pattern=getCenterLine();
@@ -252,7 +253,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	  System.out.println("==== Distance of full pattern number "+i+" ====");
 	  System.out.println(getFitnessBasic(pattern,testPattern));
 	  System.out.println(distanceTopology(pattern,testPattern));
-	  System.out.println(distanceBlurExponential(pattern,testPattern));
+	  System.out.println(distanceBlurExponential(pattern,testPattern)/distanceBlurExponential(pattern,pattern));
 	  System.out.println(distanceBlurLinear(pattern,testPattern));
 	  System.out.println("");
   }
