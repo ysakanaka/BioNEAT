@@ -80,6 +80,7 @@ public class RDConstants {
 	public static double comparisonThreshold = 0.1; //Since we are manipulating doubles, we want to make sure fitnesses are different enough to sort them
 	public static boolean useNatBlurFitness = false;
 	public static boolean useEuclDistance = true; // In case of Nat's version of blur fitness, we base the dist matrix on the euclidian distance (if not, infinite distance = max of two differences)
+	public static String targetName = "undefined";
 	
 	//TODO add a function to read parameters from outside
 	

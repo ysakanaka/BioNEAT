@@ -28,13 +28,24 @@ public class RDLineIbuki3 {
 	//  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
 	  boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-	  RDConstants.evalRandomDistance=true;
+	  //RDConstants.evalRandomDistance=true;
 	  // RDConstants.defaultRandomFitness = 0.0;
 	  RDConstants.matchPenalty=-0.1;
 	  RDConstants.populationSize=10;
 	  RDConstants.maxGeneration=100;
 	  RDConstants.maxTimeEval=2000;
 	  RDConstants.weightDisableTemplate=3;
+	  
+	  RDConstants.targetName = "Ibuki3";
+	  
+	  RDConstants.evalRandomDistance=false;
+	  boolean[][] fullMap = new boolean[target.length][target[0].length];
+	  for(int i=0;i<fullMap.length; i++){
+		  for(int j=0;j<fullMap[0].length; j++){
+			  fullMap[i][j] = true;
+		  }
+	  }
+	   RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.distanceBlurExponential(target,fullMap);
 
 	  RDConstants.maxNodes=16;
 	  RDPatternFitnessResultIbuki.weightExponential = 2.0/3.0;

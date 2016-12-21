@@ -37,6 +37,8 @@ boolean[][] target = new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)]
 		RDConstants.matchPenalty = -0.5;
 		RDConstants.maxGeneration = 50;
 		
+		RDConstants.targetName = "RDBottomLine";
+		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);

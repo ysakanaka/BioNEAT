@@ -52,6 +52,8 @@ public class RDLine {
 		RDConstants.maxTimeEval = 10000;
 		RDConstants.maxNodes = 20;
 		
+		RDConstants.targetName = "RDLine";
+		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDFitnessFunction fitnessFunction = new RDFitnessFunction(target);

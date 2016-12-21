@@ -18,7 +18,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   */
  public RDPatternFitnessResultIbuki(float[][][] conc,boolean[][] pattern,HashBasedTable<Integer,Integer,ArrayList<Bead>> beads,double randomFit){
   // this.concGlue = conc[RDConstants.glueIndex];
-  this.conc=new float[Math.min(conc.length,RDConstants.glueIndex+2)][][];
+  this.conc=new float[Math.min(conc.length,RDConstants.glueIndex+3)][][];
   for(int i=0;i<this.conc.length;i++)
    this.conc[i]=conc[i];
   this.pattern=pattern;

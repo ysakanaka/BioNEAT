@@ -31,6 +31,7 @@ boolean[][] target = new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)]
 				target[j][i] = (j>=target.length*(1.0f-width));
 			}
 		}
+		RDConstants.targetName = "RDRightLine";
 		
 		RDConstants.evalRandomDistance = false;
 		RDConstants.defaultRandomFitness = 0.0;

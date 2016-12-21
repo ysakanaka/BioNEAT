@@ -30,14 +30,26 @@ public class RDLineIbuki1{
 //  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
   boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-  RDConstants.evalRandomDistance=false;
-   RDConstants.defaultRandomFitness = 0.0;
+  
   RDConstants.matchPenalty=-0.1;
   RDConstants.populationSize=10;
   RDConstants.maxGeneration=100;
   RDConstants.maxTimeEval=2000;
   RDConstants.weightDisableTemplate=3;
+  
+  RDConstants.targetName = "Ibuki1";
+  
+  RDConstants.evalRandomDistance=false;
+  boolean[][] fullMap = new boolean[target.length][target[0].length];
+  for(int i=0;i<fullMap.length; i++){
+	  for(int j=0;j<fullMap[0].length; j++){
+		  fullMap[i][j] = true;
+	  }
+  }
+   RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.distanceBlurExponential(target,fullMap);
 
+   System.out.println("Default random fitness: "+RDConstants.defaultRandomFitness);
+   
   RDConstants.maxNodes=16;
   // RDConstants.showBeads = true;
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
