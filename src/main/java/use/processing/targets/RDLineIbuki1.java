@@ -31,7 +31,7 @@ public class RDLineIbuki1{
   boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
   // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
   
-  RDConstants.matchPenalty=-0.1;
+  RDConstants.matchPenalty=-RDPatternFitnessResultIbuki.weightExponential;
   RDConstants.populationSize=10;
   RDConstants.maxGeneration=100;
   RDConstants.maxTimeEval=2000;

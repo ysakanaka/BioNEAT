@@ -28,7 +28,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 // you can also choose!!
 // fitness=distanceTopology(pattern,positions);
   fitness=distanceBlurExponential(pattern,positions);
-  fitness=Math.max(0.0,fitness-randomFit);
+  fitness=Math.max(0.0,(fitness-randomFit)/(distanceBlurExponential(pattern,pattern)-randomFit));
  }
  /**
   * From here, I implemented my original distance function.
@@ -209,7 +209,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   for(XY surronding:surroundings){
    if(surronding.x<0||surronding.x>=patternsByStep.get(0).length||surronding.y<0||surronding.y>=patternsByStep.get(0)[0].length) continue;
    boolean isUnlabel=true;
-   for(int step=0;step<steps;step++){
+   for(int step=0;step<=steps;step++){
     if(patternsByStep.get(step)[surronding.x][surronding.y]) isUnlabel=false;
    }
    if(isUnlabel) answer.add(surronding);
@@ -223,7 +223,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
-  RDConstants.matchPenalty=-0.1;
+  RDConstants.matchPenalty=- weightExponential ;
   // here are patterns
   boolean[][] pattern=getCenterLine();
   

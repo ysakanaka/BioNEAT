@@ -30,7 +30,8 @@ public class RDLineIbuki2 {
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	  //RDConstants.evalRandomDistance=true;
 	  // RDConstants.defaultRandomFitness = 0.0;
-	  RDConstants.matchPenalty=-0.1;
+	  RDPatternFitnessResultIbuki.weightExponential = 1.0/Math.E;
+	  RDConstants.matchPenalty=-RDPatternFitnessResultIbuki.weightExponential;
 	  RDConstants.populationSize=10;
 	  RDConstants.maxGeneration=100;
 	  RDConstants.maxTimeEval=2000;
@@ -48,7 +49,7 @@ public class RDLineIbuki2 {
 	   RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.distanceBlurExponential(target,fullMap);
 	  
 	  RDConstants.maxNodes=16;
-	  RDPatternFitnessResultIbuki.weightExponential = 1.0/Math.E;
+	 
 	  // RDConstants.showBeads = true;
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	  RDFitnessFunctionIbuki fitnessFunction=new RDFitnessFunctionIbuki(target);
