@@ -274,6 +274,29 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }
   return centerLine;
  }
+ 
+ public static boolean[][] getTopCenterLine(){
+	  double width=0.2;
+	  boolean[][] centerLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+	  for(int i=0;i<centerLine.length/2;i++){
+	   for(int j=0;j<centerLine[i].length;j++){
+	    centerLine[i][j]=(i>=centerLine.length*(0.5f-width/2.0f)&&i<=centerLine.length*(0.5f+width/2.0f));
+	   }
+	  }
+	  return centerLine;
+	 }
+ 
+ public static boolean[][] getBottomCenterLine(){
+	  double width=0.2;
+	  boolean[][] centerLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+	  for(int i=centerLine.length/2;i<centerLine.length;i++){
+	   for(int j=0;j<centerLine[i].length;j++){
+	    centerLine[i][j]=(i>=centerLine.length*(0.5f-width/2.0f)&&i<=centerLine.length*(0.5f+width/2.0f));
+	   }
+	  }
+	  return centerLine;
+	 }
+ 
  public static boolean[][] getSmileyFace(){
   boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   double centerX=smileyFace.length/2.;
