@@ -9,6 +9,7 @@ public class RDConstants {
     public static boolean timing = true;
 
 	public static int maxTimeEval = 3000; //in time steps
+	public static int bigTimeStep = 100; //Save concentrations every big time step for temporal fitness
 	public static double timePerStep = 0.1;
 	public static float spaceStep = 2.0f;
 	public static int hsize = 160;

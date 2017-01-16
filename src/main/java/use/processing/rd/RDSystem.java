@@ -40,6 +40,8 @@ public class RDSystem{
 
 	transient DiffusionDispatcher dd;
 	//BeadDispatcher bd;
+	
+	//transient float concHistory[][][][]; //all time steps, (or once in a while)
 
 	
 
@@ -54,6 +56,7 @@ public class RDSystem{
 		  setSeqAddress();
 		  
 		  conc = new float[chemicalSpecies][(int) (RDConstants.wsize/RDConstants.spaceStep)][(int) (RDConstants.hsize/RDConstants.spaceStep)];
+		  //concHistory = new float[RDConstants.maxTimeEval/RDConstants.bigTimeStep][chemicalSpecies][(int) (RDConstants.wsize/RDConstants.spaceStep)][(int) (RDConstants.hsize/RDConstants.spaceStep)];
 		  beadsOnSpot = HashBasedTable.create((int) (RDConstants.wsize/RDConstants.spaceStep),(int) (RDConstants.hsize/RDConstants.spaceStep));
 		  diffRate = new float[chemicalSpecies];
 		  defaultDiff();
