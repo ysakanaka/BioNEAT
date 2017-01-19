@@ -1,6 +1,7 @@
 package erne;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import use.processing.rd.RDConstants;
@@ -18,6 +19,27 @@ public abstract class AbstractLexicographicFitnessResult extends AbstractFitness
 	
 	public int getRank(){
 		return rank;
+	}
+	
+	public void setRank(int r){
+		rank = r;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder("");
+		sb.append("rank: "+rank+"\t");
+		Iterator<Double> fullFit = getFullFitness().iterator();
+		int index = 1;
+		while(fullFit.hasNext()){
+			sb.append("fitness "+index+": "+fullFit.next()+"\t");
+			index++; 
+		}
+		return sb.toString();
+	}
+	
+	public double getFitness(){
+		return 1.0/((double)rank);
 	}
 	
 	public static class LexicographicFitnessComparator implements Comparator<AbstractLexicographicFitnessResult> {
@@ -43,6 +65,8 @@ public abstract class AbstractLexicographicFitnessResult extends AbstractFitness
 		}
 		
 	}
+	
+	public static LexicographicFitnessComparator defaultComparator = new LexicographicFitnessComparator();
 	
 
 }

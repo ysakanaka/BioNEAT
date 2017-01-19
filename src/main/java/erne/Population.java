@@ -2,6 +2,8 @@ package erne;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -173,5 +175,25 @@ public class Population implements Serializable {
 			// System.out.println("Indiv " + i + " Fitness: " +
 			// individuals[i].getFitnessResult());
 		}
+		//Now, check if we are using a lexicographic fitness function
+		if(AbstractLexicographicFitnessResult.class.isAssignableFrom(individuals[0].getFitnessResult().getClass())){
+			//we have to sort them
+			Arrays.sort(individuals,individualComparator);
+			for(int i=0;i<individuals.length;i++){
+				((AbstractLexicographicFitnessResult) individuals[i].getFitnessResult()).setRank(individuals.length-i);
+			}
+		}
 	}
+	
+	private static Comparator<Individual> individualComparator = new Comparator<Individual>(){
+		@Override
+		public int compare(Individual o1, Individual o2) {
+			if(AbstractLexicographicFitnessResult.class.isAssignableFrom(o1.getFitnessResult().getClass())
+					&& AbstractLexicographicFitnessResult.class.isAssignableFrom(o2.getFitnessResult().getClass())){
+			return AbstractLexicographicFitnessResult.defaultComparator.compare((AbstractLexicographicFitnessResult)o1.getFitnessResult(),
+					(AbstractLexicographicFitnessResult) o2.getFitnessResult());
+			}
+			return 0; // not comparable
+		}
+	};
 }

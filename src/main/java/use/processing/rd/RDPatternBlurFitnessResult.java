@@ -32,10 +32,14 @@ public class RDPatternBlurFitnessResult extends RDPatternFitnessResult {
 		for(int i=0; i<dists.length; i++){
 			for(int j=0; j<dists[i].length; j++){
 				float localconc = conc[RDConstants.glueIndex][i][j];
-				if(localconc > RDConstants.cutOff) res += dists[i][j]*localconc;
+				if(localconc > RDConstants.cutOff) {res += dists[i][j]*localconc;
 				totalConc += localconc;
+				}
 			}
 		}
+		
+		if (totalConc <= RDConstants.cutOff) return Double.MAX_VALUE;
+		
 		return res/totalConc; //So that it's normalized
 	}
 

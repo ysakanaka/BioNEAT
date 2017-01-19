@@ -13,6 +13,11 @@ import use.processing.bead.Bead;
 
 public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
  private static final long serialVersionUID=-4108046914347091513L;
+ 
+ protected RDPatternFitnessResultIbuki(){
+	 super();
+ }
+ 
  /**
   * This function actually calculate the fitness function. As there are many if-branches in the original code, I also try the same manner.
   */
@@ -223,6 +228,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
+	 
   weightExponential = 1.0/3.0;
   RDConstants.matchPenalty=- weightExponential ;
   // here are patterns
@@ -465,4 +471,9 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
    e.printStackTrace();
   }
  }
+ 
+ public static RDPatternFitnessResultIbuki getMinFitness(){
+		return new RDPatternFitnessResultIbuki();
+	}
+ 
 }

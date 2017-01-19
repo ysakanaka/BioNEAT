@@ -36,6 +36,8 @@ public class RDFitnessBlurFunction extends RDFitnessFunction {
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
 		long startTime = System.currentTimeMillis();
+		AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
+		  for(int i= 0; i<RDConstants.reEvaluation; i++){
 		RDSystem syst = new RDSystem();
 		
 		 OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(network);
@@ -54,7 +56,13 @@ public class RDFitnessBlurFunction extends RDFitnessFunction {
 			  System.out.println("total bead update:"+syst.totalBeads);
 			  System.out.println("total conc update:"+syst.totalConc);
 		  }
-		return new RDPatternBlurFitnessResult(syst.conc,dists,syst.beadsOnSpot, randomFitness);
+		AbstractFitnessResult temp = new RDPatternBlurFitnessResult(syst.conc,dists,syst.beadsOnSpot, randomFitness);
+		results[i] = temp;
+		  }
+		  
+		  Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
+		  if (RDConstants.useMedian) return results[(RDConstants.reEvaluation-1)/2];
+		  return results[0];
 	}
 	
 	@Override

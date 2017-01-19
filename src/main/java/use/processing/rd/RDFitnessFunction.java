@@ -1,6 +1,8 @@
 package use.processing.rd;
 
 
+import java.util.Arrays;
+
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import model.OligoGraph;
@@ -50,6 +52,8 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
 		long startTime = System.currentTimeMillis();
+		AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
+		  for(int i= 0; i<RDConstants.reEvaluation; i++){
 		RDSystem syst = new RDSystem();
 		
 		 OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(network);
@@ -68,7 +72,13 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 			  System.out.println("total bead update:"+syst.totalBeads);
 			  System.out.println("total conc update:"+syst.totalConc);
 		  }
-		return new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+		  RDPatternFitnessResult temp =  new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+		  results[i] = temp;
+		  }
+		  
+		  Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
+		  if (RDConstants.useMedian) return results[(RDConstants.reEvaluation-1)/2];
+		  return results[0];
 	}
 	
 	public AbstractFitnessResult evaluate(OligoGraph<SequenceVertex,String> g){

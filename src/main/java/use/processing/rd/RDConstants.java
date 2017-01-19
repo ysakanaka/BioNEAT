@@ -68,7 +68,7 @@ public class RDConstants {
 	
 	
 	//For evolution
-	public static int weightDisableTemplate = 10;
+	public static int weightDisableTemplate = 3;
 	public static int weightMutateParameter = 20;
 	public static int weightAddNodeWithGradients = 1;
 	public static int weightAddActivationWithGradients = 3;
@@ -77,11 +77,14 @@ public class RDConstants {
 	
 	public static int populationSize = 50;
 	public static int maxGeneration = 200;
+	public static int reEvaluation = 1; // number of time an individual is reevaluated (multiplies the number of evaluations, obviously)
+	public static boolean useMedian= false; //if not, use the worst individual
 	
-	public static double comparisonThreshold = 0.1; //Since we are manipulating doubles, we want to make sure fitnesses are different enough to sort them
+	public static double comparisonThreshold = 0.0; //Since we are manipulating doubles, we want to make sure fitnesses are different enough to sort them
 	public static boolean useNatBlurFitness = false;
 	public static boolean useEuclDistance = true; // In case of Nat's version of blur fitness, we base the dist matrix on the euclidian distance (if not, infinite distance = max of two differences)
 	public static String targetName = "undefined";
+	
 	
 	//TODO add a function to read parameters from outside
 	

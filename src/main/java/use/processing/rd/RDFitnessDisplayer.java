@@ -28,8 +28,8 @@ public class RDFitnessDisplayer implements FitnessDisplayer {
 		
 		JPanel panel;
 		
-		if(RDPatternFitnessResult.class.isAssignableFrom(fitnessResult.getClass())){
-			RDPatternFitnessResult res = (RDPatternFitnessResult) fitnessResult;
+		if(RDFitnessResult.class.isAssignableFrom(fitnessResult.getClass())){
+			RDFitnessResult res = (RDFitnessResult) fitnessResult;
 			panel= new RDImagePanel(res);
 		} else {
 			panel = new JPanel();
@@ -66,16 +66,16 @@ public class RDFitnessDisplayer implements FitnessDisplayer {
 		display.setVisible(true);
 	}
 	
-	public class RDImagePanel extends JPanel{
+	public static class RDImagePanel extends JPanel{
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -8782485912207043987L;
 		
-		protected RDPatternFitnessResult res;
+		protected RDFitnessResult res;
 		
-		public RDImagePanel(RDPatternFitnessResult res){
+		public RDImagePanel(RDFitnessResult res){
 			this.res=res;
 		}
 		
