@@ -35,7 +35,7 @@ public class ClusterVersionLineHellinger {
 		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 500;
+		RDConstants.maxTimeEval = 10000;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
 		RDConstants.maxBeads = 500;
