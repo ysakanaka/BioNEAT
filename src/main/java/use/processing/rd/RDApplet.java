@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+import javax.swing.JFrame;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -15,6 +17,7 @@ import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
+import reactionnetwork.visual.RNVisualizationViewerFactory;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 
@@ -147,6 +150,11 @@ public class RDApplet extends PApplet{
 		  
 		  } else {
 			g = GraphMaker.fromReactionNetwork(reac);
+			//For debug
+			JFrame frame = new JFrame("Graph");
+			frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
+			frame.pack();
+			frame.setVisible(true);
 		  }
 		  g.exoConc = RDConstants.exoConc;
 		  g.polConc = RDConstants.polConc;
