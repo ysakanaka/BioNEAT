@@ -14,41 +14,33 @@ import erne.mutation.rules.MutateParameter;
 import use.processing.mutation.rules.AddActivationWithGradients;
 import use.processing.mutation.rules.AddInhibitionWithGradients;
 import use.processing.mutation.rules.AddNodeWithGradients;
-import use.processing.rd.RDBeadPositionFitnessFunction;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
 import use.processing.rd.RDFitnessFunction;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-/**
- * Defines a target with a centered line of ratio width compared to the whole area
- * @author naubertkato
- *
- */
-public class RDLine {
-	
-	//public static float width = 0.3f; 
-	//public static float offset = 0.5f*RDConstants.hsize;
-	
+public class ClusterVersionLineHellinger {
+
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
 		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		
 		
-		
+		if(args.length > 0) RDConstants.reEvaluation = Integer.parseInt(args[0]);
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
-		RDConstants.defaultRandomFitness = 0.0;
+		RDConstants.defaultRandomFitness = 0.25;
 		RDConstants.useHellingerDistance = true;
+		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
-		RDConstants.matchPenalty = -0.48;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 10000;
+		RDConstants.maxTimeEval = 10;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
+		RDConstants.maxBeads = 500;
 		
-		RDConstants.targetName = "RDLine";
+		RDConstants.targetName = "ClusterLineHellinger";
 		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
@@ -79,4 +71,5 @@ Mutator mutator;
         System.out.println("Evolution completed.");
         if(!Evolver.hasGUI()) System.exit(0);
 	}
+	
 }

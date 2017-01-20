@@ -28,7 +28,7 @@ public class RDApplet extends PApplet{
 	
 	
 	float time = 0.0f;
-	float maxTime = 1000;
+	static float maxTime = 1000;
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
 	static int offset = RDConstants.speciesOffset; //for display
 
@@ -57,18 +57,21 @@ public class RDApplet extends PApplet{
 		}
 		}
 		
-		RDConstants.hsize = 250;
-		RDConstants.wsize = 250;
-		RDConstants.spaceStep = 2.0f;
-		RDConstants.timePerStep = 0.1f;
-		RDConstants.concScale = 10.0f;
-		RDConstants.beadExclusion = true;
-		RDConstants.bounceRatePerBead = 1.4;
-		RDConstants.concChemostat = 100.0f;
-		RDConstants.gradientScale /= 1.6;
-		RDConstants.maxBeads = 700;
-		RDConstants.maxTimeEval = 100000/bigTimeStep;
+		//RDConstants.hsize = 250;
+		//RDConstants.wsize = 250;
+		//RDConstants.spaceStep = 2.0f;
+		//RDConstants.timePerStep = 0.1f;
+		//RDConstants.concScale = 10.0f;
+		//RDConstants.beadExclusion = true;
+		//RDConstants.bounceRatePerBead = 1.4;
+		//RDConstants.concChemostat = 100.0f;
+		//RDConstants.gradientScale /= 1.6;
+		RDConstants.cutOff = 5.0f;
+		RDConstants.maxBeads = 500;
+		maxTime = 2000/bigTimeStep;
 		RDConstants.timing = false;
+		RDConstants.useMatchFitness = false;
+		RDConstants.useHellingerDistance = true;
 		offset = 2;
 		
         PApplet.main("use.processing.rd.RDApplet");
@@ -123,6 +126,9 @@ public class RDApplet extends PApplet{
 				  System.out.println("total rendering:"+totalRender);
 				  System.out.println("total bead update:"+system.totalBeads);
 				  System.out.println("total conc update:"+system.totalConc);
+				  boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
+				  RDLexicographicFitnessResult fitness = new RDLexicographicFitnessResult(system.conc,target,system.beadsOnSpot,0.0);
+				  System.out.println(fitness);
 				  exit();
 			  }
 			  saveFrame();
