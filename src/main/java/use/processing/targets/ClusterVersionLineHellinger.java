@@ -26,16 +26,16 @@ public class ClusterVersionLineHellinger {
 		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		
 		
-		if(args.length > 0) RDConstants.reEvaluation = Integer.parseInt(args[0]);
+		RDConstants.reEvaluation = 2;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
-		RDConstants.defaultRandomFitness = 0.25;
+		RDConstants.defaultRandomFitness = 0.28;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 10;
+		RDConstants.maxTimeEval = 500;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
 		RDConstants.maxBeads = 500;
