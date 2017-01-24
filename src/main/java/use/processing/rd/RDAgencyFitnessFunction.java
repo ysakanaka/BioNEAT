@@ -1,10 +1,5 @@
 package use.processing.rd;
 
-
-import java.util.Arrays;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import model.OligoGraph;

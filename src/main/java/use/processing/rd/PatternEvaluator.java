@@ -80,12 +80,12 @@ public class PatternEvaluator {
 		    	if(conc[i][j]>RDConstants.cutOff){
 		    		if(pattern[i][j]){
 		    			int hpos = (i*RDConstants.horizontalBins)/pattern.length;
-		    			int vpos = (i*RDConstants.verticalBins)/pattern.length;
-		    			totalgood+= conc[i][j];
-		    			goodConc[hpos+vpos*RDConstants.horizontalBins] = conc[i][j];
+		    			int vpos = (j*RDConstants.verticalBins)/pattern.length;
+		    			totalgood+= (RDConstants.patternHellinger?RDConstants.cutOff:conc[i][j]);
+		    			goodConc[hpos+vpos*RDConstants.horizontalBins] += (RDConstants.patternHellinger?RDConstants.cutOff:conc[i][j]);
 		    			
 		    		} else {
-		    			totalbad+= conc[i][j];
+		    			totalbad+= (RDConstants.patternHellinger?RDConstants.cutOff:conc[i][j]);
 		    		}
 		    	}
 		    	

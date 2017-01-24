@@ -4,35 +4,34 @@ import java.util.Arrays;
 
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
+import erne.AbstractLexicographicFitnessResult;
 import model.OligoGraph;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
-import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.processing.targets.BeadPositionTarget;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 
-public class RDBeadPositionFitnessFunction extends AbstractFitnessFunction {
-
+public class RDLexicographicFitnessFunction extends RDFitnessFunction{
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7453389085701880972L;
-	protected BeadPositionTarget target;
-	protected boolean[][] pattern;
+	private static final long serialVersionUID = 8422873429506377841L;
 	
-	public RDBeadPositionFitnessFunction(BeadPositionTarget target, boolean [][] pattern){
-		this.target = target;
-		this.pattern = pattern;
+	
+	
+	public RDLexicographicFitnessFunction(boolean[][] pattern){
+		super(pattern);
 	}
-	
+
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
 		long startTime = System.currentTimeMillis();
-		AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
+		AbstractLexicographicFitnessResult[] results = new AbstractLexicographicFitnessResult[RDConstants.reEvaluation];
 		  for(int i= 0; i<RDConstants.reEvaluation; i++){
 		RDSystem syst = new RDSystem();
+		
 		 OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(network);
 		  g.exoConc = RDConstants.exoConc;
 		  g.polConc = RDConstants.polConc;
@@ -49,19 +48,19 @@ public class RDBeadPositionFitnessFunction extends AbstractFitnessFunction {
 			  System.out.println("total bead update:"+syst.totalBeads);
 			  System.out.println("total conc update:"+syst.totalConc);
 		  }
-		  
-		AbstractFitnessResult temp =  new RDBeadPositionFitnessResult(syst.conc,pattern,syst.beadsOnSpot, 0.0,target,syst.beads);
-		results[i] = temp;
+		  RDLexicographicFitnessResult temp =  new RDLexicographicFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+		  results[i] = temp;
 		  }
 		  
-		  Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
+		  Arrays.sort(results, AbstractLexicographicFitnessResult.defaultComparator);
 		  if (RDConstants.useMedian) return results[(RDConstants.reEvaluation-1)/2];
 		  return results[0];
-		}
+	}
 
 	@Override
 	public AbstractFitnessResult minFitness() {
-		return RDBeadPositionFitnessResult.minFitness;
+		
+		return RDLexicographicFitnessResult.minFitness;
 	}
 
 }

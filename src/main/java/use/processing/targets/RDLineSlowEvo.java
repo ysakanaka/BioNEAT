@@ -20,7 +20,7 @@ import use.processing.rd.RDFitnessFunctionIbuki;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-public class RDCenterIbuki {
+public class RDLineSlowEvo {
 	public static float width=0.2f;
 	 public static float offset=0.5f*RDConstants.hsize;
 	 public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
@@ -36,7 +36,7 @@ public class RDCenterIbuki {
 	  RDConstants.weightDisableTemplate=3;
 	  RDConstants.reEvaluation = 4;
 	  
-	  RDConstants.targetName = "IbukiCenter";
+	  RDConstants.targetName = "SlowEvoIbukiCenter";
 	  
 	  RDConstants.evalRandomDistance=false;
 	  boolean[][] fullMap = new boolean[target.length][target[0].length];
@@ -53,13 +53,20 @@ public class RDCenterIbuki {
 	  // RDConstants.showBeads = true;
 	  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	  RDFitnessFunctionIbuki fitnessFunction=new RDFitnessFunctionIbuki(target);
+	  RDConstants.hardTrim = false;
+	  RDConstants.weightDisableTemplate = 1;
+	  RDConstants.weightMutateParameter = 96;
+	  RDConstants.weightAddActivationWithGradients = 1;
+	  RDConstants.weightAddInhibitionWithGradients = 1;
+	  RDConstants.weightAddNodeWithGradients = 1;
 	  Mutator mutator;
 	  if(RDConstants.hardTrim){
 	   mutator=new PruningMutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[]{new DisableTemplate(RDConstants.weightDisableTemplate),new MutateParameter(RDConstants.weightMutateParameter),new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients),new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients),new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
 	  }else{
 	   mutator=new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[]{new DisableTemplate(RDConstants.weightDisableTemplate),new MutateParameter(RDConstants.weightMutateParameter),new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients),new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients),new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
 	  }
-	  Evolver evolver=new Evolver(RDConstants.populationSize,RDConstants.maxGeneration,RDLibrary.rdstart,fitnessFunction,mutator,new RDFitnessDisplayer());
+	  Evolver evolver=new Evolver(RDConstants.populationSize,RDConstants.maxGeneration,
+			  RDLibrary.rdstart,fitnessFunction,mutator,new RDFitnessDisplayer());
 	  //evolver.setGUI(true);
 	  evolver.setExtraConfig(RDConstants.configsToString());
 	  evolver.evolve();

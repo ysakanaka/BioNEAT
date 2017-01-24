@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+import javax.swing.JFrame;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -15,6 +17,7 @@ import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
+import reactionnetwork.visual.RNVisualizationViewerFactory;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 
@@ -28,7 +31,7 @@ public class RDApplet extends PApplet{
 	
 	
 	float time = 0.0f;
-	float maxTime = 1000;
+	static float maxTime = 1000;
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
 	static int offset = RDConstants.speciesOffset; //for display
 
@@ -57,18 +60,24 @@ public class RDApplet extends PApplet{
 		}
 		}
 		
-		RDConstants.hsize = 250;
-		RDConstants.wsize = 250;
-		RDConstants.spaceStep = 2.0f;
-		RDConstants.timePerStep = 0.1f;
-		RDConstants.concScale = 10.0f;
-		RDConstants.beadExclusion = true;
-		RDConstants.bounceRatePerBead = 1.4;
-		RDConstants.concChemostat = 100.0f;
-		RDConstants.gradientScale /= 1.6;
-		RDConstants.maxBeads = 700;
-		RDConstants.maxTimeEval = 100000/bigTimeStep;
-		RDConstants.timing = false;
+		//RDConstants.hsize = 250;
+		//RDConstants.wsize = 250;
+		//RDConstants.spaceStep = 2.0f;
+		//RDConstants.timePerStep = 0.1f;
+		//RDConstants.concScale = 10.0f;
+		//RDConstants.beadExclusion = true;
+		//RDConstants.bounceRatePerBead = 1.4;
+		//RDConstants.concChemostat = 100.0f;
+		//RDConstants.gradientScale /= 1.6;
+		
+		RDConstants.cutOff = 5.0f;
+		RDConstants.maxBeads = 500;
+		maxTime = 5000/bigTimeStep;
+		RDConstants.timing = true;
+		RDConstants.useMatchFitness = false;
+		RDConstants.useHellingerDistance = true;
+		RDConstants.horizontalBins = 1;
+		RDConstants.verticalBins = 3;
 		offset = 2;
 		
         PApplet.main("use.processing.rd.RDApplet");
@@ -123,6 +132,10 @@ public class RDApplet extends PApplet{
 				  System.out.println("total rendering:"+totalRender);
 				  System.out.println("total bead update:"+system.totalBeads);
 				  System.out.println("total conc update:"+system.totalConc);
+				  RDPatternFitnessResultIbuki.width = 0.4;
+				  boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
+				  RDLexicographicFitnessResult fitness = new RDLexicographicFitnessResult(system.conc,target,system.beadsOnSpot,0.0);
+				  System.out.println(fitness);
 				  exit();
 			  }
 			  saveFrame();
@@ -141,6 +154,11 @@ public class RDApplet extends PApplet{
 		  
 		  } else {
 			g = GraphMaker.fromReactionNetwork(reac);
+			//For debug
+			JFrame frame = new JFrame("Graph");
+			frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
+			frame.pack();
+			frame.setVisible(true);
 		  }
 		  g.exoConc = RDConstants.exoConc;
 		  g.polConc = RDConstants.polConc;

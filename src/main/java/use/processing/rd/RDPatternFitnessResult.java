@@ -8,7 +8,7 @@ import com.google.common.collect.Table;
 import erne.AbstractFitnessResult;
 import use.processing.bead.Bead;
 
-public class RDPatternFitnessResult extends AbstractFitnessResult {
+public class RDPatternFitnessResult extends AbstractFitnessResult implements RDFitnessResult {
 
 	/**
 	 * 

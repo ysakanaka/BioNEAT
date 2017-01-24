@@ -20,7 +20,7 @@ import use.processing.rd.RDFitnessFunctionIbuki;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-public class RDCenterIbuki {
+public class ClusterVersionLineIbuki {
 	public static float width=0.2f;
 	 public static float offset=0.5f*RDConstants.hsize;
 	 public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
@@ -32,11 +32,16 @@ public class RDCenterIbuki {
 	 RDConstants.matchPenalty=-RDPatternFitnessResultIbuki.weightExponential;
 	  RDConstants.populationSize=50;
 	  RDConstants.maxGeneration=200;
-	  RDConstants.maxTimeEval=1000;
-	  RDConstants.weightDisableTemplate=3;
-	  RDConstants.reEvaluation = 4;
+	  RDConstants.maxTimeEval=10000;
+	  RDConstants.reEvaluation = 1;
+	  RDConstants.hardTrim = false;
+		RDConstants.maxNodes = 16;
+		RDConstants.maxBeads = 500;
+		
+		RDConstants.horizontalBins = 1;
+		RDConstants.verticalBins = 2;
 	  
-	  RDConstants.targetName = "IbukiCenter";
+	  RDConstants.targetName = "ClusterLineHellinger";
 	  
 	  RDConstants.evalRandomDistance=false;
 	  boolean[][] fullMap = new boolean[target.length][target[0].length];

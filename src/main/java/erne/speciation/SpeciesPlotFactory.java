@@ -33,6 +33,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import erne.Evolver;
 import erne.Individual;
 import reactionnetwork.Library;
+import use.processing.rd.RDConstants;
 
 public class SpeciesPlotFactory {
 
@@ -50,7 +51,7 @@ public class SpeciesPlotFactory {
 					series = new XYSeries(String.valueOf(species[j].representative.getId()));
 					dataset.addSeries(series);
 				}
-				series.add(i*Evolver.DEFAULT_POP_SIZE, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
+				series.add(i*RDConstants.populationSize*RDConstants.reEvaluation, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
 						.getFitnessResult().getFitness());
 			}
 		}
@@ -131,7 +132,7 @@ public class SpeciesPlotFactory {
 
 		final JFreeChart chart = createStackedAreaChart("", // chart
 															// title
-				"Generation", // domain axis label
+				"Evaluations", // domain axis label
 				"Species Population", // range axis label
 				dataset, // data
 				PlotOrientation.VERTICAL, // orientation

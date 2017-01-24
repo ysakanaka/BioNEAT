@@ -13,6 +13,11 @@ import use.processing.bead.Bead;
 
 public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
  private static final long serialVersionUID=-4108046914347091513L;
+ 
+ protected RDPatternFitnessResultIbuki(){
+	 super();
+ }
+ 
  /**
   * This function actually calculate the fitness function. As there are many if-branches in the original code, I also try the same manner.
   */
@@ -39,6 +44,8 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   // it is exactly the same as the Nat code.
   return (PatternEvaluator.matchOnPattern(target,positions)*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
  }
+ 
+ public static double width=0.2;
  public static int binX=5;// x
  public static int binY=5;// y
  public static int binA=5;// angle
@@ -223,6 +230,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return currentWeight-1;
  }
  public static void main(String[] args){
+	 
   weightExponential = 1.0/3.0;
   RDConstants.matchPenalty=- weightExponential ;
   // here are patterns
@@ -265,7 +273,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 // drawBlurredPattern(pattern);
  }
  public static boolean[][] getCenterLine(){
-  double width=0.2;
+
   boolean[][] centerLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   for(int i=0;i<centerLine.length;i++){
    for(int j=0;j<centerLine[i].length;j++){
@@ -276,7 +284,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
  }
  
  public static boolean[][] getTopCenterLine(){
-	  double width=0.2;
+	 
 	  boolean[][] centerLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
 	  for(int i=0;i<centerLine.length/2;i++){
 	   for(int j=0;j<centerLine[i].length;j++){
@@ -287,7 +295,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	 }
  
  public static boolean[][] getBottomCenterLine(){
-	  double width=0.2;
+	  
 	  boolean[][] centerLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
 	  for(int i=centerLine.length/2;i<centerLine.length;i++){
 	   for(int j=0;j<centerLine[i].length;j++){
@@ -331,6 +339,26 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }
   return smileyFace;
  }
+ 
+ public static boolean[][] getCircle(){
+	  boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+	  double centerX=smileyFace.length/2.;
+	  double centerY=smileyFace[0].length/2.;
+	  double min=Math.min(centerX,centerY);
+	  double radiusSquareMin=Math.pow(0.7*min,2);
+	  double radiusSquareMax=Math.pow((0.7+width)*min,2);
+	  
+	  for(int i=0;i<smileyFace.length;i++){
+	   for(int j=0;j<smileyFace[i].length;j++){
+	    double distanceSquare=Math.pow(i-centerX,2.)+Math.pow(j-centerY,2.);
+	    if(distanceSquare>radiusSquareMin&&distanceSquare<radiusSquareMax){
+	     smileyFace[i][j]=true;
+	    }
+	   }
+	  }
+	  return smileyFace;
+	 }
+ 
  public static boolean[][] getTopLine(){
   double width=0.2;
   boolean[][] topLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
@@ -465,4 +493,9 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
    e.printStackTrace();
   }
  }
+ 
+ public static RDPatternFitnessResultIbuki getMinFitness(){
+		return new RDPatternFitnessResultIbuki();
+	}
+ 
 }
