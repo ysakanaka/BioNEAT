@@ -32,7 +32,7 @@ public class ClusterVersionLineHellinger {
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
-		RDConstants.defaultRandomFitness = 0.4;//0.28;
+		RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.width;//0.28;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
