@@ -41,7 +41,7 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 					}
 		
 		fitness = Math.max(0.0, fitness);
-		RDImagePrinter ip = new 
+		//RDImagePrinter ip = new 
 	}
 	
 	/**
