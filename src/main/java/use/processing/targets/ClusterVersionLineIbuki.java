@@ -33,10 +33,13 @@ public class ClusterVersionLineIbuki {
 	  RDConstants.populationSize=50;
 	  RDConstants.maxGeneration=200;
 	  RDConstants.maxTimeEval=10000;
-	  RDConstants.reEvaluation = 2;
+	  RDConstants.reEvaluation = 1;
 	  RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
 		RDConstants.maxBeads = 500;
+		
+		RDConstants.horizontalBins = 1;
+		RDConstants.verticalBins = 2;
 	  
 	  RDConstants.targetName = "ClusterLineHellinger";
 	  

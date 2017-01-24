@@ -23,22 +23,30 @@ import utils.RDLibrary;
 public class ClusterVersionLineHellinger {
 
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
+		
+		RDPatternFitnessResultIbuki.width = 0.3;
 		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		
 		
-		RDConstants.reEvaluation = 2;
+		RDConstants.reEvaluation = 1;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
-		RDConstants.defaultRandomFitness = 0.28;
+		RDConstants.defaultRandomFitness = 0.4;//0.28;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 10000;
+		RDConstants.maxTimeEval = 5000;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
 		RDConstants.maxBeads = 500;
+		RDConstants.showBeads = true;
+		RDConstants.weightDisableTemplate = 1;
+		  RDConstants.weightMutateParameter = 96;
+		  RDConstants.weightAddActivationWithGradients = 1;
+		  RDConstants.weightAddInhibitionWithGradients = 1;
+		  RDConstants.weightAddNodeWithGradients = 1;
 		
 		RDConstants.targetName = "ClusterLineHellinger";
 		

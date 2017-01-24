@@ -1,15 +1,9 @@
 package use.processing.targets;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import erne.Evolver;
 import erne.mutation.MutationRule;
@@ -17,60 +11,36 @@ import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
-import reactionnetwork.Connection;
-import reactionnetwork.ConnectionSerializer;
-import reactionnetwork.ReactionNetwork;
-import reactionnetwork.ReactionNetworkDeserializer;
 import use.processing.mutation.rules.AddActivationWithGradients;
 import use.processing.mutation.rules.AddInhibitionWithGradients;
 import use.processing.mutation.rules.AddNodeWithGradients;
-import use.processing.rd.RDBeadPositionFitnessFunction;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
 import use.processing.rd.RDFitnessFunction;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-/**
- * Defines a target with a centered line of ratio width compared to the whole area
- * @author naubertkato
- *
- */
-public class RDLine {
-	
-	//public static float width = 0.3f; 
-	//public static float offset = 0.5f*RDConstants.hsize;
-	
+public class RDCircle {
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
-		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
-		ReactionNetwork reac = RDLibrary.rdstart;
+		boolean[][] target = RDPatternFitnessResultIbuki.getCircle();
 		
-		if(args.length >= 1){
-			Gson gson = new GsonBuilder().registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
-					.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
-			BufferedReader in;
-			
-			try {
-				in = new BufferedReader(new FileReader(args[0]));
-				reac = gson.fromJson(in, ReactionNetwork.class);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			}
+		
+		RDConstants.reEvaluation = 2;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
 		RDConstants.defaultRandomFitness = 0.0;
 		RDConstants.useHellingerDistance = true;
+		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
-		RDConstants.matchPenalty = -0.48;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 10000;
+		RDConstants.maxTimeEval = 10;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
+		RDConstants.maxBeads = 500;
+		RDConstants.showBeads = true;
 		
-		RDConstants.targetName = "RDLine";
+		RDConstants.targetName = "ClusterCircleHellinger";
 		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
@@ -93,7 +63,7 @@ Mutator mutator;
     			new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
     			new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
         }
-		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, reac,
+		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
 				fitnessFunction, mutator, new RDFitnessDisplayer());
 		//evolver.setGUI(false);
 		evolver.setExtraConfig(RDConstants.configsToString());
