@@ -33,9 +33,15 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		//TODO calculate happily fitness
 		//this.beads = beads;
 		
-		//concHistory
+		for(int i = 0; i<concHistory.length-2; i++) // timestep
+			for(int j = 0; j<concHistory[0].length-1; j++) //species
+				for(int x = 0; x<concHistory[0][0].length-1; x++)
+					for(int y = 0; y<concHistory[0][0][0].length-1; y++) {
+						fitness = Math.pow(concHistory[i+1][j][x][y] - concHistory[i][j][x][y], 2);
+					}
 		
 		fitness = Math.max(0.0, fitness);
+		RDImagePrinter ip = new 
 	}
 	
 	/**
