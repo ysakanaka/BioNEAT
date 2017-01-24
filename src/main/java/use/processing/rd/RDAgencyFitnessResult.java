@@ -1,6 +1,12 @@
 package use.processing.rd;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.imageio.ImageIO;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
@@ -19,6 +25,8 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 	transient protected float[][][][] concHistory;
 	//protected Table<Integer,Integer,ArrayList<Bead>> beads;//index of the first template species, indicating bead positions;
 	protected double fitness;
+	
+	transient static protected AtomicInteger nextFileName = new AtomicInteger();
 	
 	protected RDAgencyFitnessResult(){
 		fitness = 0.0;
@@ -41,7 +49,19 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 					}
 		
 		fitness = Math.max(0.0, fitness);
+<<<<<<< HEAD
 		//RDImagePrinter ip = new 
+=======
+		int myName = nextFileName.getAndAdd(1);
+		for(int i= 0; i<concHistory.length; i++){
+		RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
+		BufferedImage bi = new BufferedImage(ip.getSize().width, ip.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+		Graphics g = bi.createGraphics();
+		ip.paint(g);  //this == JComponent
+		g.dispose();
+		try{ImageIO.write(bi,"png",new File("image-"+myName+"-"+i+".png"));}catch (Exception e) {}
+		}
+>>>>>>> ec78b41bf8308d6f35d4e9af5820b0f8f3b0e064
 	}
 	
 	/**
