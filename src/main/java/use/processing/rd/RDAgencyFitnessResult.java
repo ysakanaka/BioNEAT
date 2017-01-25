@@ -49,9 +49,7 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 					}
 		
 		fitness = Math.max(0.0, fitness);
-<<<<<<< HEAD
-		//RDImagePrinter ip = new 
-=======
+
 		int myName = nextFileName.getAndAdd(1);
 		for(int i= 0; i<concHistory.length; i++){
 		RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
@@ -61,7 +59,6 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		g.dispose();
 		try{ImageIO.write(bi,"png",new File("image-"+myName+"-"+i+".png"));}catch (Exception e) {}
 		}
->>>>>>> ec78b41bf8308d6f35d4e9af5820b0f8f3b0e064
 	}
 	
 	/**
