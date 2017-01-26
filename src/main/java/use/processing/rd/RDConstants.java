@@ -56,7 +56,10 @@ public class RDConstants {
 	public static boolean useHellingerDistance = true; // false means hamming. Only used if not match fitness
 	public static boolean patternHellinger = false; // true means we care about the actual values rather than coverage
 	public static int horizontalBins = 1; //used to bin the Hellinger distance. Too little bins mean no pattern coverage. Too much means too much penalty for holes
-	public static int verticalBins = 3;
+	public static int verticalBins = 1;
+	
+	public static int coverageHBins = 7; //used to bin the lexicographic fitness. Makes no sense to be the same as Hellinger
+	public static int coverageVBins = 7;
 	public static boolean evalRandomDistance = true; //before starting, check the distance between a random dist and the pattern.
 	public static double defaultRandomFitness = 2.0; //if not, use this one
 	public static int trials = 10; //Average over how many attempts?

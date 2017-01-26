@@ -22,28 +22,36 @@ import utils.RDLibrary;
 
 public class ClusterVersionLineLexicographic {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-		 boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
+		RDPatternFitnessResultIbuki.width = 0.3; 
+		boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
 		//  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
 		 // boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
 		  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		 
-		  RDConstants.populationSize=50;
+		  RDConstants.populationSize=100;
 		  RDConstants.maxGeneration=200;
-		  RDConstants.maxTimeEval=10000;
+		  RDConstants.maxTimeEval=5000; //TODO wrong val
 		  RDConstants.hardTrim = false;
-			RDConstants.maxNodes = 16;
+			RDConstants.maxNodes = 14;
 			RDConstants.maxBeads = 500;
 		  RDConstants.reEvaluation = 2;
+		  RDConstants.showBeads = true;
+			RDConstants.weightDisableTemplate = 1;
+			  RDConstants.weightMutateParameter = 96;
+			  RDConstants.weightAddActivationWithGradients = 1;
+			  RDConstants.weightAddInhibitionWithGradients = 1;
+			  RDConstants.weightAddNodeWithGradients = 1;
 		  
 		  RDConstants.targetName = "ClusterLineLexicographic";
 		  
 		  RDConstants.evalRandomDistance=false;
 		  
-		   RDConstants.defaultRandomFitness = 0.25;
+		  RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.width;
 
 		   
 		   RDConstants.useMatchFitness = false;
 			RDConstants.useHellingerDistance = true;
+			RDConstants.patternHellinger = false;
 			//RDConstants.horizontalBins = 1;
 			//RDConstants.verticalBins = 1;
 		   

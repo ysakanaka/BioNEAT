@@ -22,19 +22,20 @@ import utils.RDLibrary;
 
 public class RDCircle {
 	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
-		boolean[][] target = RDPatternFitnessResultIbuki.getCircle();
+		RDPatternFitnessResultIbuki.width = 0.5;
+		boolean[][] target = RDPatternFitnessResultIbuki.getDisk();
 		
 		
-		RDConstants.reEvaluation = 2;
+		RDConstants.reEvaluation = 1;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
-		RDConstants.defaultRandomFitness = 0.0;
+		RDConstants.defaultRandomFitness = 0.22;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 10;
+		RDConstants.maxTimeEval = 1000;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
 		RDConstants.maxBeads = 500;

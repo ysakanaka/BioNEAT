@@ -358,6 +358,24 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	  }
 	  return smileyFace;
 	 }
+ public static boolean[][] getDisk(){
+	  boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+	  double centerX=smileyFace.length/2.;
+	  double centerY=smileyFace[0].length/2.;
+	  double min=Math.min(centerX,centerY);
+	  double radiusSquareMin=0.0;
+	  double radiusSquareMax=Math.pow(width*min,2);
+	  
+	  for(int i=0;i<smileyFace.length;i++){
+	   for(int j=0;j<smileyFace[i].length;j++){
+	    double distanceSquare=Math.pow(i-centerX,2.)+Math.pow(j-centerY,2.);
+	    if(distanceSquare>radiusSquareMin&&distanceSquare<radiusSquareMax){
+	     smileyFace[i][j]=true;
+	    }
+	   }
+	  }
+	  return smileyFace;
+	 }
  
  public static boolean[][] getTopLine(){
   double width=0.2;
