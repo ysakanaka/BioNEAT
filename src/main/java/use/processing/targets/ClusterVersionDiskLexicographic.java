@@ -29,11 +29,11 @@ public class ClusterVersionDiskLexicographic {
 		
 		RDConstants.populationSize=100;
 		  RDConstants.maxGeneration=200;
-		  RDConstants.maxTimeEval=5000; //TODO wrong val
+		  RDConstants.maxTimeEval=10000; //TODO wrong val
 		  RDConstants.hardTrim = false;
 			RDConstants.maxNodes = 14;
-			RDConstants.maxBeads = 500;
-		  RDConstants.reEvaluation = 2;
+			RDConstants.maxBeads = 500; //TODO wrong val
+		  RDConstants.reEvaluation = 1; //TODO wrong val
 		  RDConstants.showBeads = true;
 			RDConstants.weightDisableTemplate = 1;
 			  RDConstants.weightMutateParameter = 96;
