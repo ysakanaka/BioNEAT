@@ -53,11 +53,12 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		int myName = nextFileName.getAndAdd(1);
 		for(int i= 0; i<concHistory.length; i++){
 		RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
-		BufferedImage bi = new BufferedImage(ip.getSize().width, ip.getSize().height, BufferedImage.TYPE_INT_ARGB); 
+		BufferedImage bi = new BufferedImage((int) (conc[0].length* RDConstants.spaceStep),(int) (conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_ARGB); 
 		Graphics g = bi.createGraphics();
-		ip.paint(g);  //this == JComponent
-		g.dispose();
+		ip.paintComponent(g);  //this == JComponent
+		
 		try{ImageIO.write(bi,"png",new File("image-"+myName+"-"+i+".png"));}catch (Exception e) {}
+		g.dispose();
 		}
 	}
 	
