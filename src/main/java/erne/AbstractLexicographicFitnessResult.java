@@ -39,7 +39,7 @@ public abstract class AbstractLexicographicFitnessResult extends AbstractFitness
 	}
 	
 	public double getFitness(){
-		return 1.0/((double)rank);
+		return Math.min(1.0/((double)rank),getFullFitness().iterator().next()); //people with a finess of zero get zero
 	}
 	
 	public static class LexicographicFitnessComparator implements Comparator<AbstractLexicographicFitnessResult> {

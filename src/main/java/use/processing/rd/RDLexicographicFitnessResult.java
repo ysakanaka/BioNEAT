@@ -49,8 +49,8 @@ public class RDLexicographicFitnessResult extends AbstractLexicographicFitnessRe
 	 */
 	protected void computeFitness(){
 		if(!fitnessComputed){
+			fullFitness.add(getMatchingFitness());
 		  fullFitness.add(getCoverageFitness());
-		  fullFitness.add(getMatchingFitness());
 		  fitnessComputed = true;
 		}
 	}
@@ -62,16 +62,16 @@ public class RDLexicographicFitnessResult extends AbstractLexicographicFitnessRe
 	}
 	
 	protected double getCoverageFitness(){
-		int patternSize = RDConstants.horizontalBins*RDConstants.verticalBins;
+		int patternSize = RDConstants.coverageHBins*RDConstants.coverageVBins;
 		double[] goodConc = new double[patternSize];
 		
 		for(int i = 0; i<conc[RDConstants.glueIndex].length; i++){
 			for(int j=0; j<conc[RDConstants.glueIndex][i].length;j++){
 		    	if(conc[RDConstants.glueIndex][i][j]>RDConstants.cutOff){
 		    		if(pattern[i][j]){
-		    			int hpos = (i*RDConstants.horizontalBins)/pattern.length;
-		    			int vpos = (j*RDConstants.verticalBins)/pattern.length;
-		    			goodConc[hpos+vpos*RDConstants.horizontalBins] += conc[RDConstants.glueIndex][i][j];
+		    			int hpos = (i*RDConstants.coverageHBins)/pattern.length;
+		    			int vpos = (j*RDConstants.coverageVBins)/pattern.length;
+		    			goodConc[hpos+vpos*RDConstants.coverageHBins] += conc[RDConstants.glueIndex][i][j];
 		    			
 		    		}
 		    	}
@@ -98,7 +98,10 @@ public class RDLexicographicFitnessResult extends AbstractLexicographicFitnessRe
 		fitness = RDConstants.hsize*RDConstants.wsize/((PatternEvaluator.distance(pattern, 
 				positions))*RDConstants.spaceStep*RDConstants.spaceStep);
 		}
-		return Math.max(0.0, fitness - randomFit);
+		
+		//also, we need to round it, if we want to be able to compare. Let's go down to the percent.
+		
+		return Math.max(0.0, (Math.round(fitness*100.0)/100.0 - randomFit)/(1.0-randomFit));
 	}
 	
 	public float[][][] getConc(){

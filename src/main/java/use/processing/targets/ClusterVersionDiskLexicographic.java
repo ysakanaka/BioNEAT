@@ -16,25 +16,24 @@ import use.processing.mutation.rules.AddInhibitionWithGradients;
 import use.processing.mutation.rules.AddNodeWithGradients;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
+import use.processing.rd.RDFitnessFunction;
 import use.processing.rd.RDLexicographicFitnessFunction;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-public class ClusterVersionLineLexicographic {
-	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-		RDPatternFitnessResultIbuki.width = 0.3; 
-		boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
-		//  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
-		 // boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
-		  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-		 
-		  RDConstants.populationSize=100;
+public class ClusterVersionDiskLexicographic {
+	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
+		RDPatternFitnessResultIbuki.width = 0.5;
+		boolean[][] target = RDPatternFitnessResultIbuki.getDisk();
+		
+		
+		RDConstants.populationSize=100;
 		  RDConstants.maxGeneration=200;
-		  RDConstants.maxTimeEval=5000; //TODO wrong val
+		  RDConstants.maxTimeEval=10000; //TODO wrong val
 		  RDConstants.hardTrim = false;
 			RDConstants.maxNodes = 14;
-			RDConstants.maxBeads = 500;
-		  RDConstants.reEvaluation = 2;
+			RDConstants.maxBeads = 500; //TODO wrong val
+		  RDConstants.reEvaluation = 1; //TODO wrong val
 		  RDConstants.showBeads = true;
 			RDConstants.weightDisableTemplate = 1;
 			  RDConstants.weightMutateParameter = 96;
@@ -42,11 +41,11 @@ public class ClusterVersionLineLexicographic {
 			  RDConstants.weightAddInhibitionWithGradients = 1;
 			  RDConstants.weightAddNodeWithGradients = 1;
 		  
-		  RDConstants.targetName = "ClusterLineLexicographic";
+		  RDConstants.targetName = "ClusterDiskLexicographic";
 		  
 		  RDConstants.evalRandomDistance=false;
 		  
-		  RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.width;
+		  RDConstants.defaultRandomFitness = 0.22;
 
 		   
 		   RDConstants.useMatchFitness = false;

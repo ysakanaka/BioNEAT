@@ -68,6 +68,7 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 			// ;
 		}
 		fitness = Math.max(0.0, fitness);
+		
 		fitness = fitness/ //concHistory[0].length/
 				concHistory[0][0].length/concHistory[0][0][0].length;
 
@@ -90,6 +91,17 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 			g.dispose();
 		}
 
+// previous code:
+//		int myName = nextFileName.getAndAdd(1);
+//		for(int i= 0; i<concHistory.length; i++){
+//		RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
+//		BufferedImage bi = new BufferedImage((int) (conc[0].length* RDConstants.spaceStep),(int) (conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_ARGB); 
+//		Graphics g = bi.createGraphics();
+//		ip.paintComponent(g);  //this == JComponent
+//		
+//		try{ImageIO.write(bi,"png",new File("image-"+myName+"-"+i+".png"));}catch (Exception e) {}
+//		g.dispose();
+//		}
 	}
 
 	/**
@@ -177,6 +189,30 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		}
 
 		return sum;
+	}
+
+	public static void main (String[] args){
+		float[][][] conc = new float[5][200][200];
+		float[][][][] concHistory = new float[1][][][];
+		
+		for (int i = 0; i< conc.length; i++){
+			for (int j = 0; j<conc[i].length; j++){
+				for(int k = 0; k<conc[i][j].length; k++){
+					conc[i][j][k] = i*j*k/1000.0f;
+				}
+			}
+		}
+		concHistory[0] = conc;
+		String myName = "mimimi";
+		for(int i= 0; i<concHistory.length; i++){
+			RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
+			BufferedImage bi = new BufferedImage((int) (conc[0].length* RDConstants.spaceStep),(int) (conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
+			Graphics g = bi.createGraphics();
+			ip.paintComponent(g);
+			
+			try{ImageIO.write(bi,"png",new File("image-"+myName+"-"+i+".png"));}catch (Exception e) {}
+			g.dispose();
+			}
 	}
 
 }

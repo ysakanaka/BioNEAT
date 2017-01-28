@@ -20,28 +20,35 @@ import use.processing.rd.RDFitnessFunction;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-public class RDCircle {
-	public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
-		RDPatternFitnessResultIbuki.width = 0.5;
-		boolean[][] target = RDPatternFitnessResultIbuki.getDisk();
+public class AndromedaVersionLineHellinger {
+public static void main(String[] args) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
+		
+		RDPatternFitnessResultIbuki.width = 0.3;
+		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		
 		
 		RDConstants.reEvaluation = 1;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
-		RDConstants.defaultRandomFitness = 0.22;
+		RDConstants.defaultRandomFitness = RDPatternFitnessResultIbuki.width;//0.28;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.patternHellinger = true;
 		RDConstants.useMatchFitness = false;
+		RDConstants.populationSize = 100;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 1000;
+		RDConstants.maxTimeEval = 5000;
 		RDConstants.hardTrim = false;
-		RDConstants.maxNodes = 16;
+		RDConstants.maxNodes = 12;
 		RDConstants.maxBeads = 500;
 		RDConstants.showBeads = true;
+		RDConstants.weightDisableTemplate = 1;
+		  RDConstants.weightMutateParameter = 96;
+		  RDConstants.weightAddActivationWithGradients = 1;
+		  RDConstants.weightAddInhibitionWithGradients = 1;
+		  RDConstants.weightAddNodeWithGradients = 1;
 		
-		RDConstants.targetName = "ClusterCircleHellinger";
+		RDConstants.targetName = "AndromedaLineHellinger";
 		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);

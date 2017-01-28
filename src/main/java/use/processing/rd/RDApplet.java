@@ -73,7 +73,7 @@ public class RDApplet extends PApplet{
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
 		maxTime = 5000/bigTimeStep;
-		RDConstants.timing = true;
+		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
