@@ -47,51 +47,145 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 
 		// TODO calculate happily fitness
 		// this.beads = beads;
-		fitness = 0;
-		double[] concPrev = new double[concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length];
-		double[] concNow = new double[concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length];
-		for (int i = 0; i < concHistory.length - 1; i++) // timestep
-		{
-			for (int j = 0; j < concHistory[0].length 
-					; j++) // species
-				for (int x = 0; x < concHistory[0][0].length; x++)
-					for (int y = 0; y < concHistory[0][0][0].length; y++) 
-					{
-						// fitness += Math.pow(concHistory[i + 1][j][x][y] -
-						// concHistory[i][j][x][y], 2); //test
-						concPrev[j * x * y] = concHistory[i][j][x][y];
-						concNow[j * x * y] = concHistory[i + 1][j][x][y];
-					}
-			fitness += calculateMI(concPrev, concNow); // At+1, At / At+1, Et.
-														// vary A over the space
-			// Math.pow( // , 2)
-			// ;
-		}
-		fitness = Math.max(0.0, fitness);
 		
-		fitness = fitness/ //concHistory[0].length/
-				concHistory[0][0].length/concHistory[0][0][0].length;
-
-		int myName = nextFileName.getAndAdd(1);
-		for (int i = 0; i < concHistory.length; i++) {
-			System.err.println(concHistory[i][1][3][1]+" "+concHistory[i][0][2][3]+" "+concHistory[i][0][1][5]); //TODO fix: why is concHistory the same for all values of i -- je dois etre trop fatigue la, je vois pas
-			RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
-			BufferedImage bi = new BufferedImage(concHistory[0][0].length, concHistory[0][0][0].length,
-					BufferedImage.TYPE_INT_ARGB); // ip.getSize().width,
-													// ip.getSize().height,
-			Graphics g = bi.createGraphics();
-			ip.paint(g); // this == JComponent
-			// g.dispose();
-			try {
-				//ImageIO.write(bi, "png", new File("image-" + myName + "-" + i + ".png"));
-				ImageIO.write(bi, "jpg", new File("samefileallthetime.jpg"));
-			} catch (Exception e) {
-				System.err.println("can't write in file, my apologies");
+		// pick agent that maximizes IF over a set of generated agents
+		//int agentSearchSpace = 100;
+		//int asscnt = 0;
+		//while (asscnt < agentSearchSpace)
+		fitness = 0;
+		int sizeAE = concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length; // 3*80*80 world size
+		int sizeA = concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length/5/5; // 3*80*80/25 = 3*16*16 agent size
+		double maxFitness = 0;
+		//int agent_jump = 5;
+		for (int ax = 0; ax < sizeAE - 5; ax = ax + 5) { 
+		for (int ay = 0; ay < sizeAE - 5; ay = ay + 5) {
+			//asscnt++;
+			double localFitness = 0;
+			//System.err.println(concHistory[0].length+" "+concHistory[0][0].length+" "+concHistory[0][0][0].length+" ");
+			double[] concPrev = new double[sizeAE]; //80 side
+			double[] concNow = new double[sizeAE];
+			//System.err.println(sizeAE);
+			//System.err.println(sizeA);
+			double[] concPrevA = new double[sizeA]; //5 side
+			double[] concNowA = new double[sizeA];
+			//int sizeE = concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length/5/5;
+			//System.err.println(sizeE);
+			double[] concPrevE = new double[sizeAE-sizeA]; //75 side
+			double[] concNowE = new double[sizeAE-sizeA];
+			
+			for (int i = 0; i < concHistory.length - 1; i++) // timestep //TODO -1 not necessary
+			{
+				//whole world history (A+E)
+				for (int j = 0; j < concHistory[0].length; j++) // species
+					for (int x = 0; x < concHistory[0][0].length; x++)
+						for (int y = 0; y < concHistory[0][0][0].length; y++) 
+						{
+							// fitness += Math.pow(concHistory[i + 1][j][x][y] -
+							// concHistory[i][j][x][y], 2); //test
+							concPrev[j * x * y] = concHistory[i][j][x][y];
+							concNow[j * x * y] = concHistory[i + 1][j][x][y];
+						}
+				
+				//A
+				for (int j = 0; j < concHistory[0].length; j++) {
+					int cx = 0;
+					for (int x = ax; x < concHistory[0][0].length && x < ax + 5 ; x++) {
+						int cy = 0;
+						for (int y = ay; y < concHistory[0][0][0].length && y < ay + 5 ; y++) {
+							try {
+								concPrevA[j * cx * cy] = concHistory[i][j][x][y];
+								concNowA[j * cx * cy] = concHistory[i + 1][j][x][y];
+							} catch (Exception e) {
+								System.out.println("concA: "+i+" "+j+" "+x+" "+y+" ");
+								e.printStackTrace();
+							}
+							cy++;
+						}
+						cx++;
+					}
+				}
+				
+				//E
+				for (int j = 0; j < concHistory[0].length; j++) {
+					int cx = 0;
+					int x = ax;
+					while (x < concHistory[0][0].length) {
+						int cy = 0;
+						int y = ay;
+						while (y < concHistory[0][0][0].length) {
+							concPrevE[j * cx * cy] = concHistory[i][j][x][y];
+							concNowE[j * cx * cy] = concHistory[i + 1][j][x][y];
+							cy++;
+							while(ay <= y && y < ay+sizeA) y++;
+						}
+						cx++;
+						while(ax <= x && x < ax+sizeA) x++;
+					}
+				}
+				
+				double fitInc = calculateMI(concPrev, concNow) - calculateMI(concPrevA, concNowA) - calculateMI(concPrevE, concNowE);
+				localFitness += fitInc;
 			}
-			g.dispose();
+			localFitness = Math.max(0.0, localFitness);
+			
+			localFitness = localFitness/ //concHistory[0].length/
+					concHistory[0][0].length/concHistory[0][0][0].length;
+			if (maxFitness < localFitness) {
+				System.out.println("\t new fitness = "+fitness+", old fitness = "+maxFitness);
+				maxFitness = localFitness;
+			}
 		}
+		}
+		fitness = maxFitness;
+		System.err.println("fitness = "+fitness);
+		// now paint it into a file
 
-// previous code:
+		//float[][][] conc = new float[5][200][200];
+		//float[][][][] concHistory = new float[1][][][];
+		
+//		for (int i = 0; i< conc.length; i++){
+//			for (int j = 0; j<conc[i].length; j++){
+//				for(int k = 0; k<conc[i][j].length; k++){
+//					conc[i][j][k] = i*j*k/1000.0f;
+//				}
+//			}
+//		}
+		concHistory[0] = conc;
+		String myName = "rdfit"; 
+		int mySuffix = nextFileName.getAndAdd(1);
+		for(int i= 0; i<concHistory.length; i++) {
+			RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
+			BufferedImage bi = new BufferedImage((int) (conc[0].length* RDConstants.spaceStep),(int) (conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
+			Graphics g = bi.createGraphics();
+			ip.paintComponent(g);
+			
+			try {
+				ImageIO.write(bi,"png",new File("image-"+myName+"-"+mySuffix+"-"+i+".png"));
+				} catch (Exception e) {}
+			g.dispose();
+		}		
+		//int myName = nextFileName.getAndAdd(1);
+		
+// just previous code: 
+//		for (int i = 0; i < concHistory.length; i++) {
+//			System.err.println(concHistory[i][1][3][1]+" "+concHistory[i][0][2][3]+" "+concHistory[i][0][1][5]); //TODO fix: why is concHistory the same for all values of i -- je dois etre trop fatigue la, je vois pas
+//			RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
+//			BufferedImage bi = new BufferedImage(concHistory[0][0].length, concHistory[0][0][0].length,
+//					BufferedImage.TYPE_INT_ARGB); // ip.getSize().width,
+//													// ip.getSize().height,
+//			Graphics g = bi.createGraphics();
+//			ip.paint(g); // this == JComponent
+//			// g.dispose();
+//			try {
+//				//ImageIO.write(bi, "png", new File("image-" + myName + "-" + i + ".png"));
+//				ImageIO.write(bi, "jpg", new File("samefileallthetime.jpg"));
+//			} catch (Exception e) {
+//				System.err.println("can't write in file, my apologies");
+//			}
+//			g.dispose();
+//		}
+
+// a while ago code:
 //		int myName = nextFileName.getAndAdd(1);
 //		for(int i= 0; i<concHistory.length; i++){
 //		RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
@@ -191,7 +285,7 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		return sum;
 	}
 
-	public static void main (String[] args){
+	public static void main2 (String[] args){
 		float[][][] conc = new float[5][200][200];
 		float[][][][] concHistory = new float[1][][][];
 		
@@ -203,7 +297,7 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 			}
 		}
 		concHistory[0] = conc;
-		String myName = "mimimi";
+		String myName = "mimimi"; 
 		for(int i= 0; i<concHistory.length; i++){
 			RDImagePrinter ip = new RDImagePrinter(concHistory[i]);
 			BufferedImage bi = new BufferedImage((int) (conc[0].length* RDConstants.spaceStep),(int) (conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
