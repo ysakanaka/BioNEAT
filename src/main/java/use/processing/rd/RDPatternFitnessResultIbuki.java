@@ -378,7 +378,6 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	 }
  
  public static boolean[][] getTopLine(){
-  double width=0.2;
   boolean[][] topLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   for(int i=0;i<topLine.length;i++){
    for(int j=0;j<topLine[i].length;j++){
@@ -388,7 +387,6 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return topLine;
  }
  public static boolean[][] getBottomLine(){
-  double width=0.2;
   boolean[][] bottomLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   for(int i=0;i<bottomLine.length;i++){
    for(int j=0;j<bottomLine[i].length;j++){
@@ -398,7 +396,6 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return bottomLine;
  }
  public static boolean[][] getLeftLine(){
-  double width=0.2;
   boolean[][] leftLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   for(int i=0;i<leftLine.length;i++){
    for(int j=0;j<leftLine[i].length;j++){
@@ -408,11 +405,10 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return leftLine;
  }
  public static boolean[][] getRightLine(){
-  double width=0.2;
   boolean[][] rightLine=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   for(int i=0;i<rightLine.length;i++){
    for(int j=0;j<rightLine[i].length;j++){
-    rightLine[i][j]=(i<=rightLine.length*(1.-width));
+    rightLine[i][j]=(i>=rightLine.length*(1.-width));
    }
   }
   return rightLine;

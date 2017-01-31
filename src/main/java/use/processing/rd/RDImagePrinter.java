@@ -31,13 +31,19 @@ public class RDImagePrinter extends JPanel {
 				float val = 0.0f;
 				float val2 = 0.0f;
 				float val3 = 0.0f;
-				
-					val = Math.min(1.0f, conc[0 + RDConstants.speciesOffset][x][y] / RDConstants.concScale);
-					if (conc.length >= 2 + RDConstants.speciesOffset)
-						val2 = Math.min(1.0f, conc[1 + RDConstants.speciesOffset][x][y] / RDConstants.concScale);
-					if (conc.length >= 3 + RDConstants.speciesOffset)
-						val3 = Math.min(1.0f, conc[2 + RDConstants.speciesOffset][x][y] / RDConstants.concScale);
-				
+				if(RDConstants.showBeads){
+			    	  //Table<Integer,Integer,ArrayList<Bead>> beads = res.getBeads();
+			    	  //int pos = res.getBeadIndex();
+			    	  boolean here = conc[0+RDConstants.speciesOffset][x][y]>RDConstants.cutOff;
+			    	  
+			    	  val = here?1.0f:0.0f;
+			    	  val2 = here?1.0f:0.0f;
+			    	  val3 = here?1.0f:0.0f;
+			      } else {
+			      val = Math.min(1.0f,conc[0+RDConstants.speciesOffset][x][y]/RDConstants.concScale);
+			      if (conc.length >= 2+RDConstants.speciesOffset) val2 = Math.min(1.0f,conc[1+RDConstants.speciesOffset][x][y]/RDConstants.concScale);
+			      if (conc.length >= 3+RDConstants.speciesOffset) val3 = Math.min(1.0f,conc[2+RDConstants.speciesOffset][x][y]/RDConstants.concScale);
+			      }
 				g.setColor(new Color(Math.max(0.0f, val), Math.max(0.0f, val2), Math.max(0.0f, val3)));
 				g.fillRect((int) (x * RDConstants.spaceStep), (int) (y * RDConstants.spaceStep),
 						(int) RDConstants.spaceStep, (int) RDConstants.spaceStep);

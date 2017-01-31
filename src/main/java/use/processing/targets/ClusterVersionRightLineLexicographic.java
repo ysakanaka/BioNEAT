@@ -22,19 +22,19 @@ import utils.RDLibrary;
 
 public class ClusterVersionRightLineLexicographic {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-		RDPatternFitnessResultIbuki.width = 0.3; 
+		RDPatternFitnessResultIbuki.width = 0.25; 
 		boolean[][] target=RDPatternFitnessResultIbuki.getRightLine();
 		//  boolean [][] target=RDPatternFitnessResultIbuki.getSmileyFace();
 		 // boolean[][] target=RDPatternFitnessResultIbuki.getTopLine();
 		  // RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		 
 		  RDConstants.populationSize=50;
-		  RDConstants.maxGeneration=50;
+		  RDConstants.maxGeneration=100;
 		  RDConstants.maxTimeEval=2000; //TODO wrong val
 		  RDConstants.hardTrim = false;
 			RDConstants.maxNodes = 10;
 			RDConstants.maxBeads = 500;
-		  RDConstants.reEvaluation = 2;
+		  RDConstants.reEvaluation = 1;
 		  RDConstants.showBeads = true;
 			RDConstants.weightDisableTemplate = 1;
 			  RDConstants.weightMutateParameter = 96;

@@ -283,4 +283,16 @@ public class Evolver implements Serializable {
 		}
 		return ret;
 	}
+	
+	public static Individual getBestLastGen(String resultDirectory)throws ClassNotFoundException, IOException{
+		Individual ret = null;
+		Population population;
+		
+		population = (Population) Serializer.deserialize(resultDirectory + "/population");
+		
+			PopulationInfo info = population.getPopulationInfo(population.getTotalGeneration()-1);
+			ret = info.getBestIndividual();
+			
+		return ret;
+	}
 }
