@@ -23,6 +23,7 @@ public class RDLexicographicFitnessResult extends AbstractLexicographicFitnessRe
 	protected float[][][] conc;
 	protected boolean[][] pattern;
 	protected boolean[][] positions;
+	transient protected float[][] floatPos;
 	transient protected double randomFit;
 	transient protected boolean fitnessComputed = false;
 	
@@ -39,7 +40,7 @@ public class RDLexicographicFitnessResult extends AbstractLexicographicFitnessRe
 		//this.beads = beads;
 		positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(conc[RDConstants.glueIndex])
 				:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,beads));
-		
+		floatPos =PatternEvaluator.detectBeadsAsFloat(pattern.length, pattern[0].length,beads);
 		computeFitness();
 		
 	}
@@ -93,7 +94,11 @@ public class RDLexicographicFitnessResult extends AbstractLexicographicFitnessRe
 			fitness = ((PatternEvaluator.matchOnPattern(pattern, positions))
 					*RDConstants.spaceStep*RDConstants.spaceStep)/(RDConstants.hsize*RDConstants.wsize);
 		} else if(RDConstants.useHellingerDistance){
+			if(RDConstants.useGlueAsTarget){
 		    fitness = 1.0 - PatternEvaluator.hellingerDistance(conc[RDConstants.glueIndex], pattern);
+			} else {
+				fitness = 1.0 - PatternEvaluator.hellingerDistance(floatPos, pattern);
+			}
 		} else {
 		fitness = RDConstants.hsize*RDConstants.wsize/((PatternEvaluator.distance(pattern, 
 				positions))*RDConstants.spaceStep*RDConstants.spaceStep);

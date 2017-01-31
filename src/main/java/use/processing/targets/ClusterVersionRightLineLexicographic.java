@@ -30,17 +30,21 @@ public class ClusterVersionRightLineLexicographic {
 		 
 		  RDConstants.populationSize=50;
 		  RDConstants.maxGeneration=100;
-		  RDConstants.maxTimeEval=2000; //TODO wrong val
+		  RDConstants.maxTimeEval=1000; //TODO wrong val
 		  RDConstants.hardTrim = false;
 			RDConstants.maxNodes = 10;
 			RDConstants.maxBeads = 500;
 		  RDConstants.reEvaluation = 1;
-		  RDConstants.showBeads = true;
+		  RDConstants.showBeads = false;
+		  RDConstants.cutOff = 10.0f;
+		  RDConstants.useGlueAsTarget = true;
 			RDConstants.weightDisableTemplate = 1;
 			  RDConstants.weightMutateParameter = 96;
 			  RDConstants.weightAddActivationWithGradients = 1;
 			  RDConstants.weightAddInhibitionWithGradients = 1;
 			  RDConstants.weightAddNodeWithGradients = 1;
+			  RDConstants.coverageHBins = 80;
+			  RDConstants.coverageVBins = 80;
 		  
 		  RDConstants.targetName = "ClusterRigthLexicographic";
 		  

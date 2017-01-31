@@ -201,5 +201,9 @@ public class Bead implements Serializable{
 	    return  Math.log(1-rand.nextDouble())/(-lambda);
   }
   
+  public Aggregate getParent(){
+	  return parent;
+  }
+  
   
 }

@@ -114,6 +114,21 @@ public class PatternEvaluator {
 		return res;
 	}
 	
+	public static float[][] detectBeadsAsFloat(int sizex, int sizey, Table<Integer,Integer,ArrayList<Bead>> beads){
+		float[][] res = new float[sizex][sizey];
+		for(int i = 0; i<sizex; i++){
+			for(int j=0; j<sizey;j++){
+				res[i][j] = 0.0f;
+				if(beads.get(i, j)!= null){
+				  for(Bead b: beads.get(i, j)){
+					  if(b.getParent() != null) res[i][j]= RDConstants.cutOff + 1.0f;
+				  }
+				}
+			}
+		}
+		return res;
+	}
+	
 	public static boolean[][] detectGlue(float conc[][]){
 		boolean[][] res = new boolean[conc.length][conc[0].length];
 		for(int i = 0; i<conc.length; i++){
