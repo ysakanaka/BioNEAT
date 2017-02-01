@@ -24,10 +24,10 @@ public class RDLineNicolasGoodParams {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
 	RDPatternFitnessResultIbuki.width = 0.3;
 	boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
-	RDPatternFitnessResultIbuki.weightExponential = 0.05;
-	  RDConstants.matchPenalty=-0.3;
+	RDPatternFitnessResultIbuki.weightExponential = 0.1;
+	  RDConstants.matchPenalty=-0.1;
 	
-	RDConstants.reEvaluation = 1;
+	RDConstants.reEvaluation = 2;
 	
 	//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 	RDConstants.evalRandomDistance = false;
@@ -39,7 +39,7 @@ public class RDLineNicolasGoodParams {
 	  }
 	   RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
 	   System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
-	   RDConstants.populationSize=100;
+	   RDConstants.populationSize=50;
 	RDConstants.maxGeneration = 100;
 	RDConstants.maxTimeEval = 1000;
 	RDConstants.hardTrim = false;
