@@ -52,7 +52,7 @@ public class RDBottomNicolas {
 		  RDConstants.weightAddInhibitionWithGradients = 1;
 		  RDConstants.weightAddNodeWithGradients = 1;
 		
-		RDConstants.targetName = "ClusterLineIbuki35";
+		RDConstants.targetName = "ClusterBottomIbuki34";
 		
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
