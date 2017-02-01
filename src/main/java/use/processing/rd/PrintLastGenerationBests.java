@@ -17,7 +17,7 @@ import utils.RDLibrary;
 
 public class PrintLastGenerationBests {
 
-	public static int reevaluationLenght = 5000;
+	public static int reevaluationLenght = 1000;
 	public static boolean debug = false;
 	
 	public static void main (String[] args){

@@ -32,8 +32,8 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 // I chose one of my distances
 // you can also choose!!
 // fitness=distanceTopology(pattern,positions);
-  fitness=distanceBlurExponential(pattern,positions);
-  fitness=Math.max(0.0,(fitness-randomFit)/(distanceBlurExponential(pattern,pattern)-randomFit));
+  fitness= distanceNicolasExponential(pattern,positions);//distanceBlurExponential(pattern,positions);
+  fitness=Math.max(0.0,(fitness-randomFit)/(distanceNicolasExponential(pattern,pattern)-randomFit));
  }
  /**
   * From here, I implemented my original distance function.
@@ -136,6 +136,31 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }
   return fitness;
  }
+ 
+ public static double distanceNicolasExponential(boolean[][] pattern,boolean[][] positions){
+	  List<boolean[][]> blurredPatterns=getBlurredPatterns(pattern);
+	  double fitness=0.;
+	  int farthestDistance=blurredPatterns.size();
+	  
+	  boolean[][] patt = pattern;
+	   for(int i = 0; i<pattern.length; i++){
+		   for(int j = 0; j < pattern[i].length; j++){
+			   if(positions[i][j] && patt[i][j]) fitness+=RDConstants.matchBonus;
+		   }
+	   }
+	  for(int distance=1;distance<farthestDistance;distance++){
+	   double fitnessTemp = 0;
+	   patt = blurredPatterns.get(distance);
+	   for(int i = 0; i<pattern.length; i++){
+		   for(int j = 0; j < pattern[i].length; j++){
+			   if(positions[i][j] && patt[i][j]) fitnessTemp++;
+		   }
+	   }
+	   fitness+=fitnessTemp*RDConstants.matchPenalty*Math.exp(weightExponential*distance); //matchPenalty < 0
+	  }
+	  return fitness;
+}
+ 
  public static double distanceBlurLinear(boolean[][] pattern,boolean[][] positions){
   List<boolean[][]> blurredPatterns=getBlurredPatterns(pattern);
   double fitness=0.;
@@ -231,8 +256,8 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
  }
  public static void main(String[] args){
 	 
-  weightExponential = 0.1;
-  RDConstants.matchPenalty=- 0.5 ;
+  weightExponential = 0.05;
+  RDConstants.matchPenalty=- 0.3 ;
   // here are patterns
   width = 0.3;
   boolean[][] pattern=getCenterLine();
@@ -267,11 +292,11 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	  
 	  System.out.println(i+" "+
 	  //getFitnessBasic(pattern,testPattern)+" "+distanceTopology(pattern,testPattern)+" "+
-	  distanceBlurExponential(pattern,testPattern)/maxValBlurExp+" "+distanceBlurLinear(pattern,testPattern)+" "+
+	  distanceBlurExponential(pattern,testPattern)/maxValBlurExp+" "+distanceNicolasExponential(pattern,testPattern)+" "+
 	  //getFitnessBasic(pattern,partialLineFromTop)+" "+distanceTopology(pattern,partialLineFromTop)+" "+
-	  distanceBlurExponential(pattern,partialLineFromTop)/maxValBlurExp+" "+distanceBlurLinear(pattern,partialLineFromTop)+" "+
+	  distanceBlurExponential(pattern,partialLineFromTop)/maxValBlurExp+" "+distanceNicolasExponential(pattern,partialLineFromTop)+" "+
 	  //getFitnessBasic(pattern,testPatternLeftSide)+" "+distanceTopology(pattern,testPatternLeftSide)+" "+
-	  distanceBlurExponential(pattern,testPatternLeftSide)/maxValBlurExp+" "+distanceBlurLinear(pattern,testPatternLeftSide)
+	  distanceBlurExponential(pattern,testPatternLeftSide)/maxValBlurExp+" "+distanceNicolasExponential(pattern,testPatternLeftSide)
 			  );
   }
   

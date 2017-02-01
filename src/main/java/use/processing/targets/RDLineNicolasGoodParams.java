@@ -24,8 +24,8 @@ public class RDLineNicolasGoodParams {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
 	RDPatternFitnessResultIbuki.width = 0.3;
 	boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
-	RDPatternFitnessResultIbuki.weightExponential = 0.3;
-	  RDConstants.matchPenalty=-0.4;
+	RDPatternFitnessResultIbuki.weightExponential = 0.05;
+	  RDConstants.matchPenalty=-0.3;
 	
 	RDConstants.reEvaluation = 1;
 	
@@ -37,7 +37,7 @@ public class RDLineNicolasGoodParams {
 			  fullMap[i][j] = true;
 		  }
 	  }
-	   RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceBlurExponential(target,fullMap));
+	   RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
 	   System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
 	   RDConstants.populationSize=50;
 	RDConstants.maxGeneration = 200;
@@ -52,7 +52,7 @@ public class RDLineNicolasGoodParams {
 	  RDConstants.weightAddInhibitionWithGradients = 1;
 	  RDConstants.weightAddNodeWithGradients = 1;
 	
-	RDConstants.targetName = "ClusterLineIbuki35";
+	RDConstants.targetName = "ClusterLineIbuki24";
 	
 	//RDConstants.showBeads = true;
 	//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);

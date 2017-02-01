@@ -40,7 +40,7 @@ public class RDBottomNicolas {
 		   RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceBlurExponential(target,fullMap));
 		   System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
 		   RDConstants.populationSize=50;
-		RDConstants.maxGeneration = 200;
+		RDConstants.maxGeneration = 50;
 		RDConstants.maxTimeEval = 1000;
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
