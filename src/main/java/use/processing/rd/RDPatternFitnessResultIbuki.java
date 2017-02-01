@@ -231,39 +231,48 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
  }
  public static void main(String[] args){
 	 
-  weightExponential = 1.0/3.0;
-  RDConstants.matchPenalty=- weightExponential ;
+  weightExponential = 0.1;
+  RDConstants.matchPenalty=- 0.5 ;
   // here are patterns
+  width = 0.3;
   boolean[][] pattern=getCenterLine();
   
-  List<boolean[][]> blurredPatterns = getBlurredPatterns(pattern);
+  List<boolean[][]> blurredPatterns = RDPatternFitnessResultIbuki.getBlurredPatterns(pattern);
 // boolean[][] pattern=getTopLine();
 // boolean[][] pattern=getSmileyFace();
 // drawPattern(pattern,"images"+File.separatorChar+"pattern.pbm");
 // here are to check the correctness of the distance
-  for(int i = 0; i<blurredPatterns.size(); i++){
-	  System.out.println("==== Distance of blur number "+i+" ====");
-	  System.out.println(getFitnessBasic(pattern,blurredPatterns.get(i)));
-	  System.out.println(distanceTopology(pattern,blurredPatterns.get(i)));
-	  System.out.println(distanceBlurExponential(pattern,blurredPatterns.get(i)));
-	  System.out.println(distanceBlurLinear(pattern,blurredPatterns.get(i)));
-	  System.out.println("");
-  }
+  
   
   boolean[][] testPattern = new boolean[pattern.length][pattern[0].length];
+  boolean[][] partialLineFromTop = RDPatternFitnessResultIbuki.getCenterLine();
+  boolean[][] testPatternLeftSide = new boolean[pattern.length][pattern[0].length];
+  double maxValBasic = getFitnessBasic(pattern,pattern);
+  double maxValTopology = distanceTopology(pattern,pattern);
+  double maxValBlurExp = distanceBlurExponential(pattern,pattern);
+  double maxValBlurLin = distanceBlurLinear(pattern,pattern);
+  System.out.println("#parameters: "+weightExponential+" "+RDConstants.matchPenalty);
+  System.out.println("#max: "+maxValBasic+" "+maxValTopology+" "+maxValBlurExp+" "+maxValBlurLin);
   for(int i = 0; i<blurredPatterns.size(); i++){
 	  boolean[][] p = blurredPatterns.get(i);
 	  for(int j = 0; j<pattern.length; j++){
 		  for(int k= 0; k<pattern[0].length; k++){
+			  if(k>pattern.length-2*i) partialLineFromTop[j][k] = false; //we are shaving off the good stuff
 			  if(p[j][k]) testPattern[j][k] = true;
+			  if(j<=(pattern.length*(1.0+width))/2.0 && p[j][k]) testPatternLeftSide[j][k] = true;
 		  }
 	  }
-	  System.out.println("==== Distance of full pattern number "+i+" ====");
-	  System.out.println(getFitnessBasic(pattern,testPattern));
-	  System.out.println(distanceTopology(pattern,testPattern));
-	  System.out.println(distanceBlurExponential(pattern,testPattern)/distanceBlurExponential(pattern,pattern));
-	  System.out.println(distanceBlurLinear(pattern,testPattern));
-	  System.out.println("");
+	  
+	  
+	  
+	  System.out.println(i+" "+
+	  //getFitnessBasic(pattern,testPattern)+" "+distanceTopology(pattern,testPattern)+" "+
+	  distanceBlurExponential(pattern,testPattern)/maxValBlurExp+" "+distanceBlurLinear(pattern,testPattern)+" "+
+	  //getFitnessBasic(pattern,partialLineFromTop)+" "+distanceTopology(pattern,partialLineFromTop)+" "+
+	  distanceBlurExponential(pattern,partialLineFromTop)/maxValBlurExp+" "+distanceBlurLinear(pattern,partialLineFromTop)+" "+
+	  //getFitnessBasic(pattern,testPatternLeftSide)+" "+distanceTopology(pattern,testPatternLeftSide)+" "+
+	  distanceBlurExponential(pattern,testPatternLeftSide)/maxValBlurExp+" "+distanceBlurLinear(pattern,testPatternLeftSide)
+			  );
   }
   
   
