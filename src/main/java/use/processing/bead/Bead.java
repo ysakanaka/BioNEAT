@@ -204,6 +204,16 @@ public class Bead implements Serializable{
   public Aggregate getParent(){
 	  return parent;
   }
+
+public void setParent(Aggregate object) {
+	parent = object;
+	
+}
+
+public void setPosition(float x, float y){
+	this.x = x;
+	this.y = y;
+}
   
   
 }

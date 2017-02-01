@@ -18,6 +18,7 @@ import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
+import use.processing.bead.Bead;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 
@@ -32,6 +33,10 @@ public class RDApplet extends PApplet{
 	
 	float time = 0.0f;
 	static float maxTime = 1000;
+	
+	static boolean selfRepair = false; //Do we remove a bunch of beads?
+	static double removePatternSize = 0.2; //how much do we remove? (Square)
+	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
 	static int offset = RDConstants.speciesOffset; //for display
 
@@ -72,7 +77,7 @@ public class RDApplet extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 5000/bigTimeStep;
+		maxTime = 300/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
@@ -139,6 +144,25 @@ public class RDApplet extends PApplet{
 				  exit();
 			  }
 			  saveFrame();
+			  if(selfRepair){
+				  //hard coded at the bottom
+				  System.out.println("Removed a chunck");
+				  int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
+				  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
+				  for (int x = minPos; x <=maxPos ; x++){
+					    for (int y = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
+					    		; y < system.conc[0][x].length; y++){
+					    	if(system.beadsOnSpot.get(x, y) != null){
+					    	  for(Bead b: system.beadsOnSpot.get(x, y)){
+					    		  b.setParent(null);
+					    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
+					          }
+					    	}
+				  }
+				}
+				selfRepair = false;
+			  }
+			  
 			  time = 0.0f;
 		  }
 		}
