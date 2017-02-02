@@ -256,8 +256,8 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
  }
  public static void main(String[] args){
 	 
-  weightExponential = 0.1;
-  RDConstants.matchPenalty=- 0.1 ;
+  weightExponential = 0.2;
+  RDConstants.matchPenalty=- 0.02 ;
   // here are patterns
   width = 0.3;
   boolean[][] pattern=getCenterLine();
