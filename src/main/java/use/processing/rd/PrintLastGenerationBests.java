@@ -57,7 +57,7 @@ public class PrintLastGenerationBests {
 		for(int i= 0; i<bestLastGen.length; i++){
 			PrintWriter fileOut;
 			try {
-				fileOut = new PrintWriter("network-"+folder.getName()+"-"+i+".txt");
+				fileOut = new PrintWriter("./network-"+folder.getName()+"-"+i+".txt");
 				fileOut.write(bestLastGen[i].toString());
 				fileOut.close();
 			} catch (FileNotFoundException e) {
@@ -65,6 +65,8 @@ public class PrintLastGenerationBests {
 				e.printStackTrace();
 			}
 		}
+		
+		System.out.println("Done with writing");
 		
 		RDConstants.showBeads = false;
 		for(int i= 0; i<bestLastGen.length; i++){
