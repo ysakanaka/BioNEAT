@@ -51,7 +51,7 @@ public class PrintLastGenerationBests {
 		}
 		
 		System.out.println("Done with loading");
-		RDConstants.showBeads = true;
+		RDConstants.showBeads = false;
 		for(int i= 0; i<bestLastGen.length; i++){
 			if(bestLastGen[i]==null) continue;
 			RDSystem syst = new RDSystem();
