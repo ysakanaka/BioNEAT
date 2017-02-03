@@ -3,6 +3,8 @@ package use.processing.rd;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 import javax.imageio.ImageIO;
 
@@ -71,6 +73,16 @@ public class PrintLastGenerationBests {
 			
 			try{ImageIO.write(bi,"png",new File("image-"+folder.getName()+"-"+i+".png"));}catch (Exception e) {}
 			g.dispose();
+			PrintWriter fileOut;
+			try {
+				fileOut = new PrintWriter("network-"+folder.getName()+"-"+i+".txt");
+				fileOut.write(bestLastGen[i].toString());
+				fileOut.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			}
 		System.exit(0);
 	}

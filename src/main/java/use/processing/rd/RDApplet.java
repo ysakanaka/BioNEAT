@@ -35,7 +35,7 @@ public class RDApplet extends PApplet{
 	static float maxTime = 1000;
 	static String name;
 	
-	static boolean selfRepair = true; //Do we remove a bunch of beads?
+	static boolean selfRepair = false; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
 	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
@@ -149,19 +149,7 @@ public class RDApplet extends PApplet{
 			  if(selfRepair){
 				  //hard coded at the bottom
 				  System.out.println("Removed a chunck");
-				  int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
-				  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
-				  for (int x = minPos; x <=maxPos ; x++){
-					    for (int y = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
-					    		; y < system.conc[0][x].length; y++){
-					    	if(system.beadsOnSpot.get(x, y) != null){
-					    	  for(Bead b: system.beadsOnSpot.get(x, y)){
-					    		  b.setParent(null);
-					    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
-					          }
-					    	}
-				  }
-				}
+				  removeChunckBottom();
 				  saveFrame("done"+name);
 				selfRepair = false;
 			  }
@@ -194,6 +182,68 @@ public class RDApplet extends PApplet{
 		  
 		}
 
+		protected void removeChunckBottom(){
+			 int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
+			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
+			  for (int x = minPos; x <=maxPos ; x++){
+				    for (int y = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
+				    		; y < system.conc[0][x].length; y++){
+				    	if(system.beadsOnSpot.get(x, y) != null){
+				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
+				    		  b.setParent(null);
+				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
+				          }
+				    	}
+			  }
+			}
+		}
+		
+		protected void removeChunckTop(){
+			 int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
+			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
+			  for (int x = minPos; x <=maxPos ; x++){
+				    for (int y = 0; y< (int) Math.round(system.conc[0].length*(removePatternSize)); y++){
+				    	if(system.beadsOnSpot.get(x, y) != null){
+				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
+				    		  b.setParent(null);
+				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
+				          }
+				    	}
+			  }
+			}
+		}
+		
+		protected void removeChunckCenter(){
+			 int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
+			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
+			  for (int x = minPos; x <=maxPos ; x++){
+				    for (int y = minPos; y< maxPos; y++){
+				    	if(system.beadsOnSpot.get(x, y) != null){
+				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
+				    		  b.setParent(null);
+				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
+				          }
+				    	}
+			  }
+			}
+		}
+		
+		protected void removeChunckRight(){
+			 int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
+			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
+			  for (int y = minPos; y <=maxPos ; y++){
+				    for (int x = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
+				    		; x < system.conc[0][x].length; x++){
+				    	if(system.beadsOnSpot.get(x, y) != null){
+				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
+				    		  b.setParent(null);
+				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
+				          }
+				    	}
+			  }
+			}
+		}
+		
 		
 
 
