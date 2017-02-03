@@ -27,7 +27,7 @@ public class RDTopNicolas {
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 		
-		RDConstants.reEvaluation = 1;
+		RDConstants.reEvaluation = 2;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;

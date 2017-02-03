@@ -33,8 +33,9 @@ public class RDApplet extends PApplet{
 	
 	float time = 0.0f;
 	static float maxTime = 1000;
+	static String name;
 	
-	static boolean selfRepair = false; //Do we remove a bunch of beads?
+	static boolean selfRepair = true; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
 	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
@@ -77,14 +78,14 @@ public class RDApplet extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 300/bigTimeStep;
+		maxTime = 1000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
 		offset = 2;
-		
+		name = (selfRepair?"self-######.png":"screen-######.png");
         PApplet.main("use.processing.rd.RDApplet");
 
     }
@@ -143,7 +144,8 @@ public class RDApplet extends PApplet{
 				  System.out.println(fitness);
 				  exit();
 			  }
-			  saveFrame();
+			 
+			  saveFrame(name);
 			  if(selfRepair){
 				  //hard coded at the bottom
 				  System.out.println("Removed a chunck");
@@ -160,6 +162,7 @@ public class RDApplet extends PApplet{
 					    	}
 				  }
 				}
+				  saveFrame("done"+name);
 				selfRepair = false;
 			  }
 			  
