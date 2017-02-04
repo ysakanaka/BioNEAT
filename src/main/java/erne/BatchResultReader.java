@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 public class BatchResultReader {
 
-	public static int maxGen = 100;
+	public static int maxGen = 50;
 	public static boolean getAllVals = true;
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException, ExecutionException {
