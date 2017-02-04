@@ -25,8 +25,9 @@ public class PrintLastGenerationBests {
 	public static void main (String[] args){
 		File folder = new File(args[0]);
 		ReactionNetwork[] bestLastGen;
+		File[] files;
 		if(folder.isDirectory()){
-		File[] files = folder.listFiles();
+		 files = folder.listFiles();
 		bestLastGen = new ReactionNetwork[files.length];
 		System.out.println("Found "+files.length+" potential folders");
 		for(int i=0; i<files.length; i++){
@@ -57,7 +58,7 @@ public class PrintLastGenerationBests {
 		for(int i= 0; i<bestLastGen.length; i++){
 			PrintWriter fileOut;
 			try {
-				fileOut = new PrintWriter("./network-"+folder.getName()+"-"+i+".txt");
+				fileOut = new PrintWriter("./network-"+folder.getName()+"-"+files[i]+".txt");
 				fileOut.write(bestLastGen[i].toString());
 				fileOut.close();
 			} catch (FileNotFoundException e) {
@@ -86,7 +87,7 @@ public class PrintLastGenerationBests {
 			Graphics g = bi.createGraphics();
 			ip.paintComponent(g);
 			
-			try{ImageIO.write(bi,"png",new File("image-"+folder.getName()+"-"+i+".png"));}catch (Exception e) {}
+			try{ImageIO.write(bi,"png",new File("image-"+folder.getName()+"-"+files[i]+".png"));}catch (Exception e) {}
 			g.dispose();
 			
 			

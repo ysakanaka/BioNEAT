@@ -35,7 +35,7 @@ public class RDApplet extends PApplet{
 	static float maxTime = 1000;
 	static String name;
 	
-	static boolean selfRepair = false; //Do we remove a bunch of beads?
+	static boolean selfRepair = true; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
 	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
@@ -149,7 +149,10 @@ public class RDApplet extends PApplet{
 			  if(selfRepair){
 				  //hard coded at the bottom
 				  System.out.println("Removed a chunck");
-				  removeChunckBottom();
+				  removeChunckRight();
+				  for(int i=0; i<bigTimeStep; i++){
+					    system.update();
+					  }
 				  saveFrame("done"+name);
 				selfRepair = false;
 			  }
@@ -232,8 +235,8 @@ public class RDApplet extends PApplet{
 			 int minPos = (int) Math.round(system.conc[0].length*(1.0-removePatternSize)/2.0);
 			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
 			  for (int y = minPos; y <=maxPos ; y++){
-				    for (int x = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
-				    		; x < system.conc[0][x].length; x++){
+				    for (int x = (int) Math.round(system.conc[0].length*(1.0-1.1*removePatternSize))
+				    		; x < system.conc[0][y].length; x++){
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
