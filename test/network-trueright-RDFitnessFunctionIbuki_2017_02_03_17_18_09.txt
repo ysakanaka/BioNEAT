@@ -1,0 +1,119 @@
+{
+  "nodes": [
+    {
+      "name": "a",
+      "parameter": 200.97667172700827,
+      "initialConcentration": 10.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "b",
+      "parameter": 13.875389606022804,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "c",
+      "parameter": 10.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "cw",
+      "parameter": 28.72852351218692,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 141.2749551414256
+    },
+    {
+      "name": "IcwTcw",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 4.689701015653498
+    },
+    {
+      "name": "IbTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 40.37141681502437
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 0,
+      "enabled": false,
+      "parameter": 1.9691942431649272,
+      "from": "c",
+      "to": "c"
+    },
+    {
+      "innovation": 1,
+      "enabled": true,
+      "parameter": 75.24043841929141,
+      "from": "b",
+      "to": "c"
+    },
+    {
+      "innovation": 4,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "cw",
+      "to": "cw"
+    },
+    {
+      "innovation": 5,
+      "enabled": true,
+      "parameter": 2.5386097470344504,
+      "from": "c",
+      "to": "IcwTcw"
+    },
+    {
+      "innovation": 23,
+      "enabled": true,
+      "parameter": 10.594665706753958,
+      "from": "cw",
+      "to": "IbTc"
+    },
+    {
+      "innovation": 33,
+      "enabled": true,
+      "parameter": 198.35329486330207,
+      "from": "a",
+      "to": "IbTc"
+    }
+  ],
+  "parameters": {
+    "nick": 10.0,
+    "pol": 10.0,
+    "exo": 10.0
+  }
+}
