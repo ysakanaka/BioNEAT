@@ -20,7 +20,7 @@ CLASS_PATH="$ROOT_DIR/lib/*:config"
 # http://cr.yp.to/daemontools.html
 if [ -n "$1" ]
 then
-  exec java $JAVA_OPTS -cp $CLASS_PATH $1 $2
+  exec java $JAVA_OPTS -cp $CLASS_PATH $1
 else
   exec java $JAVA_OPTS -cp $CLASS_PATH cluster.Cluster
 fi
