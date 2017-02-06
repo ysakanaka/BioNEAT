@@ -1,9 +1,13 @@
 package use.processing.rd;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.google.gson.Gson;
@@ -32,11 +36,12 @@ public class RDApplet extends PApplet{
 	
 	
 	float time = 0.0f;
-	static float maxTime = 1000;
+	static float maxTime = 3000;
 	static String name;
 	
 	static boolean selfRepair = true; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
+	static int fullRun = -1000;
 	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
 	static int offset = RDConstants.speciesOffset; //for display
@@ -46,7 +51,7 @@ public class RDApplet extends PApplet{
 	long realTime = startTime;
 	long totalRender = 0;
 	
-	
+	boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
 	
 	RDSystem system = new RDSystem();
 	static ReactionNetwork reac = null; 
@@ -78,12 +83,16 @@ public class RDApplet extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 1000/bigTimeStep;
+		maxTime = 5000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
+		 RDPatternFitnessResultIbuki.width = 0.2;
+		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
+		  RDConstants.matchPenalty=-0.1;
+
 		offset = 2;
 		name = (selfRepair?"self-######.png":"screen-######.png");
         PApplet.main("use.processing.rd.RDApplet");
@@ -139,25 +148,40 @@ public class RDApplet extends PApplet{
 				  System.out.println("total bead update:"+system.totalBeads);
 				  System.out.println("total conc update:"+system.totalConc);
 				  RDPatternFitnessResultIbuki.width = 0.4;
-				  boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
 				  RDLexicographicFitnessResult fitness = new RDLexicographicFitnessResult(system.conc,target,system.beadsOnSpot,0.0);
 				  System.out.println(fitness);
 				  exit();
 			  }
 			 
 			  saveFrame(name);
+			  time = 0.0f;
 			  if(selfRepair){
 				  //hard coded at the bottom
+				 				  
+				  RDFitnessResult fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
+				  System.out.println(fitness);
 				  System.out.println("Removed a chunck");
-				  removeChunckRight();
-				  for(int i=0; i<bigTimeStep; i++){
-					    system.update();
-					  }
 				  saveFrame("done"+name);
+				  removeChunckCenter();
+				  
+				  RDImagePrinter ip = new RDImagePrinter(system.conc);
+					BufferedImage bi = new BufferedImage((int) (system.conc[0].length* RDConstants.spaceStep),(int) (system.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
+					Graphics g = bi.createGraphics();
+					ip.paintComponent(g);
+					
+					try{ImageIO.write(bi,"png",new File("image-"+name+".png"));}catch (Exception e) {}
+					g.dispose();
 				selfRepair = false;
+				 fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
+				 System.out.println(fitness);
+				 time -= fullRun/bigTimeStep;
+			  } else {
+				  RDFitnessResult fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
+				  System.out.println(fitness);
+				  exit();
 			  }
 			  
-			  time = 0.0f;
+			 
 		  }
 		}
 	
@@ -191,11 +215,14 @@ public class RDApplet extends PApplet{
 			  for (int x = minPos; x <=maxPos ; x++){
 				    for (int y = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
 				    		; y < system.conc[0][x].length; y++){
+				    	for(int i =  RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
 				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
-				          }
+				            //todo: I should check where I put them...
+				    	  }
+				    	  system.beadsOnSpot.get(x, y).removeAll(system.beadsOnSpot.get(x, y));
 				    	}
 			  }
 			}
@@ -206,11 +233,14 @@ public class RDApplet extends PApplet{
 			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
 			  for (int x = minPos; x <=maxPos ; x++){
 				    for (int y = 0; y< (int) Math.round(system.conc[0].length*(removePatternSize)); y++){
+				    	for(int i =  RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
 				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
-				          }
+				            //todo: I should check where I put them...
+				    	  }
+				    	  system.beadsOnSpot.get(x, y).removeAll(system.beadsOnSpot.get(x, y));
 				    	}
 			  }
 			}
@@ -221,11 +251,14 @@ public class RDApplet extends PApplet{
 			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
 			  for (int x = minPos; x <=maxPos ; x++){
 				    for (int y = minPos; y< maxPos; y++){
+				    	for(int i =  RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
 				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
-				          }
+				            //todo: I should check where I put them...
+				    	  }
+				    	  system.beadsOnSpot.get(x, y).removeAll(system.beadsOnSpot.get(x, y));
 				    	}
 			  }
 			}
@@ -237,11 +270,14 @@ public class RDApplet extends PApplet{
 			  for (int y = minPos; y <=maxPos ; y++){
 				    for (int x = (int) Math.round(system.conc[0].length*(1.0-1.1*removePatternSize))
 				    		; x < system.conc[0][y].length; x++){
+				    	for(int i = RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
 				    		  b.setPosition((float)(Bead.rand.nextDouble()*RDConstants.wsize),(float)(Bead.rand.nextDouble()*RDConstants.hsize));
-				          }
+				            //todo: I should check where I put them...
+				    	  }
+				    	  system.beadsOnSpot.get(x, y).removeAll(system.beadsOnSpot.get(x, y));
 				    	}
 			  }
 			}

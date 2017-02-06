@@ -57,6 +57,7 @@ public class PrintLastGenerationBests {
 		
 		for(int i= 0; i<bestLastGen.length; i++){
 			PrintWriter fileOut;
+			if(bestLastGen[i]==null)continue;
 			try {
 				fileOut = new PrintWriter("./network-"+folder.getName()+"-"+files[i].getName()+".txt");
 				fileOut.write(bestLastGen[i].toString());
