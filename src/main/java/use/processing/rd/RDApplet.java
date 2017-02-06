@@ -51,7 +51,7 @@ public class RDApplet extends PApplet{
 	long realTime = startTime;
 	long totalRender = 0;
 	
-	boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine();
+	boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine(); //TODO change fitness target
 	
 	RDSystem system = new RDSystem();
 	static ReactionNetwork reac = null; 
@@ -66,7 +66,7 @@ public class RDApplet extends PApplet{
 			in = new BufferedReader(new FileReader(args[0]));
 			reac = gson.fromJson(in, ReactionNetwork.class);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		}
@@ -83,7 +83,7 @@ public class RDApplet extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 5000/bigTimeStep;
+		maxTime = 3000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
@@ -162,7 +162,7 @@ public class RDApplet extends PApplet{
 				  System.out.println(fitness);
 				  System.out.println("Removed a chunck");
 				  saveFrame("done"+name);
-				  removeChunckCenter();
+				  removeChunckCenter(); //TODO change chunk position
 				  
 				  RDImagePrinter ip = new RDImagePrinter(system.conc);
 					BufferedImage bi = new BufferedImage((int) (system.conc[0].length* RDConstants.spaceStep),(int) (system.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
