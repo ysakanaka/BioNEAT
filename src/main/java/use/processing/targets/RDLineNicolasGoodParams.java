@@ -27,33 +27,34 @@ public class RDLineNicolasGoodParams {
 	RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
 	  RDConstants.matchPenalty=-0.1;
 	
-	RDConstants.reEvaluation = 1;
-	
-	//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-	RDConstants.evalRandomDistance = false;
-	boolean[][] fullMap = new boolean[target.length][target[0].length];
-	  for(int i=0;i<fullMap.length; i++){
-		  for(int j=0;j<fullMap[0].length; j++){
-			  fullMap[i][j] = true;
+	  RDConstants.reEvaluation = 10;
+		
+		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
+		RDConstants.evalRandomDistance = false;
+		boolean[][] fullMap = new boolean[target.length][target[0].length];
+		  for(int i=0;i<fullMap.length; i++){
+			  for(int j=0;j<fullMap[0].length; j++){
+				  fullMap[i][j] = true;
+			  }
 		  }
-	  }
-	   RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
-	   System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
-	   RDConstants.populationSize=50;
-	RDConstants.maxGeneration = 400;
-	RDConstants.maxTimeEval = 5000;
-	RDConstants.hardTrim = false;
-	RDConstants.maxNodes = 16;
-	RDConstants.maxBeads = 500;
-	RDConstants.showBeads = true;
-	RDConstants.weightDisableTemplate = 1;
-	  RDConstants.weightMutateParameter = 96;
-	  RDConstants.weightAddActivationWithGradients = 1;
-	  RDConstants.weightAddInhibitionWithGradients = 1;
-	  RDConstants.weightAddNodeWithGradients = 1;
+		   RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
+		   System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
+		   RDConstants.populationSize=50;
+		RDConstants.maxGeneration = 200;
+		RDConstants.maxTimeEval = 4000;
+		RDConstants.hardTrim = false;
+		RDConstants.maxNodes = 16;
+		RDConstants.maxBeads = 500;
+		RDConstants.showBeads = false;
+		RDConstants.useMedian = true; //use median score of reevaluations
+		RDConstants.weightDisableTemplate = 1;
+		  RDConstants.weightMutateParameter = 96;
+		  RDConstants.weightAddActivationWithGradients = 1;
+		  RDConstants.weightAddInhibitionWithGradients = 1;
+		  RDConstants.weightAddNodeWithGradients = 1;
 	  //RDConstants.cutOff = 10.0f;
 	
-	RDConstants.targetName = "ClusterLineIbuki24";
+	RDConstants.targetName = "ClusterLineNicolas";
 	
 	//RDConstants.showBeads = true;
 	//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
