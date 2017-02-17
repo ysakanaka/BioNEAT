@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 public class BatchResultReader {
 
-	public static int maxGen = 50;
+	public static int maxGen = 60;
 	public static boolean getAllVals = true;
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException, ExecutionException {
@@ -46,9 +46,9 @@ public class BatchResultReader {
 		
 		StringBuilder sb = new StringBuilder();
 		int indexWorst = 0;
-		int indexQ1 = allVals.length/5;
-		int indexMed = (2*allVals.length)/5;
-		int indexQ3 = (3*allVals.length)/5;
+		int indexQ1 = allVals.length/4;
+		int indexMed = (2*allVals.length)/4;
+		int indexQ3 = (3*allVals.length)/4;
 		int indexBest = allVals.length-1;
 		
 		for(int i=0;i<sortedList.length; i++){
