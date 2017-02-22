@@ -43,7 +43,7 @@ public class RDAppletMore extends PApplet{
 	long realTime = startTime;
 	long totalRender = 0;
 	
-	boolean[][] target=RDPatternFitnessResultIbuki.getBottomLine(); //TODO change fitness target
+	boolean[][] target=RDPatternFitnessResultIbuki.getTopLine(); //TODO change fitness target
 	
 	RDSystem system = new RDSystem();
 	static ReactionNetwork reac = null; 
@@ -87,7 +87,7 @@ public class RDAppletMore extends PApplet{
 
 		offset = 2;
 		name = (selfRepair?"self-######.png":"screen-######.png");
-        PApplet.main("use.processing.rd.RDApplet");
+        PApplet.main("use.processing.rd.RDAppletMore");
 
     }
 	
@@ -154,7 +154,7 @@ public class RDAppletMore extends PApplet{
 				  System.out.println(fitness);
 				  System.out.println("Removed a chunck");
 				  saveFrame("done"+name);
-				  removeChunckBottom(); //TODO change chunk position
+				  removeChunckTop(); //TODO change chunk position
 				  
 				  RDImagePrinter ip = new RDImagePrinter(system.conc);
 					BufferedImage bi = new BufferedImage((int) (system.conc[0].length* RDConstants.spaceStep),(int) (system.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 

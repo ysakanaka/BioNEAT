@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 
 import erne.Evolver;
+import erne.Individual;
 import model.OligoGraph;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
@@ -38,7 +39,9 @@ public class PrintLastGenerationBests {
 				}
 				System.out.println("File "+files[i]);
 				try{
-					bestLastGen[i] = Evolver.getBestLastGen(files[i].getAbsolutePath()).getNetwork();
+					Individual indiv = Evolver.getBestLastGen(files[i].getAbsolutePath());
+					bestLastGen[i] = indiv.getNetwork();
+					System.out.println(files[i].getName()+": "+indiv.getFitnessResult().getFitness());
 				} catch(Exception e){
 					System.err.println("Warning: could not read");
 					bestLastGen[i] = null;
