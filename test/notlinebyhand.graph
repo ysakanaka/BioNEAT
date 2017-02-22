@@ -1,0 +1,215 @@
+{
+  "nodes": [
+    {
+      "name": "a",
+      "parameter": 20.0,
+      "initialConcentration": 10.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "b",
+      "parameter": 20.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "c",
+      "parameter": 30.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "ca",
+      "parameter": 30.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "cb",
+      "parameter": 30.0,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "IcaTca",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 46.04730943559566
+    },
+    {
+      "name": "da",
+      "parameter": 10.0,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 11.34286281052248
+    },
+    {
+      "name": "IdaTda",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 1.4543437935268904
+    },
+    {
+      "name": "IcbTcb",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 46.04730943559566
+    },
+    {
+      "name": "dc",
+      "parameter": 10.0,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 11.34286281052248
+    },
+    {
+      "name": "IdcTdc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 1.4543437935268904
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 0,
+      "enabled": true,
+      "parameter": 14.249299988753654,
+      "from": "cb",
+      "to": "cb"
+    },
+    {
+      "innovation": 1,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "cb",
+      "to": "c"
+    },
+    {
+      "innovation": 2,
+      "enabled": true,
+      "parameter": 10.0,
+      "from": "a",
+      "to": "IcbTcb"
+    },
+    {
+      "innovation": 3,
+      "enabled": true,
+      "parameter": 9.495460479503937,
+      "from": "dc",
+      "to": "dc"
+    },
+    {
+      "innovation": 4,
+      "enabled": true,
+      "parameter": 15.0,
+      "from": "b",
+      "to": "IdcTdc"
+    },
+    {
+      "innovation": 5,
+      "enabled": true,
+      "parameter": 20.0,
+      "from": "dc",
+      "to": "IcbTcb"
+    },{
+      "innovation": 6,
+      "enabled": true,
+      "parameter": 14.249299988753654,
+      "from": "ca",
+      "to": "ca"
+    },
+    {
+      "innovation": 7,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "ca",
+      "to": "c"
+    },
+    {
+      "innovation": 8,
+      "enabled": true,
+      "parameter": 10.0,
+      "from": "b",
+      "to": "IcaTca"
+    },
+    {
+      "innovation": 9,
+      "enabled": true,
+      "parameter": 9.495460479503937,
+      "from": "da",
+      "to": "da"
+    },
+    {
+      "innovation": 10,
+      "enabled": true,
+      "parameter": 15.0,
+      "from": "a",
+      "to": "IdaTda"
+    },
+    {
+      "innovation": 11,
+      "enabled": true,
+      "parameter": 20.0,
+      "from": "da",
+      "to": "IcaTca"
+    }
+  ],
+  "parameters": {
+    "nick": 10.0,
+    "pol": 10.0,
+    "exo": 10.0
+  }
+}
