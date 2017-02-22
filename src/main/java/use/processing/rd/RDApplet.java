@@ -39,7 +39,7 @@ public class RDApplet extends PApplet{
 	static float maxTime = 3000;
 	static String name;
 	
-	static boolean selfRepair = true; //Do we remove a bunch of beads?
+	static boolean selfRepair = false; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
 	static int fullRun = -1000;
 	

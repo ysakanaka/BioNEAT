@@ -159,91 +159,91 @@
     {
       "innovation": 0,
       "enabled": true,
-      "parameter": 30.0,
+      "parameter": 60.0,
       "from": "a",
       "to": "a1"
     },
     {
       "innovation": 1,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 10.0,
       "from": "a1",
       "to": "a1"
     },
     {
       "innovation": 2,
       "enabled": true,
-      "parameter": 10.0,
+      "parameter": 200.0,
       "from": "b",
       "to": "IaTa1"
     },
     {
       "innovation": 3,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 100.0,
       "from": "b",
       "to": "Ia1Ta1"
     },
     {
       "innovation": 4,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 100.0,
       "from": "a1",
       "to": "Ic1Tc1"
     },
     {
       "innovation": 5,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 10.0,
       "from": "c1",
       "to": "c1"
     },
     {
       "innovation": 6,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 10.0,
       "from": "c1",
       "to": "IcTc"
     },
     {
       "innovation": 7,
       "enabled": true,
-      "parameter": 30.0,
+      "parameter": 60.0,
       "from": "b",
       "to": "b1"
     },
     {
       "innovation": 8,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 10.0,
       "from": "b1",
       "to": "b1"
     },
     {
       "innovation": 9,
       "enabled": true,
-      "parameter": 10.0,
+      "parameter": 200.0,
       "from": "a",
       "to": "IbTb1"
     },
     {
       "innovation": 10,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 100.0,
       "from": "a",
       "to": "Ib1Tb1"
     },
     {
       "innovation": 11,
       "enabled": true,
-      "parameter": 10.0,
+      "parameter": 100.0,
       "from": "b1",
       "to": "Ic2Tc2"
     },
     {
       "innovation": 12,
       "enabled": true,
-      "parameter": 0.0,
+      "parameter": 10.0,
       "from": "c2",
       "to": "c2"
     },
@@ -257,28 +257,28 @@
     {
       "innovation": 14,
       "enabled": true,
-      "parameter": 20.0,
+      "parameter": 30.0,
       "from": "c",
       "to": "c"
     },
     {
-      "innovation": 11,
+      "innovation": 15,
       "enabled": true,
-      "parameter": 20.0,
+      "parameter": 30.0,
       "from": "b1",
       "to": "IcTc"
     },
     {
-      "innovation": 11,
+      "innovation": 16,
       "enabled": true,
-      "parameter": 20.0,
+      "parameter": 30.0,
       "from": "a1",
       "to": "IcTc"
     },
     {
-      "innovation": 11,
-      "enabled": true,
-      "parameter": 0.0,
+      "innovation": 17,
+      "enabled": false,
+      "parameter": 2.0,
       "from": "c",
       "to": "IcTc"
     }
