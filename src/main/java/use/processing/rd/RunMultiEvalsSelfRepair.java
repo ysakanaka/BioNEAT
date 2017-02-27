@@ -24,7 +24,7 @@ import utils.PadiracTemplateFactory;
 
 public class RunMultiEvalsSelfRepair {
 	
-	public static int maxEvals = 1000;
+	public static int maxEvals = 4000;
 	public static int repairTime = 3000;
 	
 	public static int totalRetry = 100;
@@ -35,7 +35,7 @@ public class RunMultiEvalsSelfRepair {
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		if(args.length >= 1){
-			String outputfilename = args[0].split("\\\\.")[0]+outputSuffix;//we don't want the graph or txt extension
+			String outputfilename = args[0].split("\\.")[0]+outputSuffix;//we don't want the graph or txt extension
 		Gson gson = new GsonBuilder().registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
 				.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
 		BufferedReader in;
@@ -55,7 +55,7 @@ public class RunMultiEvalsSelfRepair {
 		  StringBuilder sb = new StringBuilder("");
 		  RDFitnessResult fitness;
 		  
-		  boolean[][] target = RDPatternFitnessResultIbuki.getTopLine();
+		  boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		  for(int i = 0; i<totalRetry;i++){
 		  RDSystem system = new RDSystem();
 		  setTestGraph(system);
@@ -63,7 +63,7 @@ public class RunMultiEvalsSelfRepair {
 		  for(int j = 0; j<maxEvals; j++) system.update();
 		  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
 		  sb.append(fitness+"\t");
-		  removeChunckTop(system);
+		  removeChunckCenter(system);
 		  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
 		  sb.append(fitness+"\t");
 		  for(int j = 0; j<repairTime; j++) system.update();

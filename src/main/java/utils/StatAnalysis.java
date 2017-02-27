@@ -46,6 +46,10 @@ public class StatAnalysis {
 		}
 		
 		for(int i=0; i<arrayVals.length; i++) System.out.println(getMeanAndSD(arrayVals[i]));
+		
+		System.out.println("U before versus damage: "+getU(arrayVals[0],arrayVals[1]));
+		System.out.println("U before versus after repair: "+getU(arrayVals[0],arrayVals[2]));
+		System.out.println("U damage versus after repair: "+getU(arrayVals[1],arrayVals[2]));
 	}
 	
 	public static Pair<Double> getMeanAndSD(double[] vals){
@@ -66,6 +70,19 @@ public class StatAnalysis {
 		
 		
 		return new Pair<Double>(mean,sd);
+	}
+	
+	public static double getU(double[] vals1, double[] vals2){
+		double u = 0.0;
+		
+		for(int i=0;i<vals1.length;i++){
+			for(int j=0;j<vals2.length;j++){
+				if(vals1[i]> vals2[i]) u+=1.0;
+				if(vals1[i]== vals2[i]) u+=0.5;
+			}
+		}
+		
+		return u;
 	}
 	
 }
