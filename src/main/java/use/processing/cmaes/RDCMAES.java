@@ -7,11 +7,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import cluster.Cluster;
 import erne.AbstractFitnessFunction;
+import erne.AbstractFitnessResult;
 import optimizers.cmaes.CMAEvolutionStrategy;
 import optimizers.cmaes.fitness.IObjectiveFunction;
 import reactionnetwork.Connection;
@@ -144,6 +149,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		cma.options.outputFileNamesPrefix += "_"+datetime;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 		cma.writeToDefaultFilesHeaders(0);
@@ -152,6 +158,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	    {
 		int nbResample = 0;
 		double[][] pop = this.cma.samplePopulation();
+		ArrayList<ReactionNetwork> networks = new ArrayList<ReactionNetwork>();
 		for (int i = 0; i < pop.length; i++)
 		{
 		  while (!isFeasible(pop[i])) {
@@ -162,9 +169,22 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		
 		    }
 		  }
-		  fitness[i] = valueOf(pop[i]);
-		  
+		  networks.add(networkFromGenome(pop[i]));
         }
+		
+		Map<ReactionNetwork, AbstractFitnessResult> fitnesses;
+		try {
+			fitnesses = Cluster.evaluateFitness(fitnessFunction, (List<ReactionNetwork>) networks.clone());
+			for (int i = 0; i < pop.length; i++) {
+				fitness[i] = 1.0/fitnesses.get(networks.get(i)).getFitness(); //We want to increase, no decrease
+				// System.out.println("Indiv " + i + " Fitness: " +
+				// individuals[i].getFitnessResult());
+			}
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
  
         this.cma.updateDistribution(fitness);
  
