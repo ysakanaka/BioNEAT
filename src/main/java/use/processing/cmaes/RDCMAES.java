@@ -25,7 +25,6 @@ import use.processing.rd.RDPatternFitnessResultIbuki;
 
 public class RDCMAES  implements IObjectiveFunction, Runnable{
 	
-	public int seed = -1;
 	public int popSize = 50;
 	public CMAEvolutionStrategy cma;
 	public String properties = System.getProperty("user.dir")+"/CMAES.config";
@@ -117,12 +116,21 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		for(int i = 0; i<orderedConnections.size(); i++) baseGenome[orderedNodes.size()+i] = orderedConnections.get(i).parameter;
 	}
 	
-	protected void initCMA(){
-		if(seed == -1){
-			seed = (int) System.currentTimeMillis(); 
+	public ReactionNetwork networkFromGenome(double[] genome){
+		ReactionNetwork r = structure.clone();
+		for(int i = 0; i<orderedNodes.size(); i++){
+			r.getNodeByName(orderedNodes.get(i).name).parameter = genome[i];
 		}
-		cma.readProperties(properties);
+		for(int i = 0; i<orderedConnections.size(); i++){
+			r.getConnectionByEnds(orderedConnections.get(i).from, orderedConnections.get(i).to).parameter = genome[orderedNodes.size()+i];
+		}
+		return r;
+	}
+	
+	protected void initCMA(){
 		cma = new CMAEvolutionStrategy();
+		cma.readProperties(properties);
+		
 		cma.setDimension(baseGenome.length);
 		
 		cma.parameters.setPopulationSize(popSize);
@@ -139,19 +147,66 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	@Override
 	public void run() {
 		cma.writeToDefaultFilesHeaders(0);
+		double[] fitness = this.cma.init();
+		 while (this.cma.stopConditions.getNumber() == 0)
+	    {
+		int nbResample = 0;
+		double[][] pop = this.cma.samplePopulation();
+		for (int i = 0; i < pop.length; i++)
+		{
+		  while (!isFeasible(pop[i])) {
+		    pop[i] = this.cma.resampleSingle(i);
+		    nbResample++;
+		    if (nbResample % 50 == 0) {
+		      System.out.println("Looping in the resample");
+		
+		    }
+		  }
+		  fitness[i] = valueOf(pop[i]);
+		  
+        }
+ 
+        this.cma.updateDistribution(fitness);
+ 
+        this.cma.writeToDefaultFiles();
+       int outmod = 5;
+       if (this.cma.getCountIter() % (15 * outmod) == 1L) {
+         String output = this.cma.getPrintAnnotation();
+          System.out.println(output);
+        }
+  
+        if (this.cma.getCountIter() % outmod == 1L) {
+         String output = this.cma.getPrintLine();
+          System.out.println(output);
+          
+        }
+	 }
+		 //Out of the main loop
+     String output = this.cma.getPrintLine();
+     System.out.println(output);
+ 
+     output = "Terminated due to\n";
+     for (String s : this.cma.stopConditions.getMessages())
+       output = output + "  " + s + "\n";
+    output = output + "best function value " + this.cma.getBestFunctionValue() + " at evaluation " + this.cma.getBestEvaluationNumber();
+    System.out.println(output);
+    this.cma.writeToDefaultFiles(1);
 		
 	}
 
 	@Override
 	public boolean isFeasible(double[] arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		for(int i=0; i<arg0.length; i++){
+			if(arg0[i] > 200.0 || arg0[i] < 0.1) return false;
+		}
+		return true;
 	}
 
 	@Override
 	public double valueOf(double[] arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		double match = fitnessFunction.evaluate(networkFromGenome(arg0)).getFitness();
+		return match; //We are trying to maximize
 	}
 
 }
