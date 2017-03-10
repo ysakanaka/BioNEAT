@@ -17,6 +17,7 @@ public class SpeciationSolver implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public ArrayList<Species[]> speciesByGeneration = new ArrayList<Species[]>();
 	public ArrayList<Individual> speciesLib = new ArrayList<Individual>();
+	public double speciationThreshold = Constants.defaultSpeciationThreshold;
 	
 	public static double speciesPopIncreaseCappingRatio = 0.1;
 
@@ -28,17 +29,19 @@ public class SpeciationSolver implements Serializable {
 		if (Constants.autoSpeciationThreshold) {
 			int nSpecies = nextGenSpecies.size();
 			if (nSpecies < Constants.targetNSpecies) {
-				Constants.speciationThreshold -= Constants.speciationThresholdMod;
+				speciationThreshold -= Constants.speciationThresholdMod;
 			} else if (nSpecies > Constants.targetNSpecies) {
-				Constants.speciationThreshold += Constants.speciationThresholdMod;
+				speciationThreshold += Constants.speciationThresholdMod;
 			}
-			Constants.speciationThreshold = Math.max(Constants.speciationThreshold, Constants.speciationThresholdMin);
+			speciationThreshold = Math.max(speciationThreshold, Constants.speciationThresholdMin);
 		}
 
 		Species[] nextGenSpeciesArray = nextGenSpecies.toArray(new Species[nextGenSpecies.size()]);
 		speciesByGeneration.add(nextGenSpeciesArray);
 		return nextGenSpeciesArray;
 	}
+	
+	
 
 	private ArrayList<Species> decideSpeciesPopulation(ArrayList<Species> nextGenSpecies, int popSize) {
 		// calculate next gen population for each species
@@ -98,7 +101,7 @@ public class SpeciationSolver implements Serializable {
 				for (Species sp : speciesByGeneration.get(speciesByGeneration.size() - 1)) {
 					Individual bestIndiv = sp.getBestIndividual();
 					if (curSpeciesFitness < bestIndiv.getFitnessResult().getFitness()) {
-						if (compDistance(nextGen[i], bestIndiv) < Constants.speciationThreshold) {
+						if (compDistance(nextGen[i], bestIndiv) < speciationThreshold) {
 							nextGen[i].speciesId = sp.representative.getId();
 							curSpeciesFitness = bestIndiv.getFitnessResult().getFitness();
 						}
@@ -108,7 +111,7 @@ public class SpeciationSolver implements Serializable {
 				if (nextGen[i].speciesId == -1) {
 					for (Species sp : speciesByGeneration.get(speciesByGeneration.size() - 1)) {
 						for (Individual indiv1 : sp.individuals) {
-							if (compDistance(nextGen[i], indiv1) < Constants.speciationThreshold) {
+							if (compDistance(nextGen[i], indiv1) < speciationThreshold) {
 								nextGen[i].speciesId = sp.representative.getId();
 								break;
 							}
@@ -121,7 +124,7 @@ public class SpeciationSolver implements Serializable {
 			// compare with history species
 			if (nextGen[i].speciesId == -1) {
 				for (Individual indiv1 : speciesLib) {
-					if (compDistance(nextGen[i], indiv1) < Constants.speciationThreshold) {
+					if (compDistance(nextGen[i], indiv1) < speciationThreshold) {
 						nextGen[i].speciesId = indiv1.getId();
 						break;
 					}
@@ -149,6 +152,23 @@ public class SpeciationSolver implements Serializable {
 			}
 		}
 		return nextGenSpecies;
+	}
+	
+	/**
+	 * In case of restart, check that the speciation parameter is correct
+	 */
+	public void checkRestart(){
+		for(int i = 0; i<speciesByGeneration.size(); i++){ //we replay the match
+			if (Constants.autoSpeciationThreshold) {
+				int nSpecies = speciesByGeneration.get(i).length;
+				if (nSpecies < Constants.targetNSpecies) {
+					speciationThreshold -= Constants.speciationThresholdMod;
+				} else if (nSpecies > Constants.targetNSpecies) {
+					speciationThreshold += Constants.speciationThresholdMod;
+				}
+				speciationThreshold = Math.max(speciationThreshold, Constants.speciationThresholdMin);
+			}
+		}
 	}
 
 	public double compDistance(Individual indiv1, Individual indiv2) {

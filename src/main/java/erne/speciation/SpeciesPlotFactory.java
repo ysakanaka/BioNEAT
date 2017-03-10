@@ -51,7 +51,7 @@ public class SpeciesPlotFactory {
 					series = new XYSeries(String.valueOf(species[j].representative.getId()));
 					dataset.addSeries(series);
 				}
-				series.add(i*RDConstants.populationSize*RDConstants.reEvaluation, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
+				series.add(i*RDConstants.populationSize, species[j].getBestIndividual().getFitnessResult() == null ? 0 : species[j].getBestIndividual()
 						.getFitnessResult().getFitness());
 			}
 		}

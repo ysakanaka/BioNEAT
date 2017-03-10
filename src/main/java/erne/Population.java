@@ -196,4 +196,8 @@ public class Population implements Serializable {
 			return 0; // not comparable
 		}
 	};
+	
+	public SpeciationSolver getSpeciationSolver(){
+		return speciationSolver;
+	}
 }

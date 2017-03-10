@@ -179,6 +179,77 @@ public class Evolver implements Serializable {
 			window.getMainForm().setVisible(true);
 		}
 	}
+	
+	/**
+	 * In case of crash, if the population is clean, we can restart
+	 * @throws InterruptedException
+	 * @throws ExecutionException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public void resumeEvolve(String resultDir) throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
+		this.resultDirectory = resultDir;
+		
+		model.Constants.numberOfPoints = erne.Constants.maxEvalTime;
+		
+			System.out.println("ERNe version: " + Serializer.deserialize(resultDirectory + "/version"));
+			Evolver savedEvolver = (Evolver) Serializer.deserialize(resultDirectory + "/evolver");
+			System.out.println("Inspect this object for evolution details: " + savedEvolver);
+			
+			//We also have to set the parameters EXACTLY as they were
+			//But so far, extra parameters should be dealt with elsewhere (since we do not know where they come from)
+			
+		if (!noGUI){
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+			
+				try {
+					window = new Main();
+					if (!readerMode && window != null) {
+						window.getMainForm().setVisible(true);
+					}
+					//Cluster.bindProgressBar(window.getProgressBar());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		});
+		}
+		Population population;
+		
+			population = (Population) Serializer.deserialize(resultDirectory + "/population");
+		
+			population.setFitnessFunction(fitnessFunction);
+			if (mutator == null) {
+				mutator = DEFAULT_MUTATOR;
+			}
+			population.setMutator(mutator);
+		for (int i = 0; i < (population.getTotalGeneration()); i++) {
+			if (!noGUI) displayPopulation(i, population);
+			System.out.println("Processing generation " + i);
+		}
+		Population.nextIndivId.set(population.getTotalGeneration()*popSize);
+		
+		//Check the population parameter
+		population.getSpeciationSolver().checkRestart();
+		int startValue = population.getTotalGeneration();
+		for (int i = startValue; i < maxGenerations; i++) {
+			System.out.println("Processing generation " + i);
+			
+					population.evolve();
+				
+				Serializer.serialize(resultDirectory + "/population", population);
+			
+
+			if (!noGUI) displayPopulation(i, population); //pop size just increased
+		}
+		System.out.println("Done!");
+		if (readerMode) {
+			window.getMainForm().setVisible(true);
+		}
+	}
 
 	private void displayPopulation(int generation, Population population) {
 		JScrollPane scrollPane = new JScrollPane();

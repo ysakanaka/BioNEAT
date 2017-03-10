@@ -70,6 +70,8 @@ public class RDConstants {
 	//individual. This is may prevent some specific patterns that affect a system's "initialization" phase, but will also
 	//greatly prevent bloating
 	
+	public static double ratioValidity = 0.5; //Coverage ratio of target to consider a pattern "valid"
+	public static double factorInOut = 1.0; //To be valid, we need in > factor * out
 	
 	//For evolution
 	public static int weightDisableTemplate = 3;

@@ -161,6 +161,32 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 	  return fitness;
 }
  
+ /**
+  * Returns whether a given system is a valid implementation of the target (more than 50% in, more in than out)
+  * @param pattern
+  * @param positions
+  * @return
+  */
+ public static boolean isValid(boolean[][] pattern, boolean[][] positions){
+	 int in =0;
+	 int patternSize = 0;
+	 int out = 0;
+	 for(int i=0; i<pattern.length; i++){
+		 for(int j=0; j<pattern[i].length; j++){
+			 if(pattern[i][j]) patternSize++;
+			 if(positions[i][j]){
+				 if(pattern[i][j]){
+					 in++;
+				 }else {
+					 out++;
+				 }
+			 }
+		 }
+	 }
+	 double fraction = in/(double) patternSize;
+	 return fraction >= RDConstants.ratioValidity && in > RDConstants.factorInOut * out;
+ }
+ 
  public static double distanceBlurLinear(boolean[][] pattern,boolean[][] positions){
   List<boolean[][]> blurredPatterns=getBlurredPatterns(pattern);
   double fitness=0.;

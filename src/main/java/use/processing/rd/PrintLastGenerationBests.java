@@ -20,7 +20,8 @@ import utils.RDLibrary;
 
 public class PrintLastGenerationBests {
 
-	public static int reevaluationLenght = 1000;
+	public static int reevaluationLenght = 1000; //TODO: center-line is 4000
+	public static boolean[][] target = RDPatternFitnessResultIbuki.getBottomLine(); //TODO: change based on target 
 	public static boolean debug = false;
 	
 	public static void main (String[] args){
@@ -86,12 +87,15 @@ public class PrintLastGenerationBests {
 			syst.init(false);
 			for(int step = 0; step<reevaluationLenght; step++)syst.update();
 			
+			boolean isValid = RDPatternFitnessResultIbuki.isValid(target, PatternEvaluator.detectGlue(syst.conc[RDConstants.glueIndex]));
+			
+			
 			RDImagePrinter ip = new RDImagePrinter(syst.conc);
 			BufferedImage bi = new BufferedImage((int) (syst.conc[0].length* RDConstants.spaceStep),(int) (syst.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
 			Graphics g = bi.createGraphics();
 			ip.paintComponent(g);
 			
-			try{ImageIO.write(bi,"png",new File("image-"+folder.getName()+"-"+files[i].getName()+".png"));}catch (Exception e) {}
+			try{ImageIO.write(bi,"png",new File("image-"+folder.getName()+"-"+files[i].getName()+(isValid?"_VALID_":"")+".png"));}catch (Exception e) {}
 			g.dispose();
 			
 			

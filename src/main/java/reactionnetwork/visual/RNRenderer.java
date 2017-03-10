@@ -30,6 +30,8 @@ import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 public class RNRenderer extends BasicRenderer<String, String> {
 
 	RNEdgeArrowRenderingSupport edgeArrowRenderingSupport = new RNEdgeArrowRenderingSupport();
+	
+	double arrowSize = 10;
 
 	public RNRenderer() {
 		super();
@@ -107,8 +109,8 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			if (isLoop) {
 				double distToInhibition = Math.sqrt((x1 - x) * (x1 - x)
 						+ (y1 - y) * (y1 - y));
-				endX = (float) (x1 + (x - x1) * 10 / distToInhibition);
-				endY = (float) (y1 + (y - y1) * 10 / distToInhibition);
+				endX = (float) (x1 + (x - x1) * 18 / distToInhibition);
+				endY = (float) (y1 + (y - y1) * 18 / distToInhibition);
 				float dx = endX - x;
 				float dy = endY - y;
 				float distance = (float) Math.sqrt(dx * dx + dy * dy);
@@ -117,7 +119,13 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			} else {
 				endX = (x2 + x1) / 2;
 				endY = (y2 + y1) / 2;
-				double[] pt = { endX, endY };
+				
+				//Since we have angular edges, we need to adjust the destination compared to a straight line.
+				//first, find the angle with respect to the horizontal
+				double alpha = Math.atan2(y2 - endY, x2 - endX);
+				float adjustx =  - 10.0f * (float) Math.sin(alpha);
+				float adjusty = 10.0f * (float) Math.cos(alpha);
+				double[] pt = { endX + adjustx, endY+adjusty };
 				AffineTransform.getRotateInstance(Math.atan2(20, dist12), x1,
 						y1).transform(pt, 0, pt, 0, 1); // specifying to use
 				// this
@@ -183,7 +191,7 @@ public class RNRenderer extends BasicRenderer<String, String> {
 		Pair<String> endpoints = graph.getEndpoints((String) e);
 		String v1 = endpoints.getFirst();
 		String v2 = endpoints.getSecond();
-		int thickness = (int) (1 + graph.getEdgeConcentration((String) e) * 3 / 60);
+		int thickness = (int) (1 + graph.getEdgeConcentration((String) e) * 2 / 60);
 		g.setStroke(new BasicStroke(thickness));
 
 		Point2D p1 = layout.apply(v1);
@@ -215,8 +223,10 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			// at the center of the vertex.
 			boolean inhibited = false;
 			String inhibitionNode = null;
+			
 			for (String v : layout.getGraph().getVertices()) {
-				if (v.equals("I" + e.toString())) {
+				if (v.replace("I", "").replace("T","").equals(e.toString())) { //TODO horrible hack
+					
 					inhibited = true;
 					inhibitionNode = v;
 					break;
@@ -312,6 +322,7 @@ public class RNRenderer extends BasicRenderer<String, String> {
 		if (vt instanceof LensTransformer) {
 			vt = ((LensTransformer) vt).getDelegate();
 		}
+		
 		edgeHit = vt.transform(edgeShape).intersects(deviceRectangle);
 
 		if (edgeHit == true) {
@@ -368,7 +379,13 @@ public class RNRenderer extends BasicRenderer<String, String> {
 							.apply(
 									Context.<Graph<String, String>, String> getInstance(
 											graph, e));
+					Shape box = arrow.getBounds2D();
 					arrow = at.createTransformedShape(arrow);
+					box = at.createTransformedShape(box);
+					
+					//first clear the area around the arrow for better visibility
+					g.setPaint(g.getBackground());
+					g.fill(box); 
 					g.setPaint(rc.getArrowFillPaintTransformer().apply(e));
 					g.fill(arrow);
 					g.setPaint(rc.getArrowDrawPaintTransformer().apply(e));
