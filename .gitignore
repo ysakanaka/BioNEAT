@@ -6,3 +6,4 @@ bin/
 build/
 result/
 /global.config
+/hs_err_pid46928.log
