@@ -3,10 +3,11 @@ package use.processing.rd;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Panel;
 
-import javax.swing.JPanel;
+//import javax.swing.JPanel;
 
-public class RDImagePrinter extends JPanel {
+public class RDImagePrinter extends Panel {
 
 	/**
 	 * 
