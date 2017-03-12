@@ -217,7 +217,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	@Override
 	public boolean isFeasible(double[] arg0) {
 		for(int i=0; i<arg0.length; i++){
-			if(arg0[i] > 200.0 || arg0[i] < 0.1) return false;
+			if(arg0[i] > (i>orderedNodes.size()?200.0:1000.0) || arg0[i] < 0.1) return false;
 		}
 		return true;
 	}

@@ -66,7 +66,7 @@ public class RNRenderer extends BasicRenderer<String, String> {
 			for (String v : layout.getGraph().getVertices()) {
 				if (layout.getGraph().degree(v) > 0) {
 					renderVertex(renderContext, layout, v);
-					renderVertexLabel(renderContext, layout, v);
+					if(!v.contains("I")) renderVertexLabel(renderContext, layout, v); //Inhibition names are too long
 				}
 			}
 		} catch (ConcurrentModificationException cme) {

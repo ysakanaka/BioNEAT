@@ -184,6 +184,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 		 }
 	 }
 	 double fraction = in/(double) patternSize;
+	 System.out.println("Validity: ratio "+fraction+" in: "+in+" out: "+out);
 	 return fraction >= RDConstants.ratioValidity && in > RDConstants.factorInOut * out;
  }
  

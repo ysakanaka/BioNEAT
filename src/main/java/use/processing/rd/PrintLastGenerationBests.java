@@ -20,8 +20,8 @@ import utils.RDLibrary;
 
 public class PrintLastGenerationBests {
 
-	public static int reevaluationLenght = 1000; //TODO: center-line is 4000
-	public static boolean[][] target = RDPatternFitnessResultIbuki.getBottomLine(); //TODO: change based on target 
+	public static int reevaluationLenght = 4000;//1000; //TODO: center-line is 4000
+	public static boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine(); //TODO: change based on target 
 	public static boolean debug = false;
 	
 	public static void main (String[] args){
@@ -98,6 +98,17 @@ public class PrintLastGenerationBests {
 			try{ImageIO.write(bi,"png",new File("image-"+folder.getName()+"-"+files[i].getName()+(isValid?"_VALID_":"")+".png"));}catch (Exception e) {}
 			g.dispose();
 			
+			//Now print red only
+			float[][][] redComp = new float[1+RDConstants.speciesOffset][][];
+			for (int index = 0; index<RDConstants.speciesOffset+1; index++) redComp[index] = syst.conc[index];
+			 
+			ip = new RDImagePrinter(redComp);
+		    bi = new BufferedImage((int) (syst.conc[0].length* RDConstants.spaceStep),(int) (syst.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
+			g = bi.createGraphics();
+		    ip.paintComponent(g);
+				
+			try{ImageIO.write(bi,"png",new File("redComp-"+folder.getName()+"-"+files[i].getName()+(isValid?"_VALID_":"")+".png"));}catch (Exception e) {}
+			g.dispose();
 			
 			}
 		System.exit(0);
