@@ -89,7 +89,7 @@ public class RDApplet extends PApplet{
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
-		 RDPatternFitnessResultIbuki.width = 0.2;
+		 RDPatternFitnessResultIbuki.width = 0.3;
 		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 
@@ -159,6 +159,7 @@ public class RDApplet extends PApplet{
 				  //hard coded at the bottom
 				 				  
 				  RDFitnessResult fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
+				  RDPatternFitnessResultIbuki.isValid(target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]));
 				  System.out.println(fitness);
 				  System.out.println("Removed a chunck");
 				  saveFrame("done"+name);
@@ -177,6 +178,7 @@ public class RDApplet extends PApplet{
 				 time -= fullRun/bigTimeStep;
 			  } else {
 				  RDFitnessResult fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
+				  RDPatternFitnessResultIbuki.isValid(target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]));
 				  System.out.println(fitness);
 				  exit();
 			  }

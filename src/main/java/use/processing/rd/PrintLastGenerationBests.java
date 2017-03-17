@@ -5,9 +5,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
+import erne.AbstractFitnessResult;
 import erne.Evolver;
 import erne.Individual;
 import model.OligoGraph;
@@ -25,6 +27,9 @@ public class PrintLastGenerationBests {
 	public static boolean debug = false;
 	
 	public static void main (String[] args){
+		RDPatternFitnessResultIbuki.width = 0.3;
+		RDConstants.useMedian = true;
+		RDConstants.reEvaluation = 10;
 		File folder = new File(args[0]);
 		ReactionNetwork[] bestLastGen;
 		File[] files;
@@ -40,7 +45,7 @@ public class PrintLastGenerationBests {
 				}
 				System.out.println("File "+files[i]);
 				try{
-					Individual indiv = Evolver.getBestLastGen(files[i].getAbsolutePath());
+					Individual indiv = Evolver.getBestEver(files[i].getAbsolutePath());
 					bestLastGen[i] = indiv.getNetwork();
 					System.out.println(files[i].getName()+": "+indiv.getFitnessResult().getFitness());
 				} catch(Exception e){
@@ -76,8 +81,13 @@ public class PrintLastGenerationBests {
 		
 		RDConstants.showBeads = false;
 		for(int i= 0; i<bestLastGen.length; i++){
+			RDSystem syst = null;
+			AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
+		for(int attempt = 0; attempt<RDConstants.reEvaluation;attempt++){
+			
+		    
 			if(bestLastGen[i]==null) continue;
-			RDSystem syst = new RDSystem();
+			syst = new RDSystem();
 			OligoGraph<SequenceVertex,String> gr;
 			gr = GraphMaker.fromReactionNetwork(bestLastGen[i]);
 			gr.exoConc = RDConstants.exoConc;
@@ -87,10 +97,20 @@ public class PrintLastGenerationBests {
 			syst.init(false);
 			for(int step = 0; step<reevaluationLenght; step++)syst.update();
 			
-			boolean isValid = RDPatternFitnessResultIbuki.isValid(target, PatternEvaluator.detectGlue(syst.conc[RDConstants.glueIndex]));
+			RDPatternFitnessResultIbuki temp = new RDPatternFitnessResultIbuki(syst.conc,target,syst.beadsOnSpot,0.0);
+			results[attempt] = temp;
+		}
+		Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
+		float[][][] conc;
+		  if (RDConstants.useMedian){
+			  conc = ((RDPatternFitnessResultIbuki)results[(RDConstants.reEvaluation-1)/2]).conc;
+		  } else {
+			  conc = ((RDPatternFitnessResultIbuki)results[0]).conc;
+		  }
+			boolean isValid = RDPatternFitnessResultIbuki.isValid(target, PatternEvaluator.detectGlue(conc[RDConstants.glueIndex]));
+		
 			
-			
-			RDImagePrinter ip = new RDImagePrinter(syst.conc);
+			RDImagePrinter ip = new RDImagePrinter(conc);
 			BufferedImage bi = new BufferedImage((int) (syst.conc[0].length* RDConstants.spaceStep),(int) (syst.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
 			Graphics g = bi.createGraphics();
 			ip.paintComponent(g);
@@ -100,7 +120,7 @@ public class PrintLastGenerationBests {
 			
 			//Now print red only
 			float[][][] redComp = new float[1+RDConstants.speciesOffset][][];
-			for (int index = 0; index<RDConstants.speciesOffset+1; index++) redComp[index] = syst.conc[index];
+			for (int index = 0; index<RDConstants.speciesOffset+1; index++) redComp[index] = conc[index];
 			 
 			ip = new RDImagePrinter(redComp);
 		    bi = new BufferedImage((int) (syst.conc[0].length* RDConstants.spaceStep),(int) (syst.conc[0][0].length* RDConstants.spaceStep), BufferedImage.TYPE_INT_RGB); 
