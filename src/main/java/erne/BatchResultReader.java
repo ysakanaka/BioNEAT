@@ -16,7 +16,12 @@ public class BatchResultReader {
 		double[][] allVals;
 		if(folder.isDirectory()){
 		File[] files = folder.listFiles();
-		allVals = new double[files.length][];
+		//count valid directories
+		int count = 0;
+		for(int i=0; i<files.length; i++){
+			if(files[i].isDirectory()) count++;
+		}
+		allVals = new double[count][];
 		for(int i=0; i<files.length; i++){
 			if(files[i].isDirectory()){
 				
@@ -38,7 +43,7 @@ public class BatchResultReader {
 		
 		for(int i = 0; i < sortedList.length; i++){
 			for (int j = 0; j<allVals.length; j++){
-				sortedList[i][j] = allVals[j][i];
+				sortedList[i][j] = (i>=allVals[j].length?sortedList[i-1][j]:allVals[j][i]);
 			}
 			Arrays.sort(sortedList[i]);
 			System.out.println("Done with gen "+i);
