@@ -89,7 +89,7 @@ public class RDApplet extends PApplet{
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
-		 RDPatternFitnessResultIbuki.width = 0.3;
+		 RDPatternFitnessResultIbuki.width = 0.25;
 		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 

@@ -1,0 +1,344 @@
+{
+  "nodes": [
+    {
+      "name": "a",
+      "parameter": 10.0,
+      "initialConcentration": 10.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "b",
+      "parameter": 349.588992081522,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "c",
+      "parameter": 71.59623792271748,
+      "initialConcentration": 5.0,
+      "type": 1,
+      "protectedSequence": true,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 0.0
+    },
+    {
+      "name": "IcTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 74.17198724978552
+    },
+    {
+      "name": "cz",
+      "parameter": 10.0,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 19.695147479807478
+    },
+    {
+      "name": "IczTdh",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 3.1302830222658704
+    },
+    {
+      "name": "IaTc",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 30.160305483821837
+    },
+    {
+      "name": "dh",
+      "parameter": 23.22325812790848,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 42.65545768757022
+    },
+    {
+      "name": "cx",
+      "parameter": 1000.0,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 5.066205219017156
+    },
+    {
+      "name": "IdhTcz",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 1.111301436442309
+    },
+    {
+      "name": "dp",
+      "parameter": 10.912120616555068,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 15.40576317621629
+    },
+    {
+      "name": "IdpTdp",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 106.35879928898987
+    },
+    {
+      "name": "IdhTdh",
+      "parameter": 0.0,
+      "initialConcentration": 0.0,
+      "type": 2,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 33.12559119736143
+    },
+    {
+      "name": "eb",
+      "parameter": 89.02108287086823,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 2.0393978455564468
+    },
+    {
+      "name": "ea",
+      "parameter": 16.145152874415746,
+      "initialConcentration": 0.0,
+      "type": 1,
+      "protectedSequence": false,
+      "DNAString": "",
+      "reporter": false,
+      "hasPseudoTemplate": false,
+      "pseudoTemplateConcentration": 41.81937761103031
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 0,
+      "enabled": false,
+      "parameter": 1.0,
+      "from": "c",
+      "to": "c"
+    },
+    {
+      "innovation": 1,
+      "enabled": true,
+      "parameter": 66.8520625121404,
+      "from": "a",
+      "to": "c"
+    },
+    {
+      "innovation": 10,
+      "enabled": true,
+      "parameter": 3.4415024858592904,
+      "from": "b",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 16,
+      "enabled": false,
+      "parameter": 1.0,
+      "from": "cz",
+      "to": "cz"
+    },
+    {
+      "innovation": 44,
+      "enabled": false,
+      "parameter": 3.023408194401665,
+      "from": "c",
+      "to": "IczTdh"
+    },
+    {
+      "innovation": 18,
+      "enabled": true,
+      "parameter": 200.0,
+      "from": "cz",
+      "to": "IaTc"
+    },
+    {
+      "innovation": 11,
+      "enabled": true,
+      "parameter": 7.995523288987757,
+      "from": "a",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 64,
+      "enabled": true,
+      "parameter": 5.724423781456792,
+      "from": "b",
+      "to": "IczTdh"
+    },
+    {
+      "innovation": 59,
+      "enabled": true,
+      "parameter": 17.886925301314747,
+      "from": "b",
+      "to": "IaTc"
+    },
+    {
+      "innovation": 42,
+      "enabled": false,
+      "parameter": 5.226266463174698,
+      "from": "cz",
+      "to": "dh"
+    },
+    {
+      "innovation": 43,
+      "enabled": true,
+      "parameter": 10.54276652203971,
+      "from": "dh",
+      "to": "cz"
+    },
+    {
+      "innovation": 71,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "dh",
+      "to": "IcTc"
+    },
+    {
+      "innovation": 12,
+      "enabled": true,
+      "parameter": 1.9248650516159787,
+      "from": "cx",
+      "to": "cx"
+    },
+    {
+      "innovation": 13,
+      "enabled": true,
+      "parameter": 1.5301305874595998,
+      "from": "cx",
+      "to": "c"
+    },
+    {
+      "innovation": 112,
+      "enabled": true,
+      "parameter": 16.00141279844733,
+      "from": "b",
+      "to": "IdhTcz"
+    },
+    {
+      "innovation": 140,
+      "enabled": true,
+      "parameter": 0.1,
+      "from": "a",
+      "to": "IdpTdp"
+    },
+    {
+      "innovation": 76,
+      "enabled": true,
+      "parameter": 6.3804743183209975,
+      "from": "dp",
+      "to": "dp"
+    },
+    {
+      "innovation": 77,
+      "enabled": false,
+      "parameter": 1.0,
+      "from": "cz",
+      "to": "IdpTdp"
+    },
+    {
+      "innovation": 78,
+      "enabled": true,
+      "parameter": 5.029647408026603,
+      "from": "dh",
+      "to": "dh"
+    },
+    {
+      "innovation": 79,
+      "enabled": true,
+      "parameter": 9.427966071181165,
+      "from": "dp",
+      "to": "IdhTdh"
+    },
+    {
+      "innovation": 132,
+      "enabled": true,
+      "parameter": 1.4220065461304596,
+      "from": "c",
+      "to": "eb"
+    },
+    {
+      "innovation": 133,
+      "enabled": true,
+      "parameter": 9.71729399538318,
+      "from": "eb",
+      "to": "IczTdh"
+    },
+    {
+      "innovation": 126,
+      "enabled": true,
+      "parameter": 1.0,
+      "from": "cz",
+      "to": "ea"
+    },
+    {
+      "innovation": 127,
+      "enabled": true,
+      "parameter": 3.3819018232141014,
+      "from": "ea",
+      "to": "IdpTdp"
+    }
+  ],
+  "parameters": {
+    "nick": 10.0,
+    "pol": 10.0,
+    "exo": 10.0
+  }
+}

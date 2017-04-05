@@ -69,7 +69,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		
 		if(reac != null){
 			initGlobalParams();
-			RDPatternFitnessResultIbuki.width = 0.3; //Only for center line
+			RDPatternFitnessResultIbuki.width = 0.2; //Only for center line
 			boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 			AbstractFitnessFunction fit = generateFitnessFunction(target);
 			RDCMAES rdcmaes = new RDCMAES(reac, fit);
