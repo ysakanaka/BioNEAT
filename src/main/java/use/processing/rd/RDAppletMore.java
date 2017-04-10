@@ -28,12 +28,12 @@ import utils.PadiracTemplateFactory;
 
 public class RDAppletMore extends PApplet{
 	float time = 0.0f;
-	static float maxTime = 3000;
+	static float maxTime = 0;
 	static String name;
 	
 	static boolean selfRepair = true; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
-	static int fullRun = 3000;
+	static int fullRun = 300000000;
 	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
 	static int offset = RDConstants.speciesOffset; //for display
