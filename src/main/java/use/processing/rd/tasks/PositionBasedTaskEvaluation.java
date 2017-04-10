@@ -60,6 +60,31 @@ public class PositionBasedTaskEvaluation extends OngoingTaskEvaluation {
 		
 		for(int i=0; i<repeat*targets.size(); i++)
 			System.out.println(pbte.getName()+": "+pbte.evaluateNow(concs));
+		
+		//Example number 2, with concrete targets
+		System.out.println();
+		System.out.println("====================");
+		System.out.println();
+		
+		float motifSize = 0.3f;
+		ArrayList<boolean[][]> targets2 = new ArrayList<boolean[][]>();
+		boolean[][] topLeftCorner = new boolean[size][size];
+		boolean[][] bottomRightCorner = new boolean[size][size];
+		
+		for(int i = 0; i< size; i++){
+			for(int j = 0; j < size; j++){
+				topLeftCorner[i][j] = (i+j) < (motifSize * size);
+				bottomRightCorner[i][j] = (i+j) > ((1.0 - motifSize)*size);
+			}
+		}
+		targets2.add(topLeftCorner);
+		targets2.add(bottomRightCorner);
+		
+		PositionBasedTaskEvaluation pbte2 = new PositionBasedTaskEvaluation("Olaf",targets2);
+		
+		for(int i=0; i<repeat*targets2.size(); i++)
+			System.out.println(pbte2.getName()+": "+pbte2.evaluateNow(concs));
+		
 
 	}
 
