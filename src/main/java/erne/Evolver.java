@@ -355,6 +355,19 @@ public class Evolver implements Serializable {
 		return ret;
 	}
 	
+	public static Individual[] getBestOverTime(String resultDirectory) throws ClassNotFoundException, IOException{
+		
+		Population population;
+		
+		population = (Population) Serializer.deserialize(resultDirectory + "/population");
+		Individual[] ret = new Individual[population.getTotalGeneration()];
+		for(int i = 0; i<population.getTotalGeneration(); i++){
+			PopulationInfo info = population.getPopulationInfo(i);
+			ret[i] = info.getBestIndividual();
+		}
+		return ret;
+	}
+	
 	public static Individual getBestLastGen(String resultDirectory)throws ClassNotFoundException, IOException{
 		Individual ret = null;
 		Population population;
