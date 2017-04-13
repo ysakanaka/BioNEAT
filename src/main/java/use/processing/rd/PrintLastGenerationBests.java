@@ -23,11 +23,14 @@ import utils.RDLibrary;
 public class PrintLastGenerationBests {
 
 	public static int reevaluationLenght = 4000;//1000; //TODO: center-line is 4000
-	public static boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine(); //TODO: change based on target 
+	public static boolean[][] target; //TODO: change based on target 
 	public static boolean debug = false;
 	
 	public static void main (String[] args){
 		RDPatternFitnessResultIbuki.width = 0.3;
+		RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
+		  RDConstants.matchPenalty=-0.1;
+		target = RDPatternFitnessResultIbuki.getCenterLine();
 		RDConstants.useMedian = true;
 		RDConstants.reEvaluation = 10;
 		File folder = new File(args[0]);
@@ -45,7 +48,7 @@ public class PrintLastGenerationBests {
 				}
 				System.out.println("File "+files[i]);
 				try{
-					Individual indiv = Evolver.getBestEver(files[i].getAbsolutePath());
+					Individual indiv = Evolver.getBestLastGen(files[i].getAbsolutePath());
 					bestLastGen[i] = indiv.getNetwork();
 					System.out.println(files[i].getName()+": "+indiv.getFitnessResult().getFitness());
 				} catch(Exception e){
@@ -99,11 +102,15 @@ public class PrintLastGenerationBests {
 			
 			RDPatternFitnessResultIbuki temp = new RDPatternFitnessResultIbuki(syst.conc,target,syst.beadsOnSpot,0.0);
 			results[attempt] = temp;
+			System.out.println(temp.fitness);
+			
 		}
 		Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
 		float[][][] conc;
 		  if (RDConstants.useMedian){
-			  conc = ((RDPatternFitnessResultIbuki)results[(RDConstants.reEvaluation-1)/2]).conc;
+			  conc = ((RDPatternFitnessResultIbuki)results[results.length-1]).conc;
+			  System.out.println("Fitness: "+results[results.length-1]);
+			  System.out.println("Other fitness: "+results[0]);
 		  } else {
 			  conc = ((RDPatternFitnessResultIbuki)results[0]).conc;
 		  }

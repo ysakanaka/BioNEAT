@@ -63,7 +63,7 @@ public class OptimizedNetworkWriter {
 		ReactionNetwork r = reac.clone();
 		
 		if(!(genome.length== orderedNodes.size()+orderedConnections.size())) 
-			System.err.println("Warning, inconsistent sizes. Trying best effort match");
+			System.err.println("Warning, inconsistent sizes ("+genome.length+" vs "+(orderedNodes.size()+orderedConnections.size())+"). Trying best effort match");
 		
 		for(int i = 0; i<Math.min(genome.length, orderedNodes.size()); i++){
 			Node n = r.getNodeByName(orderedNodes.get(i).name);
