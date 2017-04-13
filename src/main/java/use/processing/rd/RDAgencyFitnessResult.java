@@ -48,17 +48,31 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		// TODO calculate happily fitness
 		// this.beads = beads;
 		
+		//int[] coordinates = pickAgent();
+		
 		// pick agent that maximizes IF over a set of generated agents
 		//int agentSearchSpace = 100;
 		//int asscnt = 0;
 		//while (asscnt < agentSearchSpace)
+		
 		fitness = 0;
-		int sizeAE = concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length; // 3*80*80 world size
-		int sizeA = concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length/5/5; // 3*80*80/25 = 3*16*16 agent size
 		double maxFitness = 0;
 		//int agent_jump = 5;
-		for (int ax = 0; ax < sizeAE - 5; ax = ax + 5) { 
-		for (int ay = 0; ay < sizeAE - 5; ay = ay + 5) {
+		//for (int ax = 0; ax < sizeAE - 5; ax = ax + 5) { 
+		//for (int ay = 0; ay < sizeAE - 5; ay = ay + 5) {
+		for (int wn = 0; wn < 1; wn++) {//int ay = 0; ay < sizeAE - 5; ay = ay + 5) { // 50: number of agents checked
+			int[] winDim = pickRandomWindow(concHistory); // returns agent-window dimensions: (agent x_init, agent x_final, a y_i, a y_f) ---- (0-2, 0-79, 0-79)
+			int ax_start = winDim[0]; // where the agent starts
+			int ax_end = winDim[1]; // where it ends
+			int ay_start = winDim[2]; // same for the y dimension, start
+			int ay_end = winDim[3]; // idem, end
+			
+			System.err.println("calculating another window's fitness "+wn);
+			
+			int sizeAE = concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length; // 3*80*80 world size
+			int sizeA = (ay_end-ay_start) * (ax_end-ax_start) * concHistory[0].length; //concHistory[0].length * concHistory[0][0].length * concHistory[0][0][0].length/5/5; // 3*80*80/25 = 3*16*16 agent size
+
+			
 			//asscnt++;
 			double localFitness = 0;
 			//System.err.println(concHistory[0].length+" "+concHistory[0][0].length+" "+concHistory[0][0][0].length+" ");
@@ -73,12 +87,12 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 			double[] concPrevE = new double[sizeAE-sizeA]; //75 side
 			double[] concNowE = new double[sizeAE-sizeA];
 			
-			for (int i = 0; i < concHistory.length - 1; i++) // timestep //TODO -1 not necessary
+			for (int i = 0; i < concHistory.length - 1; i++) // timestep
 			{
 				//whole world history (A+E)
 				for (int j = 0; j < concHistory[0].length; j++) // species
-					for (int x = 0; x < concHistory[0][0].length; x++)
-						for (int y = 0; y < concHistory[0][0][0].length; y++) 
+					for (int x = ax_start; x <= ax_end; x++)
+						for (int y = ay_start; y <= ay_end; y++) 
 						{
 							// fitness += Math.pow(concHistory[i + 1][j][x][y] -
 							// concHistory[i][j][x][y], 2); //test
@@ -86,12 +100,14 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 							concNow[j * x * y] = concHistory[i + 1][j][x][y];
 						}
 				
+				System.err.println("A+E");
+				
 				//A
 				for (int j = 0; j < concHistory[0].length; j++) {
 					int cx = 0;
-					for (int x = ax; x < concHistory[0][0].length && x < ax + 5 ; x++) {
+					for (int x = ax_start; x < ax_end; x++) {
 						int cy = 0;
-						for (int y = ay; y < concHistory[0][0][0].length && y < ay + 5 ; y++) {
+						for (int y = ay_start; y < ay_end; y++) {
 							try {
 								concPrevA[j * cx * cy] = concHistory[i][j][x][y];
 								concNowA[j * cx * cy] = concHistory[i + 1][j][x][y];
@@ -105,23 +121,29 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 					}
 				}
 				
+				System.err.println("A");
+				
 				//E
 				for (int j = 0; j < concHistory[0].length; j++) {
 					int cx = 0;
-					int x = ax;
+					int x = ax_start;
 					while (x < concHistory[0][0].length) {
 						int cy = 0;
-						int y = ay;
+						int y = ay_start;
 						while (y < concHistory[0][0][0].length) {
 							concPrevE[j * cx * cy] = concHistory[i][j][x][y];
 							concNowE[j * cx * cy] = concHistory[i + 1][j][x][y];
 							cy++;
-							while(ay <= y && y < ay+sizeA) y++;
+							while (ay_start <= y && y < ay_end) y++;
+							y++;
 						}
 						cx++;
-						while(ax <= x && x < ax+sizeA) x++;
+						while (ax_start <= x && x < ax_end) x++;
+						x++;
 					}
 				}
+				
+				System.err.println("E");
 				
 				double fitInc = calculateMI(concPrev, concNow) - calculateMI(concPrevA, concNowA) - calculateMI(concPrevE, concNowE);
 				localFitness += fitInc;
@@ -130,11 +152,13 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 			
 			localFitness = localFitness/ //concHistory[0].length/
 					concHistory[0][0].length/concHistory[0][0][0].length;
+			System.err.println("localFitness = "+localFitness);
 			if (maxFitness < localFitness) {
 				System.out.println("\t new fitness = "+fitness+", old fitness = "+maxFitness);
 				maxFitness = localFitness;
 			}
-		}
+		//}
+			System.err.println("Window "+wn+"'s maxFitness = "+maxFitness);
 		}
 		fitness = maxFitness;
 		System.err.println("fitness = "+fitness);
@@ -198,6 +222,23 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 //		}
 	}
 
+	private int[] pickRandomWindow(float[][][][] conHist) {
+		/*int x1 = 0;
+		int x2 = 5;
+		int y1 = 0;
+		int y2 = 5;*/
+		//System.err.println("conHist[0][0].length  " + conHist[0][0].length);
+		//System.err.println("conHist[0][0][0].length  " + conHist[0][0][0].length);
+		int x1 = Bead.rand.nextInt(conHist[0][0].length - 1);
+		int x2 = Bead.rand.nextInt(conHist[0][0].length - x1 - 1) + x1;
+		int y1 = Bead.rand.nextInt(conHist[0][0][0].length - 1);
+		int y2 = Bead.rand.nextInt(conHist[0][0][0].length - y1 - 1) + y1;
+		
+		int[] res = {x1, x2, y1, y2};
+		//System.err.println("random window at "+x1+" "+x2+" "+y1+" "+y2);
+		return res;
+	}
+	
 	/**
 	 * For child classes, skipping fitness evaluation, just setting params.
 	 * 
