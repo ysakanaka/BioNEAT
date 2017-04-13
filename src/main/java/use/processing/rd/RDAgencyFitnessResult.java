@@ -60,7 +60,7 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 		//int agent_jump = 5;
 		//for (int ax = 0; ax < sizeAE - 5; ax = ax + 5) { 
 		//for (int ay = 0; ay < sizeAE - 5; ay = ay + 5) {
-		for (int wn = 0; wn < 10; wn++) {//int ay = 0; ay < sizeAE - 5; ay = ay + 5) { // 50: number of agents checked
+		for (int wn = 0; wn < 50; wn++) {//int ay = 0; ay < sizeAE - 5; ay = ay + 5) { // 50: number of agents checked
 			int[] winDim = pickRandomWindow(concHistory); // returns agent-window dimensions: (agent x_init, agent x_final, a y_i, a y_f) ---- (0-2, 0-79, 0-79)
 			int ax_start = winDim[0]; // where the agent starts
 			int ax_end = winDim[1]; // where it ends
@@ -137,13 +137,13 @@ public class RDAgencyFitnessResult extends RDPatternFitnessResult {
 			
 			localFitness = localFitness/ //concHistory[0].length/
 					concHistory[0][0].length/concHistory[0][0][0].length;
-			System.err.println("localFitness = "+localFitness);
+			//System.err.println("localFitness = "+localFitness);
 			if (maxFitness < localFitness) {
 				System.out.println("\t new fitness = "+fitness+", old fitness = "+maxFitness);
 				maxFitness = localFitness;
 			}
 		//}
-			System.err.println("Window "+wn+"'s maxFitness = "+maxFitness);
+			//System.err.println("Window "+wn+"'s maxFitness = "+maxFitness);
 		}
 		fitness = maxFitness;
 
