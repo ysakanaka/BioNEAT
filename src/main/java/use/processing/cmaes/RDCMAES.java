@@ -155,6 +155,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	public void run() {
 		cma.writeToDefaultFilesHeaders(0);
 		double[] fitness = this.cma.init();
+		Cluster.start();
 		 while (this.cma.stopConditions.getNumber() == 0)
 	    {
 		int nbResample = 0;
@@ -212,7 +213,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
     output = output + "best function value " + this.cma.getBestFunctionValue() + " at evaluation " + this.cma.getBestEvaluationNumber();
     System.out.println(output);
     this.cma.writeToDefaultFiles(1);
-		
+	Cluster.stop();
 	}
 
 	@Override

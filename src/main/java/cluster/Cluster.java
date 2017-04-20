@@ -1,5 +1,6 @@
 package cluster;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +42,26 @@ public class Cluster {
 	private static final Map<Member, Integer> activeTaskCounts = new HashMap<Member, Integer>();
 
 	private static JProgressBar progressBar;
+	
+	private static boolean running = false;
 
 	public static void start() {
+		if(running){
+			System.err.println("WARNING: cluster is already running");
+			return;
+		}
+		initMembers();
+		running = true;
+	}
+	
+	public static void stop() {
+		if(!running){
+			System.err.println("WARNING: cluster is not running");
+			return;
+		}
+		hz.getExecutorService("default").shutdown();
+		hz.getExecutorService("default").destroy();
+		running = false;
 	}
 
 	public static void bindProgressBar(JProgressBar progressBar) {
@@ -50,6 +69,10 @@ public class Cluster {
 	}
 
 	public static String echoOnTheMember(String input, Member member) throws Exception {
+		if(!running){
+			System.err.println("Cluster not running. Start cluster first.");
+			return null;
+		}
 		Callable<String> task = new ClusterSampleTask(input);
 		IExecutorService executorService = hz.getExecutorService("default");
 		Future<String> future = executorService.submitToMember(task, member);
@@ -58,6 +81,10 @@ public class Cluster {
 
 	public static Future<AbstractFitnessResult> evaluateOnTheMember(FitnessEvaluationData data, Member member) throws InterruptedException,
 			ExecutionException {
+		if(!running){
+			System.err.println("Cluster not running. Start cluster first.");
+			return null;
+		}
 		Callable<AbstractFitnessResult> task = new FitnessEvaluationTask(data);
 		IExecutorService executorService = hz.getExecutorService("default");
 
@@ -73,19 +100,36 @@ public class Cluster {
 		return cluster.getMembers();
 	}
 
+	protected static Set<Member> initMembers(){
+		Set<Member> members = cluster.getMembers();
+		Iterator<Member> it = members.iterator();
+		while (it.hasNext()) {
+			Member m = it.next();
+			m.setIntAttribute(nProcessorsAttribute, 2*Runtime.getRuntime().availableProcessors());
+		}
+		
+		return members;
+	}
+	
 	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,
 			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
+		if(!running){
+			System.err.println("Cluster not running. Start cluster first.");
+			return null;
+		}
 		int totalJobCount = networks.size();
+		ArrayList<ReactionNetwork> tempNetworks = new ArrayList<ReactionNetwork>(networks); // To keep track
 		int completedJobCount = 0;
 		if (progressBar != null)
 			progressBar.setValue(0);
 		Map<ReactionNetwork, AbstractFitnessResult> results = new HashMap<ReactionNetwork, AbstractFitnessResult>();
 		Map<Future<AbstractFitnessResult>, Member> futureToMember = new HashMap<Future<AbstractFitnessResult>, Member>();
 		Map<Future<AbstractFitnessResult>, ReactionNetwork> futureToNetwork = new HashMap<Future<AbstractFitnessResult>, ReactionNetwork>();
-		while (!networks.isEmpty()) {
-			ReactionNetwork network = networks.get(0);
+		while (!tempNetworks.isEmpty()) {
+			ReactionNetwork network = tempNetworks.get(0);
 			boolean submitted = false;
-			Set<Member> members = cluster.getMembers();
+			Set<Member> members = getMembers();
+			
 			Iterator<Member> it = members.iterator();
 			while (it.hasNext()) {
 				Member m = it.next();
@@ -94,7 +138,7 @@ public class Cluster {
 				if (taskCountObject != null) {
 					taskCount = taskCountObject.intValue();
 				}
-				m.setIntAttribute(nProcessorsAttribute, 2*Runtime.getRuntime().availableProcessors());
+				
 				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
 					Future<AbstractFitnessResult> future = evaluateOnTheMember(new FitnessEvaluationData(fitnessFunction, network), m);
 					taskCount++;
@@ -127,7 +171,7 @@ public class Cluster {
 					}
 				}
 			} else {
-				networks.remove(0);
+				tempNetworks.remove(0);
 			}
 		}
 		while (futureToMember.size() > 0) {
