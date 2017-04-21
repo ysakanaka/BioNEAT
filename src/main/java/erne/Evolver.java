@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import cluster.Cluster;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import xy.reflect.ui.ReflectionUI;
@@ -156,8 +157,9 @@ public class Evolver implements Serializable {
 					window = new Main();
 					if (!readerMode && window != null) {
 						window.getMainForm().setVisible(true);
+						Cluster.bindProgressBar(window.getProgressBar());
 					}
-					//Cluster.bindProgressBar(window.getProgressBar());
+					//
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -224,6 +226,7 @@ public class Evolver implements Serializable {
 					window = new Main();
 					if (!readerMode && window != null) {
 						window.getMainForm().setVisible(true);
+						Cluster.bindProgressBar(window.getProgressBar());
 					}
 					//Cluster.bindProgressBar(window.getProgressBar());
 				} catch (Exception e) {

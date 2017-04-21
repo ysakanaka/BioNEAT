@@ -147,6 +147,7 @@ public class DE {
 		ReactionNetwork[] nextGen;
 		double[] curFitness = new double[curGen.length];
 		double[] nextFitness;
+		Cluster.start();
 		System.out.println("Evaluating fitness");
 		List<ReactionNetwork> networks = new LinkedList<ReactionNetwork>();
 		for (int i = 0; i < curGen.length; i++) {
@@ -202,6 +203,7 @@ public class DE {
 			}
 			this.GenCount++;
 		}
+		Cluster.stop();
 		return this.CurGen[bestIndivIndex].getReactionNetwork();
 	}
 
