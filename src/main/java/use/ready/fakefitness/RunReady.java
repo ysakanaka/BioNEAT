@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import erne.Evolver;
+import erne.algorithm.BioNEATBuilder;
+import erne.algorithm.EvolutionaryAlgorithm;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.rules.AddActivation;
@@ -82,7 +84,9 @@ public class RunReady {
 		ReadyExporter.maxSteps = 10;
 		ReadyExporter.interval = 10;
 		
-		Evolver evolver = new Evolver(Evolver.DEFAULT_POP_SIZE, Evolver.MAX_GENERATIONS,startingReady, fitness, mutator, Evolver.DEFAULT_FITNESS_DISPLAYER);
+		EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlgorithm();
+		
+		Evolver evolver = new Evolver(Evolver.DEFAULT_POP_SIZE, Evolver.MAX_GENERATIONS,startingReady, fitness, Evolver.DEFAULT_FITNESS_DISPLAYER,algorithm);
 		evolver.evolve();
         System.out.println("Evolution completed.");
         System.exit(0);

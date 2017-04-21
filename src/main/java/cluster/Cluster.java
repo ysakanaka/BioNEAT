@@ -78,6 +78,19 @@ public class Cluster {
 		Future<String> future = executorService.submitToMember(task, member);
 		return future.get();
 	}
+	
+	public static <T1,T2> Future<T2> evaluateOnTheMember(AbstractTask<T1,T2> task, Member member) throws InterruptedException, ExecutionException {
+		if(!running){
+			System.err.println("Cluster not running. Start cluster first.");
+			return null;
+		}
+		
+		IExecutorService executorService = hz.getExecutorService("default");
+
+		Future<T2> future = executorService.submitToMember(task, member);
+		return future;
+		
+	}
 
 	public static Future<AbstractFitnessResult> evaluateOnTheMember(FitnessEvaluationData data, Member member) throws InterruptedException,
 			ExecutionException {
@@ -109,6 +122,87 @@ public class Cluster {
 		}
 		
 		return members;
+	}
+	
+	public static <T1,T2> Map<T1,T2> submitToCluster(List<AbstractTask<T1,T2>> tasks) throws InterruptedException, ExecutionException {
+		int completedJobCount = 0;
+		int totalJobCount = tasks.size();
+		Map<T1, T2> results = new HashMap<T1, T2>();
+		Map<Future<T2>, Member> futureToMember = new HashMap<Future<T2>, Member>();
+		Map<Future<T2>, T1> futureToNetwork = new HashMap<Future<T2>, T1>();
+		
+		while (!tasks.isEmpty()) {
+			//ReactionNetwork network = tempNetworks.get(0);
+			AbstractTask<T1,T2> task = tasks.get(0);
+			boolean submitted = false;
+			Set<Member> members = getMembers();
+			
+			Iterator<Member> it = members.iterator();
+			while (it.hasNext()) {
+				Member m = it.next();
+				Integer taskCountObject = activeTaskCounts.get(m);
+				int taskCount = 0;
+				if (taskCountObject != null) {
+					taskCount = taskCountObject.intValue();
+				}
+				
+				if (taskCount < m.getIntAttribute(nProcessorsAttribute)) {
+					Future<T2> future = evaluateOnTheMember(task, m);
+					taskCount++;
+					// System.out.println("Submitted to <" + m +
+					// ">. Task count: " + taskCount);
+					futureToMember.put(future, m);
+					futureToNetwork.put(future, task.getOrigin());
+					activeTaskCounts.put(m, taskCount);
+					submitted = true;
+					break;
+				}
+			}
+			if (!submitted) {
+				loop1: while (true) {
+					for (Future<T2> future : futureToMember.keySet()) {
+						if (future.isDone()) {
+							T2 fitnessResult = future.get();
+							Member m = futureToMember.get(future);
+							int taskCount = activeTaskCounts.get(m) - 1;
+							completedJobCount++;
+							if (progressBar != null)
+								progressBar.setValue(completedJobCount * 100 / totalJobCount);
+							System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
+							activeTaskCounts.put(m, taskCount);
+							T1 n = futureToNetwork.get(future);
+							results.put(n, fitnessResult);
+							futureToMember.remove(future);
+							break loop1;
+						}
+					}
+				}
+			} else {
+				tasks.remove(0);
+			}
+		}
+		while (futureToMember.size() > 0) {
+			Iterator<Entry<Future<T2>, Member>> it = futureToMember.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<Future<T2>, Member> entry = it.next();
+				Future<T2> future = entry.getKey();
+				if (future.isDone()) {
+					T2 fitnessResult = future.get();
+					Member m = entry.getValue();
+					int taskCount = activeTaskCounts.get(m) - 1;
+					completedJobCount++;
+					if (progressBar != null)
+						progressBar.setValue(completedJobCount * 100 / totalJobCount);
+					System.out.println("<" + m + ">. DONE. Task count: " + taskCount + ". Fitness:" + fitnessResult);
+					activeTaskCounts.put(m, taskCount);
+					T1 n = futureToNetwork.get(future);
+					results.put(n, fitnessResult);
+					it.remove();
+				}
+			}
+		}
+		
+		return results;
 	}
 	
 	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,

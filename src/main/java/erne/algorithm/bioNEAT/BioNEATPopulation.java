@@ -120,7 +120,7 @@ public class BioNEATPopulation extends Population {
 		BioNEATPopulation pop = new BioNEATPopulation(1,Library.startingMath);
 		int fakeGens = 10;
 		try {
-			pop.mutator = Evolver.DEFAULT_MUTATOR;
+			pop.mutator = Evolver.DEFAULT_ALGORITHM.getMutator();
 			pop.setFitnessFunction(new DummyFitnessFunction());
 			pop.resetPopulation();
 		} catch (InterruptedException | ExecutionException e) {

@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import erne.Evolver;
+import erne.algorithm.BioNEATBuilder;
+import erne.algorithm.EvolutionaryAlgorithm;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;
@@ -62,7 +64,10 @@ public class ClusterVersionLineLexicographic {
 		  }else{
 		   mutator=new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[]{new DisableTemplate(RDConstants.weightDisableTemplate),new MutateParameter(RDConstants.weightMutateParameter),new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients),new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients),new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
 		  }
-		  Evolver evolver=new Evolver(RDConstants.populationSize,RDConstants.maxGeneration,RDLibrary.rdstart,fitnessFunction,mutator,new RDFitnessDisplayer());
+		  EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlgorithm();
+	        
+			Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
+					fitnessFunction, new RDFitnessDisplayer(), algorithm);
 		  //evolver.setGUI(true);
 		  evolver.setExtraConfig(RDConstants.configsToString());
 		  evolver.evolve();

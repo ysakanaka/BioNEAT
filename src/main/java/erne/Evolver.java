@@ -28,6 +28,8 @@ import reactionnetwork.visual.RNVisualizationViewerFactory;
 import xy.reflect.ui.ReflectionUI;
 import common.Static;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import erne.algorithm.BioNEATBuilder;
+import erne.algorithm.EvolutionaryAlgorithm;
 import erne.algorithm.bioNEAT.BioNEATPopulationFactory;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
@@ -61,11 +63,11 @@ public class Evolver implements Serializable {
 
 	public static final int DEFAULT_POP_SIZE = 50;
 	public static final int MAX_GENERATIONS = 200;
-	public static final Mutator DEFAULT_MUTATOR = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
-			new DisableTemplate(1), new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5), new TogglePseudoTemplate(5) })));
+	
 	public static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
-	public static final PopulationDisplayer DEFAULT_POPULATION_DISPLAYER = new BioNEATPopulationDisplayer();
-	public static final PopulationFactory DEFAULT_POPULATION_FACTORY = new BioNEATPopulationFactory();
+	
+	
+	public static final EvolutionaryAlgorithm DEFAULT_ALGORITHM = new BioNEATBuilder().buildAlgorithm();
 
 	private transient boolean readerMode = false;
 	private transient boolean noGUI = !hasGUI(); //there IS a GUI
@@ -91,34 +93,30 @@ public class Evolver implements Serializable {
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction) throws IOException {
-		init(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, DEFAULT_POPULATION_FACTORY, fitnessFunction, DEFAULT_MUTATOR, DEFAULT_FITNESS_DISPLAYER, DEFAULT_POPULATION_DISPLAYER);
+		init(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, fitnessFunction, DEFAULT_FITNESS_DISPLAYER, DEFAULT_ALGORITHM);
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction, FitnessDisplayer fitnessDisplayer)
 			throws IOException {
-		init(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, DEFAULT_POPULATION_FACTORY, fitnessFunction, DEFAULT_MUTATOR, fitnessDisplayer, DEFAULT_POPULATION_DISPLAYER);
+		init(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, fitnessFunction, fitnessDisplayer, DEFAULT_ALGORITHM);
 	}
 	
-	public Evolver(int popSize, int maxGenerations, ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction,
-			Mutator mutator, FitnessDisplayer fitnessDisplayer) throws IOException {
-		init(popSize, maxGenerations, startingNetwork, DEFAULT_POPULATION_FACTORY, fitnessFunction, mutator, fitnessDisplayer, DEFAULT_POPULATION_DISPLAYER);
-	}
 
-	public Evolver(int popSize, int maxGenerations, ReactionNetwork startingNetwork, PopulationFactory popFactory, AbstractFitnessFunction fitnessFunction,
-			Mutator mutator, FitnessDisplayer fitnessDisplayer, PopulationDisplayer popDisplayer) throws IOException {
-		init(popSize, maxGenerations, startingNetwork, popFactory, fitnessFunction, mutator, fitnessDisplayer, popDisplayer);
+	public Evolver(int popSize, int maxGenerations, ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction,
+			 FitnessDisplayer fitnessDisplayer, EvolutionaryAlgorithm algorithm) throws IOException {
+		init(popSize, maxGenerations, startingNetwork, fitnessFunction, fitnessDisplayer, algorithm);
 	}
 	
-	protected void init(int popSize, int maxGenerations, ReactionNetwork startingNetwork, PopulationFactory popFactory, AbstractFitnessFunction fitnessFunction,
-			Mutator mutator, FitnessDisplayer fitnessDisplayer, PopulationDisplayer popDisplayer){
+	protected void init(int popSize, int maxGenerations, ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction,
+		 FitnessDisplayer fitnessDisplayer, EvolutionaryAlgorithm algorithm){
 		this.popSize = popSize;
 		this.maxGenerations = maxGenerations;
 		this.startingNetwork = startingNetwork;
 		this.fitnessFunction = fitnessFunction;
-		this.mutator = mutator;
+		this.mutator = algorithm.getMutator();
 		this.fitnessDisplayer = fitnessDisplayer;
-		this.popDisplayer = popDisplayer;
-		this.popFactory = popFactory;
+		this.popDisplayer = algorithm.getPopulationDisplayer();
+		this.popFactory = algorithm.getPopulationFactory();
 	}
 
 	private String createResultDirectory() {
@@ -174,7 +172,7 @@ public class Evolver implements Serializable {
 			population = popFactory.createPopulation(popSize, startingNetwork);
 			population.setFitnessFunction(fitnessFunction);
 			if (mutator == null) {
-				mutator = DEFAULT_MUTATOR;
+				mutator = DEFAULT_ALGORITHM.getMutator();
 			}
 			population.setMutator(mutator);
 		}
@@ -200,6 +198,8 @@ public class Evolver implements Serializable {
 	
 	/**
 	 * In case of crash, if the population is clean, we can restart
+	 * 
+	 * TODO: a lot of duplicated code with normal start. Should be factored.
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 * @throws IOException
@@ -242,7 +242,7 @@ public class Evolver implements Serializable {
 		
 			population.setFitnessFunction(fitnessFunction);
 			if (mutator == null) {
-				mutator = DEFAULT_MUTATOR;
+				mutator = DEFAULT_ALGORITHM.getMutator();
 			}
 			population.setMutator(mutator);
 		for (int i = 0; i < (population.getTotalGeneration()); i++) {

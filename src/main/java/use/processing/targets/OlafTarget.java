@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutionException;
 
 import erne.AbstractFitnessFunction;
 import erne.Evolver;
+import erne.algorithm.BioNEATBuilder;
+import erne.algorithm.EvolutionaryAlgorithm;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;
@@ -45,8 +47,10 @@ Mutator mutator;
     			new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
     			new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
         }
+        EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlgorithm();
+        
 		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
-				fitnessFunction, mutator, new RDFitnessDisplayer());
+				fitnessFunction, new RDFitnessDisplayer(), algorithm);
 		//evolver.setGUI(true);
 		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();

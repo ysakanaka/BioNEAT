@@ -129,7 +129,9 @@ public abstract class Population implements Serializable {
 		for (int i = 0; i < individuals.length; i++) {
 			networks.add(individuals[i].getNetwork());
 		}
+		Cluster.start();
 		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
+		Cluster.stop();
 		for (int i = 0; i < individuals.length; i++) {
 			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));
 			// System.out.println("Indiv " + i + " Fitness: " +
@@ -138,14 +140,18 @@ public abstract class Population implements Serializable {
 		//Now, check if we are using a lexicographic fitness function
 		if(AbstractLexicographicFitnessResult.class.isAssignableFrom(individuals[0].getFitnessResult().getClass())){
 			//we have to sort them
-			Arrays.sort(individuals,individualComparator);
-			for(int i=0;i<individuals.length;i++){
-				((AbstractLexicographicFitnessResult) individuals[i].getFitnessResult()).setRank(individuals.length-i);
-			}
+			sortMultiObjectiveIndividuals(individuals);
 		}
 	}
 	
-	private static Comparator<Individual> individualComparator = new Comparator<Individual>(){
+	protected void sortMultiObjectiveIndividuals(Individual[] individuals){
+		Arrays.sort(individuals,individualComparator);
+		for(int i=0;i<individuals.length;i++){
+			((AbstractLexicographicFitnessResult) individuals[i].getFitnessResult()).setRank(individuals.length-i);
+		}
+	}
+	
+	protected static Comparator<Individual> individualComparator = new Comparator<Individual>(){
 		@Override
 		public int compare(Individual o1, Individual o2) {
 			if(AbstractLexicographicFitnessResult.class.isAssignableFrom(o1.getFitnessResult().getClass())

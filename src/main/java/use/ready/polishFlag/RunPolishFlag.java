@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import erne.Evolver;
+import erne.algorithm.BioNEATBuilder;
+import erne.algorithm.EvolutionaryAlgorithm;
 import use.ready.AbstractReadyFitnessFunction;
 import use.ready.export.ReadyExporter;
 import use.ready.fakefitness.RunReady;
@@ -17,7 +19,9 @@ public class RunPolishFlag {
 		ReadyExporter.maxSteps = 100000;
 		ReadyExporter.interval = 100000;
 		
-		Evolver evolver = new Evolver(Evolver.DEFAULT_POP_SIZE, Evolver.MAX_GENERATIONS,RunReady.startingReady, fitness, RunReady.mutator, Evolver.DEFAULT_FITNESS_DISPLAYER);
+		EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(RunReady.mutator).buildAlgorithm();
+		
+		Evolver evolver = new Evolver(Evolver.DEFAULT_POP_SIZE, Evolver.MAX_GENERATIONS,RunReady.startingReady, fitness, Evolver.DEFAULT_FITNESS_DISPLAYER,algorithm);
 		evolver.evolve();
         System.out.println("Evolution completed.");
         System.exit(0);

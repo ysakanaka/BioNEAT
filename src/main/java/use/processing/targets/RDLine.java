@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import erne.Evolver;
+import erne.algorithm.BioNEATBuilder;
+import erne.algorithm.EvolutionaryAlgorithm;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;
@@ -93,8 +95,10 @@ Mutator mutator;
     			new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
     			new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
         }
-		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, reac,
-				fitnessFunction, mutator, new RDFitnessDisplayer());
+EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlgorithm();
+        
+		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
+				fitnessFunction, new RDFitnessDisplayer(), algorithm);
 		//evolver.setGUI(false);
 		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();
