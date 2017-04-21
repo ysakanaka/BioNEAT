@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.SerializationUtils;
 
 import common.Static;
+import erne.algorithm.bioNEAT.BioNEATPopulation;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
@@ -83,15 +84,15 @@ public class Individual implements Serializable {
 	}
 
 	public Connection addConnection(Node fromNode, Node toNode, double parameter) {
-		Connection conn = network.addConnection(0, fromNode, toNode); //NAT: innovation is set latter.
+		Connection conn = network.addConnection(0, fromNode, toNode); //NAT: innovation is set latter. TODO: make BioNEAT Individuals or something
 		conn.parameter = parameter;
 		String key = conn.from.name + "->" + conn.to.name;
 		int innovationNumber;
-		if (Population.innovationNumbers.containsKey(key)) {
-			innovationNumber = Population.innovationNumbers.get(key);
+		if (BioNEATPopulation.innovationNumbers.containsKey(key)) {
+			innovationNumber = BioNEATPopulation.innovationNumbers.get(key);
 		} else {
-			innovationNumber = Population.innovationNumbers.size();
-			Population.innovationNumbers.put(key, innovationNumber);
+			innovationNumber = BioNEATPopulation.innovationNumbers.size();
+			BioNEATPopulation.innovationNumbers.put(key, innovationNumber);
 		}
 		conn.innovation = innovationNumber;
 		

@@ -22,13 +22,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import org.jfree.chart.ChartPanel;
-
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
 import xy.reflect.ui.ReflectionUI;
 import common.Static;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import erne.algorithm.bioNEAT.BioNEATPopulationFactory;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.rules.AddActivation;
@@ -38,8 +37,8 @@ import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
 import erne.mutation.rules.TogglePseudoTemplate;
 import erne.speciation.Species;
-import erne.speciation.SpeciesPlotFactory;
 import erne.util.Serializer;
+import erne.visual.BioNEATPopulationDisplayer;
 import gui.Main;
 import gui.WrapLayout;
 
@@ -55,19 +54,24 @@ public class Evolver implements Serializable {
 	private AbstractFitnessFunction fitnessFunction;
 	private Mutator mutator;
 	private FitnessDisplayer fitnessDisplayer;
+	private PopulationDisplayer popDisplayer;
 	private transient String resultDirectory;
+	private transient PopulationFactory popFactory;
 
 	public static final int DEFAULT_POP_SIZE = 50;
 	public static final int MAX_GENERATIONS = 200;
-	private static final Mutator DEFAULT_MUTATOR = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
+	public static final Mutator DEFAULT_MUTATOR = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
 			new DisableTemplate(1), new MutateParameter(90), new AddNode(2), new AddActivation(2), new AddInhibition(5), new TogglePseudoTemplate(5) })));
 	public static final FitnessDisplayer DEFAULT_FITNESS_DISPLAYER = new DefaultFitnessDisplayer();
+	public static final PopulationDisplayer DEFAULT_POPULATION_DISPLAYER = new BioNEATPopulationDisplayer();
+	public static final PopulationFactory DEFAULT_POPULATION_FACTORY = new BioNEATPopulationFactory();
 
 	private transient boolean readerMode = false;
 	private transient boolean noGUI = !hasGUI(); //there IS a GUI
 	private static ReflectionUI reflectionUI = new ReflectionUI();
 	
 	protected transient String extraConfig;
+	
 	
 	public void setGUI(boolean gui){
 		this.noGUI = !gui;
@@ -86,22 +90,34 @@ public class Evolver implements Serializable {
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction) throws IOException {
-		this(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, fitnessFunction, DEFAULT_MUTATOR, DEFAULT_FITNESS_DISPLAYER);
+		init(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, DEFAULT_POPULATION_FACTORY, fitnessFunction, DEFAULT_MUTATOR, DEFAULT_FITNESS_DISPLAYER, DEFAULT_POPULATION_DISPLAYER);
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction, FitnessDisplayer fitnessDisplayer)
 			throws IOException {
-		this(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, fitnessFunction, DEFAULT_MUTATOR, fitnessDisplayer);
+		init(DEFAULT_POP_SIZE, MAX_GENERATIONS, startingNetwork, DEFAULT_POPULATION_FACTORY, fitnessFunction, DEFAULT_MUTATOR, fitnessDisplayer, DEFAULT_POPULATION_DISPLAYER);
 	}
-
+	
 	public Evolver(int popSize, int maxGenerations, ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction,
 			Mutator mutator, FitnessDisplayer fitnessDisplayer) throws IOException {
+		init(popSize, maxGenerations, startingNetwork, DEFAULT_POPULATION_FACTORY, fitnessFunction, mutator, fitnessDisplayer, DEFAULT_POPULATION_DISPLAYER);
+	}
+
+	public Evolver(int popSize, int maxGenerations, ReactionNetwork startingNetwork, PopulationFactory popFactory, AbstractFitnessFunction fitnessFunction,
+			Mutator mutator, FitnessDisplayer fitnessDisplayer, PopulationDisplayer popDisplayer) throws IOException {
+		init(popSize, maxGenerations, startingNetwork, popFactory, fitnessFunction, mutator, fitnessDisplayer, popDisplayer);
+	}
+	
+	protected void init(int popSize, int maxGenerations, ReactionNetwork startingNetwork, PopulationFactory popFactory, AbstractFitnessFunction fitnessFunction,
+			Mutator mutator, FitnessDisplayer fitnessDisplayer, PopulationDisplayer popDisplayer){
 		this.popSize = popSize;
 		this.maxGenerations = maxGenerations;
 		this.startingNetwork = startingNetwork;
 		this.fitnessFunction = fitnessFunction;
 		this.mutator = mutator;
 		this.fitnessDisplayer = fitnessDisplayer;
+		this.popDisplayer = popDisplayer;
+		this.popFactory = popFactory;
 	}
 
 	private String createResultDirectory() {
@@ -153,7 +169,7 @@ public class Evolver implements Serializable {
 		if (readerMode) {
 			population = (Population) Serializer.deserialize(resultDirectory + "/population");
 		} else {
-			population = new Population(popSize, startingNetwork);
+			population = popFactory.createPopulation(popSize, startingNetwork);
 			population.setFitnessFunction(fitnessFunction);
 			if (mutator == null) {
 				mutator = DEFAULT_MUTATOR;
@@ -233,7 +249,7 @@ public class Evolver implements Serializable {
 		Population.nextIndivId.set(population.getTotalGeneration()*popSize);
 		
 		//Check the population parameter
-		population.getSpeciationSolver().checkRestart();
+		population.checkRestart();
 		int startValue = population.getTotalGeneration();
 		for (int i = startValue; i < maxGenerations; i++) {
 			System.out.println("Processing generation " + i);
@@ -285,18 +301,24 @@ public class Evolver implements Serializable {
 			panelSpecies.add(panelSpecie);
 		}
 
-		SpeciesPlotFactory speciesFactory = new SpeciesPlotFactory();
-		JPanel speciesVisualPanel = speciesFactory.createSpeciesPanel(population.getSpeciesByGenerations());
-		window.getPanelSpecies().removeAll();
-		window.getPanelSpecies().add(speciesVisualPanel, BorderLayout.CENTER);
-		window.getPanelSpecies().revalidate();
+		//SpeciesPlotFactory speciesFactory = new SpeciesPlotFactory();
+		//JPanel populationVisualPanel = speciesFactory.createSpeciesPanel(population.getSpeciesByGenerations());
+		window.getPanelPopulation().removeAll();
+		//window.getPanelPopulation().add(speciesVisualPanel, BorderLayout.CENTER);
+		window.getPanelPopulation().add(popDisplayer.createPopulationPanel(population));
+		window.getPanelPopulation().revalidate();
 
 		window.getPanelFitness().removeAll();
-		window.getPanelFitness().add(
-				speciesFactory.createSpeciesFitnessPanel(population.getSpeciesByGenerations(),
-						speciesFactory.getSpeciesColors((ChartPanel) speciesVisualPanel)));
+		//window.getPanelFitness().add(
+		//		speciesFactory.createSpeciesFitnessPanel(population.getSpeciesByGenerations(),
+		//				speciesFactory.getSpeciesColors((ChartPanel) populationVisualPanel)));
+		window.getPanelFitness().add(popDisplayer.createFitnessPanel(population));
 		window.getPanelFitness().revalidate();
 
+	}
+	
+	protected void windowDisplay(){
+		
 	}
 	
 	public static boolean hasGUI(){

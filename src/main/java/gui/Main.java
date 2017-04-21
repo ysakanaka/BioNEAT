@@ -16,15 +16,15 @@ public class Main {
 	private JFrame frmEvolutionaryConstructionFramework;
 	private JTabbedPane tabHistory;
 	private JProgressBar progressBar;
-	private JPanel panelSpecies;
+	private JPanel panelPopulation;
 	private JPanel panelFitness;
 
 	public JPanel getPanelFitness() {
 		return panelFitness;
 	}
 
-	public JPanel getPanelSpecies() {
-		return panelSpecies;
+	public JPanel getPanelPopulation() {
+		return panelPopulation;
 	}
 
 	public JTabbedPane getTabHistory() {
@@ -91,9 +91,9 @@ public class Main {
 		splitPane.setLeftComponent(panelFitness);
 		panelFitness.setLayout(new BorderLayout(0, 0));
 
-		panelSpecies = new JPanel();
-		splitPane.setRightComponent(panelSpecies);
-		panelSpecies.setLayout(new BorderLayout(0, 0));
+		panelPopulation = new JPanel();
+		splitPane.setRightComponent(panelPopulation);
+		panelPopulation.setLayout(new BorderLayout(0, 0));
 
 		JPanel tabEvolution = new JPanel();
 		tabbedPane.addTab("Generations", null, tabEvolution, null);

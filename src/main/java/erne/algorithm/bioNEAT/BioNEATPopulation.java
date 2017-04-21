@@ -132,6 +132,8 @@ public class BioNEATPopulation extends Population {
 			System.out.println(pop);
 			pop.reproduction();
 		}
+		
+		System.exit(0);
 	}
 	
 }

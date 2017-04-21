@@ -14,49 +14,47 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cluster.Cluster;
 import erne.mutation.Mutator;
-import erne.speciation.SpeciationSolver;
 import erne.speciation.Species;
 import reactionnetwork.Connection;
 import reactionnetwork.ReactionNetwork;
 
-public class Population implements Serializable {
+public abstract class Population implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	public static AtomicInteger nextIndivId = new AtomicInteger();
-	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b');
-	public static Map<String, Integer> innovationNumbers = new HashMap<String, Integer>();
+	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b'); //TODO: refactor that approach
+	//public static Map<String, Integer> innovationNumbers = new HashMap<String, Integer>(); //TODO bioneat
 	public static Map<String, String> nodeNameOrigins = new HashMap<String, String>();
 
 	private Individual initIndividual;
-	private ArrayList<Individual[]> populations = new ArrayList<Individual[]>();
+	protected ArrayList<Individual[]> populations = new ArrayList<Individual[]>();
 	private AbstractFitnessFunction fitnessFunction;
-	private SpeciationSolver speciationSolver;
+	
 
-	private Random rand = new Random();
+	protected Random rand = new Random();
 
-	private Mutator mutator;
+	protected Mutator mutator;
 
 	public Population(int size, ReactionNetwork initNetwork) {
-		for (Connection conn : initNetwork.connections) {
-			innovationNumbers.put(conn.from.name + "->" + conn.to.name, innovationNumbers.size());
-		}
 		this.populations.add(new Individual[size]);
 		this.initIndividual = new Individual(initNetwork);
-		speciationSolver = new SpeciationSolver();
 	}
 
 	public int getTotalGeneration() {
 		return populations.size();
 	}
 
-	public ArrayList<Species[]> getSpeciesByGenerations() {
+	/*public ArrayList<Species[]> getSpeciesByGenerations() {
 		return speciationSolver.speciesByGeneration;
-	}
+	}*/
 
 	public PopulationInfo getPopulationInfo(int i) {
-		return new PopulationInfo(populations.get(i), speciationSolver.speciesByGeneration.get(i));
+		Species[] species = new Species[1];
+		species[0] = new Species(populations.get(i)[0]);
+		species[0].individuals = new ArrayList<Individual>(Arrays.asList(populations.get(i)));
+		return new PopulationInfo(populations.get(i), species);
 	}
 
 	public void setFitnessFunction(AbstractFitnessFunction fitnessFunction) {
@@ -75,60 +73,22 @@ public class Population implements Serializable {
 			individuals[i].parentIds.add(initIndividual.getId());
 		}
 		evaluateFitness();
-		speciationSolver.speciate(individuals);
+		
 		return individuals;
 	}
 
 	public Individual[] evolve() throws InterruptedException, ExecutionException {
-		reproduction(speciationSolver.speciesByGeneration.get(speciationSolver.speciesByGeneration.size() - 1));
+		reproduction();
 		evaluateFitness();
 		Individual[] individuals = populations.get(populations.size() - 1);
-		speciationSolver.speciate(individuals);
+		//speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
-	public Individual[] reproduction(Species[] species) {
-		Individual[] individuals = populations.get(populations.size() - 1);
-		Individual[] nextGeneIndividuals = new Individual[individuals.length];
-		int i = 0;
-		for (Species sp : species) {
-			int nextGenPop = sp.getNextGenPopulation();
-			if (sp.getNextGenPopulation() > 0) {
-				if (i >= nextGeneIndividuals.length)
-					break;
-				nextGeneIndividuals[i] = sp.getBestIndividual().clone();
-				i++;
-				nextGenPop--;
-				if (i >= nextGeneIndividuals.length)
-					break;
-			}
-			for (int j = 0; j < nextGenPop; j++) {
-				Individual[] parents = selectCrossoverParents(sp.individuals);
-				nextGeneIndividuals[i] = parents[0].clone();
-				mutator.mutate(nextGeneIndividuals[i]);
-				nextGeneIndividuals[i].parentIds.add(parents[0].getId());
-				i++;
-				if (i >= nextGeneIndividuals.length)
-					break;
-			}
-		}
+	
+	public abstract Individual[] reproduction();
 
-		// fill the rest with mutation only
-		while (i < nextGeneIndividuals.length) {
-			Species randomSpecies = species[rand.nextInt(species.length)];
-			Individual parent = randomSpecies.individuals.get(rand.nextInt(randomSpecies.individuals.size()));
-			nextGeneIndividuals[i] = parent.clone();
-			mutator.mutate(nextGeneIndividuals[i]);
-			nextGeneIndividuals[i].parentIds.add(parent.getId());
-			i++;
-			if (i >= nextGeneIndividuals.length)
-				break;
-		}
-		populations.add(nextGeneIndividuals);
-		return nextGeneIndividuals;
-	}
-
-	private Individual[] selectCrossoverParents(ArrayList<Individual> curGen) {
+	protected Individual[] selectCrossoverParents(ArrayList<Individual> curGen) {
 		double maxFitness = -Double.MAX_VALUE;
 		Individual parent1 = null;
 		Individual parent2 = null;
@@ -197,7 +157,10 @@ public class Population implements Serializable {
 		}
 	};
 	
-	public SpeciationSolver getSpeciationSolver(){
-		return speciationSolver;
+	
+	public abstract void checkRestart();
+	
+	public String toString(){
+		return populations.size()+" gens, last gen: "+Arrays.toString(populations.get(populations.size()-1));
 	}
 }
