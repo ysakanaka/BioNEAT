@@ -83,7 +83,6 @@ EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlg
         
 		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
 				fitnessFunction, new RDFitnessDisplayer(), algorithm);
-		//evolver.setGUI(false);
 		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();
 	    System.out.println("Evolution completed.");

@@ -6,41 +6,8 @@ import java.util.List;
 
 import use.processing.rd.RDConstants;
 
-public abstract class AbstractLexicographicFitnessResult extends AbstractFitnessResult {
+public abstract class AbstractLexicographicFitnessResult extends MultiobjectiveAbstractFitnessResult {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-	protected int rank;
-	
-	public abstract List<Double> getFullFitness();
-	
-	public int getRank(){
-		return rank;
-	}
-	
-	public void setRank(int r){
-		rank = r;
-	}
-	
-	@Override
-	public String toString(){
-		StringBuilder sb = new StringBuilder("");
-		sb.append("rank: "+rank+"\t");
-		Iterator<Double> fullFit = getFullFitness().iterator();
-		int index = 1;
-		while(fullFit.hasNext()){
-			sb.append("fitness "+index+": "+fullFit.next()+"\t");
-			index++; 
-		}
-		return sb.toString();
-	}
-	
-	public double getFitness(){
-		return Math.min(1.0/((double)rank),getFullFitness().iterator().next()); //people with a finess of zero get zero
-	}
 	
 	public static class LexicographicFitnessComparator implements Comparator<AbstractLexicographicFitnessResult> {
 
