@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import cluster.Cluster;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
+import erne.Population;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.ReactionNetwork;
@@ -98,7 +99,7 @@ public class Pruner {
 			}
 		}
 		try {
-			Map<ReactionNetwork,AbstractFitnessResult> res = Cluster.evaluateFitness(f, networks); //And I should do something with it
+			Map<ReactionNetwork,AbstractFitnessResult> res = Population.evaluateFitness(f, networks); //And I should do something with it
 			lastRound = new ArrayList<ReactionNetwork>();
 			for(ReactionNetwork rn : res.keySet()){
 				if((baseFitness.getFitness()-res.get(rn).getFitness())<threshold){

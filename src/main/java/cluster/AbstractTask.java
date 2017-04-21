@@ -19,6 +19,11 @@ public class AbstractTask<T1,T2> implements Callable<T2>, DataSerializable, Haze
 		this.origin = origin;
 	}
 	
+	public AbstractTask(){
+		this.origin = null;
+		this.data = null;
+	}
+	
 	public T1 getOrigin(){
 		return origin;
 	}
@@ -35,11 +40,13 @@ public class AbstractTask<T1,T2> implements Callable<T2>, DataSerializable, Haze
 	@Override
 	public void writeData(ObjectDataOutput out) throws IOException {
 		out.writeObject(this.data);
+		out.writeObject(this.origin);
 	}
 
 	@Override
 	public void readData(ObjectDataInput in) throws IOException {
 		this.data = in.readObject();
+		this.origin = in.readObject();
 	}
 
 	@Override

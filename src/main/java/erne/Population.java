@@ -12,7 +12,10 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cluster.AbstractTask;
 import cluster.Cluster;
+import cluster.FitnessEvaluationData;
+import cluster.FitnessEvaluationTask;
 import erne.mutation.Mutator;
 import erne.speciation.Species;
 import reactionnetwork.Connection;
@@ -130,7 +133,7 @@ public abstract class Population implements Serializable {
 			networks.add(individuals[i].getNetwork());
 		}
 		Cluster.start();
-		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
+		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = evaluateFitness(fitnessFunction, networks);
 		Cluster.stop();
 		for (int i = 0; i < individuals.length; i++) {
 			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));
@@ -162,6 +165,19 @@ public abstract class Population implements Serializable {
 			return 0; // not comparable
 		}
 	};
+	
+	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,
+			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
+		
+		ArrayList<AbstractTask<ReactionNetwork,AbstractFitnessResult>> tasks = new ArrayList<AbstractTask<ReactionNetwork,AbstractFitnessResult>>();
+		for(ReactionNetwork network: networks){
+			tasks.add(new FitnessEvaluationTask(new FitnessEvaluationData(fitnessFunction,network)));
+		}
+		
+		Map<ReactionNetwork, AbstractFitnessResult> results =  Cluster.submitToCluster(tasks);
+		return results;
+
+	}
 	
 	
 	public abstract void checkRestart();

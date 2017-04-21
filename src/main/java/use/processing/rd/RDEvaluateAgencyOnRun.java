@@ -10,6 +10,7 @@ import cluster.Cluster;
 import erne.AbstractFitnessResult;
 import erne.Evolver;
 import erne.Individual;
+import erne.Population;
 import reactionnetwork.ReactionNetwork;
 import utils.ResultFilesManipulator;
 
@@ -53,7 +54,7 @@ public class RDEvaluateAgencyOnRun {
 				try {
 					
 					Map<ReactionNetwork, AbstractFitnessResult> results = 
-							Cluster.evaluateFitness(fitness, bestOverTime.get(index)); //Parallel evaluation.
+							Population.evaluateFitness(fitness, bestOverTime.get(index)); //Parallel evaluation.
 					
 					fits[index] = new double[bestOverTime.get(index).size()];
 					for(int i = 0; i<bestOverTime.get(index).size(); i++){

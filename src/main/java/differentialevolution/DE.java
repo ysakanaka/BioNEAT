@@ -11,6 +11,7 @@ import cluster.Cluster;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
 import erne.Individual;
+import erne.Population;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
@@ -153,7 +154,7 @@ public class DE {
 		for (int i = 0; i < curGen.length; i++) {
 			networks.add(curGen[i]);
 		}
-		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
+		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Population.evaluateFitness(fitnessFunction, networks);
 		for (int i = 0; i < curGen.length; i++) {
 			curFitness[i] = fitnesses.get(curGen[i]).getFitness();
 			this.CurGen[i].setFitnessScore(curFitness[i]);
@@ -168,7 +169,7 @@ public class DE {
 			for (int i = 0; i < nextGen.length; i++) {
 				networks.add(nextGen[i]);
 			}
-			fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
+			fitnesses = Population.evaluateFitness(fitnessFunction, networks);
 			for (int i = 0; i < nextGen.length; i++) {
 				nextFitness[i] = fitnesses.get(nextGen[i]).getFitness();
 				this.NextGen[i].setFitnessScore(curFitness[i]);
