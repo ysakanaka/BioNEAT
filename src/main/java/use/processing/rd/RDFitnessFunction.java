@@ -48,6 +48,9 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 
 	}
 	
+	protected AbstractFitnessResult computeResult(RDSystem syst){
+		return new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+	}
 
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
@@ -72,7 +75,7 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 			  System.out.println("total bead update:"+syst.totalBeads);
 			  System.out.println("total conc update:"+syst.totalConc);
 		  }
-		  RDPatternFitnessResult temp =  new RDPatternFitnessResult(syst.conc,pattern,syst.beadsOnSpot, randomFitness);
+		  AbstractFitnessResult temp =  computeResult(syst);
 		  results[i] = temp;
 		  }
 		  

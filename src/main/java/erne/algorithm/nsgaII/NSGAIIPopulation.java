@@ -25,11 +25,12 @@ public class NSGAIIPopulation extends Population {
 	private static final long serialVersionUID = -1966721383358670350L;
 	
 	protected boolean superElitist;
-	protected FastNonDominatedSorter sorter = new FastNonDominatedSorter(false);
+	protected transient FastNonDominatedSorter sorter;
 	
 	public NSGAIIPopulation(int size, ReactionNetwork initNetwork, boolean superElitist){
 		super(size,initNetwork);
 		this.superElitist = superElitist;
+		sorter = new FastNonDominatedSorter(superElitist);
 	}
 	
 	@Override
@@ -56,7 +57,7 @@ public class NSGAIIPopulation extends Population {
 	
 	public PopulationInfo getPopulationInfo(int i) {
 		Individual[] indivs = populations.get(i);
-		ArrayList<HashSet<Individual>> sortedBy = sorter.fastNonDominatedSort(indivs);
+		ArrayList<HashSet<Individual>> sortedBy = (new FastNonDominatedSorter(false)).fastNonDominatedSort(indivs);
 		Species[] species = new Species[sortedBy.get(0).size()];
 		int index = 0;
 		for(Individual ind : sortedBy.get(0)){
@@ -73,6 +74,15 @@ public class NSGAIIPopulation extends Population {
 	public void checkRestart() {
 		// No paramter to set, so void
 		//We should check that the last gen is correctly ranked
+		sorter = new FastNonDominatedSorter(superElitist);
+		ArrayList<Individual> indivs = new ArrayList<Individual>();
+		for(int i = 0; i<populations.size();i++){
+			//add everybody so far
+			indivs.addAll(Arrays.asList(populations.get(i)));
+		}
+		Individual[] indivArray = new Individual[indivs.size()];
+		indivArray = indivs.toArray(indivArray);
+		sorter.fastNonDominatedSort(indivArray);
 	}
 	
 	
@@ -86,19 +96,15 @@ public class NSGAIIPopulation extends Population {
 		Individual[] qt = populations.get(populations.size()-1); //current generation
 		
 		if (populations.size() <= 1){
+			if(superElitist) sorter.fastNonDominatedSort(qt); //init
 			return qt;
 		}
 		Individual[] pt;
 		
 		if(superElitist){
-			ArrayList<Individual> allPop = new ArrayList<Individual>();
-			for(int i = 0; i< populations.size()-1;i++){
-				allPop.addAll(Arrays.asList(populations.get(i)));
-			}
-			pt = new Individual[allPop.size()];
-			pt = allPop.toArray(pt);
-		} else{
-		    pt = populations.get(populations.size()-2); //previous generation
+			pt = new Individual[]{}; //already saved in the sorter
+		} else {
+			pt = populations.get(populations.size()-2); //previous generation
 		}
 		
 		int sizeRt = qt.length + pt.length;

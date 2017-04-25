@@ -47,7 +47,7 @@ public class NSGAIIPopulationDisplayer implements PopulationDisplayer, Serializa
 		
 		JPanel ret = new JPanel();
 		ChartPanel chartPanel = new ChartPanel(ChartFactory.createScatterPlot("Pareto solutions", "Param1","Param 2", dataset));
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 300));
+		chartPanel.setPreferredSize(new java.awt.Dimension(800, 800));
         chartPanel.setMinimumSize(new java.awt.Dimension(500, 300));
 		ret.add(chartPanel);
 		return ret;
