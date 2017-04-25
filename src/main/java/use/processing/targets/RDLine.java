@@ -12,8 +12,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import erne.Evolver;
-import erne.algorithm.BioNEATBuilder;
 import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.bioNEAT.BioNEATBuilder;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;

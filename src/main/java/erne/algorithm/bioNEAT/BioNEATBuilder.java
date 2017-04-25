@@ -1,4 +1,4 @@
-package erne.algorithm;
+package erne.algorithm.bioNEAT;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,7 +6,8 @@ import java.util.Arrays;
 
 import erne.PopulationDisplayer;
 import erne.PopulationFactory;
-import erne.algorithm.bioNEAT.BioNEATPopulationFactory;
+import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.EvolutionaryAlgorithmBuilder;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.rules.AddActivation;

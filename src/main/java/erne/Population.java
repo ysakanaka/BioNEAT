@@ -12,13 +12,14 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
 import cluster.AbstractTask;
 import cluster.Cluster;
 import cluster.FitnessEvaluationData;
 import cluster.FitnessEvaluationTask;
 import erne.mutation.Mutator;
 import erne.speciation.Species;
-import reactionnetwork.Connection;
 import reactionnetwork.ReactionNetwork;
 
 public abstract class Population implements Serializable {
@@ -28,10 +29,10 @@ public abstract class Population implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static AtomicInteger nextIndivId = new AtomicInteger();
 	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b'); //TODO: refactor that approach
-	//public static Map<String, Integer> innovationNumbers = new HashMap<String, Integer>(); //TODO bioneat
+	
 	public static Map<String, String> nodeNameOrigins = new HashMap<String, String>();
 
-	private Individual initIndividual;
+	protected Individual initIndividual;
 	protected ArrayList<Individual[]> populations = new ArrayList<Individual[]>();
 	private AbstractFitnessFunction fitnessFunction;
 	
@@ -48,11 +49,11 @@ public abstract class Population implements Serializable {
 	public int getTotalGeneration() {
 		return populations.size();
 	}
-
-	/*public ArrayList<Species[]> getSpeciesByGenerations() {
-		return speciationSolver.speciesByGeneration;
-	}*/
-
+	
+	public ArrayList<Individual[]> getAllPopulations(){
+		return populations;
+	}
+	
 	public PopulationInfo getPopulationInfo(int i) {
 		Species[] species = new Species[1];
 		species[0] = new Species(populations.get(i)[0]);
@@ -81,10 +82,9 @@ public abstract class Population implements Serializable {
 	}
 
 	public Individual[] evolve() throws InterruptedException, ExecutionException {
-		reproduction();
+		Individual[] individuals = reproduction();
+		populations.add(individuals);
 		evaluateFitness();
-		Individual[] individuals = populations.get(populations.size() - 1);
-		//speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
@@ -136,18 +136,16 @@ public abstract class Population implements Serializable {
 		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = evaluateFitness(fitnessFunction, networks);
 		Cluster.stop();
 		for (int i = 0; i < individuals.length; i++) {
-			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));
-			// System.out.println("Indiv " + i + " Fitness: " +
-			// individuals[i].getFitnessResult());
+			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));			
 		}
 		//Now, check if we are using a lexicographic fitness function
 		if(AbstractLexicographicFitnessResult.class.isAssignableFrom(individuals[0].getFitnessResult().getClass())){
 			//we have to sort them
-			sortMultiObjectiveIndividuals(individuals);
+			sortLexicographicIndividuals(individuals);
 		}
 	}
 	
-	protected void sortMultiObjectiveIndividuals(Individual[] individuals){
+	protected void sortLexicographicIndividuals(Individual[] individuals){
 		Arrays.sort(individuals,individualComparator);
 		for(int i=0;i<individuals.length;i++){
 			((AbstractLexicographicFitnessResult) individuals[i].getFitnessResult()).setRank(individuals.length-i);

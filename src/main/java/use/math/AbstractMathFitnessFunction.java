@@ -127,6 +127,7 @@ public abstract class AbstractMathFitnessFunction extends AbstractFitnessFunctio
 				inputs[i] = tests.get(i)[0];
 			}
 			result.inputs = inputs;
+			result.setFitnesses();
 			return result;
 
 		} catch (Exception e) {

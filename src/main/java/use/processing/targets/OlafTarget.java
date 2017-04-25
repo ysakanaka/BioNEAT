@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutionException;
 
 import erne.AbstractFitnessFunction;
 import erne.Evolver;
-import erne.algorithm.BioNEATBuilder;
 import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.bioNEAT.BioNEATBuilder;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;

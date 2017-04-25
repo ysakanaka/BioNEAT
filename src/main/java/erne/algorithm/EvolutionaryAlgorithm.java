@@ -11,7 +11,7 @@ public class EvolutionaryAlgorithm {
 	protected PopulationFactory populationFactory;
 	protected PopulationDisplayer populationDisplayer;
 	
-	EvolutionaryAlgorithm(String name, Mutator mutator, PopulationFactory populationFactory, PopulationDisplayer populationDisplayer){
+	public EvolutionaryAlgorithm(String name, Mutator mutator, PopulationFactory populationFactory, PopulationDisplayer populationDisplayer){
 		this.name = name;
 		this.mutator = mutator;
 		this.populationFactory = populationFactory;

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import erne.Evolver;
-import erne.algorithm.BioNEATBuilder;
 import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.bioNEAT.BioNEATBuilder;
 import use.ready.AbstractReadyFitnessFunction;
 import use.ready.export.ReadyExporter;
 import use.ready.fakefitness.RunReady;

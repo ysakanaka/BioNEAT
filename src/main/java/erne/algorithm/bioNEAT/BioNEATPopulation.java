@@ -104,7 +104,7 @@ public class BioNEATPopulation extends Population {
 			if (i >= nextGeneIndividuals.length)
 				break;
 		}
-		populations.add(nextGeneIndividuals);
+		
 		return nextGeneIndividuals;
 	}
 	

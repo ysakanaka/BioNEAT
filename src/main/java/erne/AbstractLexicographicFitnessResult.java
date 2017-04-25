@@ -1,14 +1,16 @@
 package erne;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-
-import use.processing.rd.RDConstants;
 
 public abstract class AbstractLexicographicFitnessResult extends MultiobjectiveAbstractFitnessResult {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5202764976715487839L;
+
 	public static class LexicographicFitnessComparator implements Comparator<AbstractLexicographicFitnessResult> {
 
 		@Override
@@ -22,7 +24,7 @@ public abstract class AbstractLexicographicFitnessResult extends MultiobjectiveA
 			for(int i = 0; i<length; i++){
 				double d1 = l1.get(i);
 				double d2 = l2.get(i);
-				if (Math.abs(d1 - d2) > RDConstants.comparisonThreshold){
+				if (Math.abs(d1 - d2) > Constants.comparisonThreshold){
 					return (int) Math.signum(d1-d2);
 				}
 			}
