@@ -12,8 +12,6 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
 import cluster.AbstractTask;
 import cluster.Cluster;
 import cluster.FitnessEvaluationData;
