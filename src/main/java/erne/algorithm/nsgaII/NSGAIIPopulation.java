@@ -50,6 +50,7 @@ public class NSGAIIPopulation extends Population {
 		
 		for(int i = 0; i<nextGen.length; i++){
 			nextGen[i] = mutator.mutate(nextGenParents[i].clone());
+			nextGen[i].parentIds.add(nextGenParents[i].getId());
 		}
 		
 		return nextGen;
