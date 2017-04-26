@@ -72,7 +72,7 @@ EvolutionaryAlgorithm algorithm = new NSGAIIBuilder().mutator(mutator).populatio
         
 		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
 				fitnessFunction, new RDFitnessDisplayer(), algorithm);
-		evolver.setGUI(true);
+		//evolver.setGUI(true);
 		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();
 	    System.out.println("Evolution completed.");
