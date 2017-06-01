@@ -49,7 +49,7 @@ public class RunMultiEvalsSelfRepair {
 			e.printStackTrace();
 		}
 		RDConstants.maxBeads = 500;
-		RDPatternFitnessResultIbuki.width = 0.3;
+		RDPatternFitnessResultIbuki.width = 0.2;
 		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 		  StringBuilder sb = new StringBuilder("");
