@@ -12,51 +12,51 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cluster.AbstractTask;
 import cluster.Cluster;
+import cluster.FitnessEvaluationData;
+import cluster.FitnessEvaluationTask;
 import erne.mutation.Mutator;
-import erne.speciation.SpeciationSolver;
 import erne.speciation.Species;
-import reactionnetwork.Connection;
 import reactionnetwork.ReactionNetwork;
 
-public class Population implements Serializable {
+public abstract class Population implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	public static AtomicInteger nextIndivId = new AtomicInteger();
-	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b');
-	public static Map<String, Integer> innovationNumbers = new HashMap<String, Integer>();
+	public static AtomicInteger nextNodeName = new AtomicInteger((int) 'b'); //TODO: refactor that approach
+	
 	public static Map<String, String> nodeNameOrigins = new HashMap<String, String>();
 
-	private Individual initIndividual;
-	private ArrayList<Individual[]> populations = new ArrayList<Individual[]>();
+	protected Individual initIndividual;
+	protected ArrayList<Individual[]> populations = new ArrayList<Individual[]>();
 	private AbstractFitnessFunction fitnessFunction;
-	private SpeciationSolver speciationSolver;
+	
 
-	private Random rand = new Random();
+	protected Random rand = new Random();
 
-	private Mutator mutator;
+	protected Mutator mutator;
 
 	public Population(int size, ReactionNetwork initNetwork) {
-		for (Connection conn : initNetwork.connections) {
-			innovationNumbers.put(conn.from.name + "->" + conn.to.name, innovationNumbers.size());
-		}
 		this.populations.add(new Individual[size]);
 		this.initIndividual = new Individual(initNetwork);
-		speciationSolver = new SpeciationSolver();
 	}
 
 	public int getTotalGeneration() {
 		return populations.size();
 	}
-
-	public ArrayList<Species[]> getSpeciesByGenerations() {
-		return speciationSolver.speciesByGeneration;
+	
+	public ArrayList<Individual[]> getAllPopulations(){
+		return populations;
 	}
-
+	
 	public PopulationInfo getPopulationInfo(int i) {
-		return new PopulationInfo(populations.get(i), speciationSolver.speciesByGeneration.get(i));
+		Species[] species = new Species[1];
+		species[0] = new Species(populations.get(i)[0]);
+		species[0].individuals = new ArrayList<Individual>(Arrays.asList(populations.get(i)));
+		return new PopulationInfo(populations.get(i), species);
 	}
 
 	public void setFitnessFunction(AbstractFitnessFunction fitnessFunction) {
@@ -75,60 +75,21 @@ public class Population implements Serializable {
 			individuals[i].parentIds.add(initIndividual.getId());
 		}
 		evaluateFitness();
-		speciationSolver.speciate(individuals);
+		
 		return individuals;
 	}
 
 	public Individual[] evolve() throws InterruptedException, ExecutionException {
-		reproduction(speciationSolver.speciesByGeneration.get(speciationSolver.speciesByGeneration.size() - 1));
+		Individual[] individuals = reproduction();
+		populations.add(individuals);
 		evaluateFitness();
-		Individual[] individuals = populations.get(populations.size() - 1);
-		speciationSolver.speciate(individuals);
 		return individuals;
 	}
 
-	public Individual[] reproduction(Species[] species) {
-		Individual[] individuals = populations.get(populations.size() - 1);
-		Individual[] nextGeneIndividuals = new Individual[individuals.length];
-		int i = 0;
-		for (Species sp : species) {
-			int nextGenPop = sp.getNextGenPopulation();
-			if (sp.getNextGenPopulation() > 0) {
-				if (i >= nextGeneIndividuals.length)
-					break;
-				nextGeneIndividuals[i] = sp.getBestIndividual().clone();
-				i++;
-				nextGenPop--;
-				if (i >= nextGeneIndividuals.length)
-					break;
-			}
-			for (int j = 0; j < nextGenPop; j++) {
-				Individual[] parents = selectCrossoverParents(sp.individuals);
-				nextGeneIndividuals[i] = parents[0].clone();
-				mutator.mutate(nextGeneIndividuals[i]);
-				nextGeneIndividuals[i].parentIds.add(parents[0].getId());
-				i++;
-				if (i >= nextGeneIndividuals.length)
-					break;
-			}
-		}
+	
+	public abstract Individual[] reproduction();
 
-		// fill the rest with mutation only
-		while (i < nextGeneIndividuals.length) {
-			Species randomSpecies = species[rand.nextInt(species.length)];
-			Individual parent = randomSpecies.individuals.get(rand.nextInt(randomSpecies.individuals.size()));
-			nextGeneIndividuals[i] = parent.clone();
-			mutator.mutate(nextGeneIndividuals[i]);
-			nextGeneIndividuals[i].parentIds.add(parent.getId());
-			i++;
-			if (i >= nextGeneIndividuals.length)
-				break;
-		}
-		populations.add(nextGeneIndividuals);
-		return nextGeneIndividuals;
-	}
-
-	private Individual[] selectCrossoverParents(ArrayList<Individual> curGen) {
+	protected Individual[] selectCrossoverParents(ArrayList<Individual> curGen) {
 		double maxFitness = -Double.MAX_VALUE;
 		Individual parent1 = null;
 		Individual parent2 = null;
@@ -169,23 +130,27 @@ public class Population implements Serializable {
 		for (int i = 0; i < individuals.length; i++) {
 			networks.add(individuals[i].getNetwork());
 		}
-		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = Cluster.evaluateFitness(fitnessFunction, networks);
+		Cluster.start();
+		Map<ReactionNetwork, AbstractFitnessResult> fitnesses = evaluateFitness(fitnessFunction, networks);
+		Cluster.stop();
 		for (int i = 0; i < individuals.length; i++) {
-			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));
-			// System.out.println("Indiv " + i + " Fitness: " +
-			// individuals[i].getFitnessResult());
+			individuals[i].setFitnessResult(fitnesses.get(individuals[i].getNetwork()));			
 		}
 		//Now, check if we are using a lexicographic fitness function
 		if(AbstractLexicographicFitnessResult.class.isAssignableFrom(individuals[0].getFitnessResult().getClass())){
 			//we have to sort them
-			Arrays.sort(individuals,individualComparator);
-			for(int i=0;i<individuals.length;i++){
-				((AbstractLexicographicFitnessResult) individuals[i].getFitnessResult()).setRank(individuals.length-i);
-			}
+			sortLexicographicIndividuals(individuals);
 		}
 	}
 	
-	private static Comparator<Individual> individualComparator = new Comparator<Individual>(){
+	protected void sortLexicographicIndividuals(Individual[] individuals){
+		Arrays.sort(individuals,individualComparator);
+		for(int i=0;i<individuals.length;i++){
+			((AbstractLexicographicFitnessResult) individuals[i].getFitnessResult()).setRank(individuals.length-i);
+		}
+	}
+	
+	protected static Comparator<Individual> individualComparator = new Comparator<Individual>(){
 		@Override
 		public int compare(Individual o1, Individual o2) {
 			if(AbstractLexicographicFitnessResult.class.isAssignableFrom(o1.getFitnessResult().getClass())
@@ -197,7 +162,23 @@ public class Population implements Serializable {
 		}
 	};
 	
-	public SpeciationSolver getSpeciationSolver(){
-		return speciationSolver;
+	public static Map<ReactionNetwork, AbstractFitnessResult> evaluateFitness(AbstractFitnessFunction fitnessFunction,
+			List<ReactionNetwork> networks) throws InterruptedException, ExecutionException {
+		
+		ArrayList<AbstractTask<ReactionNetwork,AbstractFitnessResult>> tasks = new ArrayList<AbstractTask<ReactionNetwork,AbstractFitnessResult>>();
+		for(ReactionNetwork network: networks){
+			tasks.add(new FitnessEvaluationTask(new FitnessEvaluationData(fitnessFunction,network)));
+		}
+		
+		Map<ReactionNetwork, AbstractFitnessResult> results =  Cluster.submitToCluster(tasks);
+		return results;
+
+	}
+	
+	
+	public abstract void checkRestart();
+	
+	public String toString(){
+		return populations.size()+" gens, last gen: "+Arrays.toString(populations.get(populations.size()-1));
 	}
 }

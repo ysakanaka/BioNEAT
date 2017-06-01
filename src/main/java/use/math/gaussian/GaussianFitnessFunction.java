@@ -80,8 +80,6 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			if (fittingParams[0] < cutOffFlat) {
 				fittingParams[2] = 50;
 			}
-			result.tests = tests;
-			result.actualOutputs = actualOutputs;
 
 			double[] targetOutputs = new double[tests.size()];
 			for (int i = 0; i < tests.size(); i++) {
@@ -95,20 +93,22 @@ public class GaussianFitnessFunction extends AbstractMathFitnessFunction {
 			}
 			result.targetOutputs = targetOutputs;
 
-			result.targetFittingParams = targetCoeff;
+			
 			result.actualFittingParams = fittingParams;
-			return result;
+			
 		} catch (Exception ex) {
 			System.err.println("Warning: Gaussian fitness calculation failure");
 			if(ex.getClass() != org.apache.commons.math3.exception.TooManyIterationsException.class) ex.printStackTrace();
 			System.err.println("==========================================================");
 			result.minFitness = true;
-			result.tests = tests;
-			result.actualOutputs = actualOutputs;
+			
 
-			result.targetFittingParams = targetCoeff;
-			return result;
+			
 		}
+		result.tests = tests;
+		result.actualOutputs = actualOutputs;
+		result.targetFittingParams = targetCoeff;
+		return result;
 
 	}
 

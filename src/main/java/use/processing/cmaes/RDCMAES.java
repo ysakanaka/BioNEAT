@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import cluster.Cluster;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
+import erne.Population;
 import optimizers.cmaes.CMAEvolutionStrategy;
 import optimizers.cmaes.fitness.IObjectiveFunction;
 import reactionnetwork.Connection;
@@ -155,6 +156,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	public void run() {
 		cma.writeToDefaultFilesHeaders(0);
 		double[] fitness = this.cma.init();
+		Cluster.start();
 		 while (this.cma.stopConditions.getNumber() == 0)
 	    {
 		int nbResample = 0;
@@ -175,7 +177,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		
 		Map<ReactionNetwork, AbstractFitnessResult> fitnesses;
 		try {
-			fitnesses = Cluster.evaluateFitness(fitnessFunction, (List<ReactionNetwork>) networks.clone());
+			fitnesses = Population.evaluateFitness(fitnessFunction, (List<ReactionNetwork>) networks.clone());
 			for (int i = 0; i < pop.length; i++) {
 				fitness[i] = 1.0/fitnesses.get(networks.get(i)).getFitness(); //We want to increase, no decrease
 				// System.out.println("Indiv " + i + " Fitness: " +
@@ -212,7 +214,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
     output = output + "best function value " + this.cma.getBestFunctionValue() + " at evaluation " + this.cma.getBestEvaluationNumber();
     System.out.println(output);
     this.cma.writeToDefaultFiles(1);
-		
+	Cluster.stop();
 	}
 
 	@Override

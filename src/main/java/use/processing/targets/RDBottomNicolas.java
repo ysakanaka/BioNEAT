@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import erne.Evolver;
+import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.bioNEAT.BioNEATBuilder;
 import erne.mutation.MutationRule;
 import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;
@@ -77,9 +79,10 @@ public class RDBottomNicolas {
 				new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
 				new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
 	    }
+EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlgorithm();
+        
 		Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
-				fitnessFunction, mutator, new RDFitnessDisplayer());
-		//evolver.setGUI(false);
+				fitnessFunction, new RDFitnessDisplayer(), algorithm);
 		evolver.setExtraConfig(RDConstants.configsToString());
 		evolver.evolve();
 	    System.out.println("Evolution completed.");

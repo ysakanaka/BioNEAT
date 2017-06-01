@@ -1,51 +1,26 @@
 package cluster;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
-
-import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.HazelcastInstanceAware;
-import com.hazelcast.nio.ObjectDataInput;
-import com.hazelcast.nio.ObjectDataOutput;
-import com.hazelcast.nio.serialization.DataSerializable;
-
 import erne.AbstractFitnessResult;
+import reactionnetwork.ReactionNetwork;
 
-public class FitnessEvaluationTask implements Callable<AbstractFitnessResult>, DataSerializable, HazelcastInstanceAware {
+public class FitnessEvaluationTask extends AbstractTask<ReactionNetwork,AbstractFitnessResult> {
+	
 
-	private FitnessEvaluationData data;
-	private transient HazelcastInstance hz;
-
-	FitnessEvaluationTask(FitnessEvaluationData data) {
+	public FitnessEvaluationTask(FitnessEvaluationData data) {
+		//super(data.network);
+		this.origin = data.network;
 		this.data = data;
 	}
-
+	
 	public FitnessEvaluationTask() {
-
-	}
-
-	@Override
-	public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
-		this.hz = hazelcastInstance;
+		super();
 	}
 	
-	public HazelcastInstance getHazelCastInstance(){
-		return hz;
-	}
-
-	@Override
-	public void writeData(ObjectDataOutput out) throws IOException {
-		out.writeObject(this.data);
-	}
-
-	@Override
-	public void readData(ObjectDataInput in) throws IOException {
-		this.data = in.readObject();
-	}
 
 	@Override
 	public AbstractFitnessResult call() throws Exception {
-		return data.fitnessFunction.evaluate(data.network);
+		FitnessEvaluationData fdata = (FitnessEvaluationData) data;
+		return fdata.fitnessFunction.evaluate(fdata.network);
 	}
 
 }

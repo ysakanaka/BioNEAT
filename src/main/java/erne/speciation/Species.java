@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import erne.Individual;
 
-public class Species implements Serializable {
+public class Species implements Serializable, Comparable<Species> {
 	/**
 	 * 
 	 */
@@ -70,5 +70,14 @@ public class Species implements Serializable {
 
 	public void setNextGenPopulation(int nextGenPopulation) {
 		this.nextGenPopulation = nextGenPopulation;
+	}
+
+	@Override
+	public int compareTo(Species o) {
+		int number = representative.getId();
+		
+		number -= o.representative.getId();
+		
+		return number;
 	}
 }

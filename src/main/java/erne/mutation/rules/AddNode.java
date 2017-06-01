@@ -6,6 +6,7 @@ import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import erne.Individual;
 import erne.Population;
+import erne.algorithm.bioNEAT.BioNEATPopulation;
 import erne.mutation.MutationRule;
 import erne.util.Randomizer;
 
@@ -102,11 +103,11 @@ public class AddNode extends MutationRule {
 							if (conn.to == node) {
 								String key = conn.from.name + "->" + conn.to.name;
 								int innovationNumber;
-								if (Population.innovationNumbers.containsKey(key)) {
-									innovationNumber = Population.innovationNumbers.get(key);
+								if (BioNEATPopulation.innovationNumbers.containsKey(key)) {
+									innovationNumber = BioNEATPopulation.innovationNumbers.get(key);
 								} else {
-									innovationNumber = Population.innovationNumbers.size();
-									Population.innovationNumbers.put(key, innovationNumber);
+									innovationNumber = BioNEATPopulation.innovationNumbers.size();
+									BioNEATPopulation.innovationNumbers.put(key, innovationNumber);
 								}
 								conn.innovation = innovationNumber;
 							}

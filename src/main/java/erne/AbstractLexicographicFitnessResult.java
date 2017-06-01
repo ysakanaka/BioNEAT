@@ -1,47 +1,16 @@
 package erne;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
-import use.processing.rd.RDConstants;
+public abstract class AbstractLexicographicFitnessResult extends MultiobjectiveAbstractFitnessResult {
 
-public abstract class AbstractLexicographicFitnessResult extends AbstractFitnessResult {
-
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5202764976715487839L;
 
-	protected int rank;
-	
-	public abstract List<Double> getFullFitness();
-	
-	public int getRank(){
-		return rank;
-	}
-	
-	public void setRank(int r){
-		rank = r;
-	}
-	
-	@Override
-	public String toString(){
-		StringBuilder sb = new StringBuilder("");
-		sb.append("rank: "+rank+"\t");
-		Iterator<Double> fullFit = getFullFitness().iterator();
-		int index = 1;
-		while(fullFit.hasNext()){
-			sb.append("fitness "+index+": "+fullFit.next()+"\t");
-			index++; 
-		}
-		return sb.toString();
-	}
-	
-	public double getFitness(){
-		return Math.min(1.0/((double)rank),getFullFitness().iterator().next()); //people with a finess of zero get zero
-	}
-	
 	public static class LexicographicFitnessComparator implements Comparator<AbstractLexicographicFitnessResult> {
 
 		@Override
@@ -55,7 +24,7 @@ public abstract class AbstractLexicographicFitnessResult extends AbstractFitness
 			for(int i = 0; i<length; i++){
 				double d1 = l1.get(i);
 				double d2 = l2.get(i);
-				if (Math.abs(d1 - d2) > RDConstants.comparisonThreshold){
+				if (Math.abs(d1 - d2) > Constants.comparisonThreshold){
 					return (int) Math.signum(d1-d2);
 				}
 			}
