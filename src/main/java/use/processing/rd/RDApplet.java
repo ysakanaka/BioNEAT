@@ -83,7 +83,7 @@ public class RDApplet extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 3000/bigTimeStep;
+		maxTime = 300000000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
@@ -92,6 +92,7 @@ public class RDApplet extends PApplet{
 		 RDPatternFitnessResultIbuki.width = 0.25;
 		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
+		RDConstants.showBeads = false;
 
 		offset = 2;
 		name = (selfRepair?"self-######.png":"screen-######.png");
@@ -122,13 +123,29 @@ public class RDApplet extends PApplet{
 		  realTime = System.currentTimeMillis();
 		  int base = g.fillColor;
 		  //int speciesOffset = 2;
+		  
 		  for (int x = 0; x < system.conc[0].length; x++){
 		    for (int y = 0; y < system.conc[0][x].length; y++){
-		      float val = min(1.0f,system.conc[0+offset][x][y]/RDConstants.concScale)*255;
-		      float val2 = 0.0f;
-		      float val3 = 0.0f;
-		      if (system.chemicalSpecies >= 2+offset) val2 = min(1.0f,system.conc[1+offset][x][y]/RDConstants.concScale)*255;
-		      if (system.chemicalSpecies >= 3+offset) val3 = min(1.0f,system.conc[2+offset][x][y]/RDConstants.concScale)*255;
+		    	float val, val2, val3;
+		    	val2 = 0.0f;
+		    	  val3 = 0.0f;
+		    	if(RDConstants.showBeads) {
+		    		val = 0.0f;
+		    		if(system.beadsOnSpot.get(x, y) != null && !system.beadsOnSpot.get(x, y).isEmpty()){
+		    			for(Bead b: system.beadsOnSpot.get(x, y)){
+		    				if(b.getParent()!=null){
+		    					val = 255.0f;
+		    					break;
+		    				}
+		    			}
+		    		}
+		    	  
+		    	  
+		    	} else {
+		    		val = min(1.0f,system.conc[0+offset][x][y]/RDConstants.concScale)*255;
+		    		if (system.chemicalSpecies >= 2+offset) val2 = min(1.0f,system.conc[1+offset][x][y]/RDConstants.concScale)*255;
+		    		if (system.chemicalSpecies >= 3+offset) val3 = min(1.0f,system.conc[2+offset][x][y]/RDConstants.concScale)*255;
+		    	}
 		      //System.out.println(val);
 		      fill(color(val,val2,val3));
 		      rect(x*RDConstants.spaceStep,y*RDConstants.spaceStep,RDConstants.spaceStep,RDConstants.spaceStep);

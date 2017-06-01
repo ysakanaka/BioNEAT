@@ -44,6 +44,7 @@ public class StepFitnessDisplayer implements FitnessDisplayer {
 			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 			panel.add(new PlotFactory().createTimeSeriesPanel(timeSeries, xData, false, "Input concentration", "Output concentration"));
 			panel.add(new JLabel(Arrays.toString(fitnessResult.actualFittingParams)));
+			panel.setPreferredSize(new java.awt.Dimension(500, 300));
 			return panel;
 		} else {
 			return new JPanel();

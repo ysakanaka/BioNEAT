@@ -121,9 +121,10 @@ public class FitnessResult extends MultiobjectiveAbstractFitnessResult {
 
 	@Override
 	public List<Double> getFullFitness() {
-		this.getFitness(); //To be sure to set everything.
+		this.setFitnesses(); //To be sure to set everything.
 		ArrayList<Double> fits = new ArrayList(Arrays.asList(listFits));
-		
+		//TODO: just a quick test
+		fits.remove(fits.size()-1);
 		return fits;
 	}
 }

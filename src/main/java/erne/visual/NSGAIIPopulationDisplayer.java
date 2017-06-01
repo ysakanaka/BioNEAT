@@ -11,6 +11,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.FastScatterPlot;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
@@ -31,11 +32,17 @@ public class NSGAIIPopulationDisplayer implements PopulationDisplayer, Serializa
 	private static final long serialVersionUID = 1L;
 	
 	private DefaultXYDataset dataset = new DefaultXYDataset();
+	private DefaultCategoryDataset bestEvers = new DefaultCategoryDataset();
 
 	@Override
 	public JPanel createPopulationPanel(Population population) {
-		System.out.println("Warning: Stub");
-		return new JPanel();
+		int perGen = population.getAllPopulations().get(0).length;
+		updateBestEvers(population);
+		
+		ChartPanel chartPanel = new ChartPanel(ChartFactory.createLineChart("Best aggregated fitness over time", "Evaluations", "Fitness", bestEvers));
+		JPanel ret = new JPanel();
+		ret.add(chartPanel);
+		return ret;
 	}
 
 	@Override
@@ -79,6 +86,20 @@ public class NSGAIIPopulationDisplayer implements PopulationDisplayer, Serializa
 					data[1][j] =  MultiobjectiveAbstractFitnessResult.getIthFitness(1,individ.getFitnessResult());
 				}
 				dataset.addSeries(i, data);
+			}
+		}
+	}
+	
+	protected void updateBestEvers(Population pop){
+		if(pop.getTotalGeneration() > bestEvers.getColumnCount()){
+			for(int i = bestEvers.getColumnCount();i<pop.getTotalGeneration(); i++){
+				Individual[] popThisTime = pop.getAllPopulations().get(i);
+				double possibleBest = popThisTime[0].getFitnessResult().getFitness();
+				for(int j = 1; j<popThisTime.length; j++){
+					double test = popThisTime[j].getFitnessResult().getFitness();
+					if(possibleBest < test) possibleBest = test;
+				}
+				bestEvers.addValue(possibleBest, "", ""+((i+1)*popThisTime.length));
 			}
 		}
 	}

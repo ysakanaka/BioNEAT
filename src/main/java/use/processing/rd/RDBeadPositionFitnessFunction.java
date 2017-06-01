@@ -9,7 +9,7 @@ import model.OligoSystem;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
-import use.processing.targets.BeadPositionTarget;
+import use.processing.targets.misc.BeadPositionTarget;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 

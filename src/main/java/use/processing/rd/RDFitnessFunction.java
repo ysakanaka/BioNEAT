@@ -54,6 +54,14 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 
 	@Override
 	public AbstractFitnessResult evaluate(ReactionNetwork network) {
+		AbstractFitnessResult[] results = multipleEvaluation(network);
+		  
+		  Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
+		  if (RDConstants.useMedian) return results[(RDConstants.reEvaluation-1)/2];
+		  return results[0];
+	}
+	
+	protected AbstractFitnessResult[] multipleEvaluation(ReactionNetwork network){
 		long startTime = System.currentTimeMillis();
 		AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
 		  for(int i= 0; i<RDConstants.reEvaluation; i++){
@@ -78,10 +86,7 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 		  AbstractFitnessResult temp =  computeResult(syst);
 		  results[i] = temp;
 		  }
-		  
-		  Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
-		  if (RDConstants.useMedian) return results[(RDConstants.reEvaluation-1)/2];
-		  return results[0];
+		  return results;
 	}
 	
 	public AbstractFitnessResult evaluate(OligoGraph<SequenceVertex,String> g){

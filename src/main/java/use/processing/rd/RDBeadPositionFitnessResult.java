@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.common.collect.HashBasedTable;
 
 import use.processing.bead.Bead;
-import use.processing.targets.BeadPositionTarget;
+import use.processing.targets.misc.BeadPositionTarget;
 
 public class RDBeadPositionFitnessResult extends RDPatternFitnessResult {
 
