@@ -96,6 +96,11 @@ public class NSGAIIPopulation extends Population {
 		Individual[] rt; //population to check: new gen + previous gen if available (for elitism)
 		Individual[] qt = populations.get(populations.size()-1); //current generation
 		
+		if(erne.Constants.debug){
+			System.out.println("Debug: Spoofing population");
+			return qt;
+		}
+		
 		if (populations.size() <= 1){
 			if(superElitist) sorter.fastNonDominatedSort(qt); //init
 			return qt;

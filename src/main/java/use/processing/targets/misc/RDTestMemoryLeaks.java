@@ -1,4 +1,4 @@
-package use.processing.targets.bottomlinetests;
+package use.processing.targets.misc;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutionException;
 
 import erne.Evolver;
 import erne.algorithm.EvolutionaryAlgorithm;
-import erne.algorithm.bioNEAT.BioNEATBuilder;
 import erne.algorithm.nsgaII.NSGAIIBuilder;
 import erne.algorithm.nsgaII.NSGAIIPopulationFactory;
 import erne.mutation.MutationRule;
@@ -15,8 +14,6 @@ import erne.mutation.Mutator;
 import erne.mutation.PruningMutator;
 import erne.mutation.rules.DisableTemplate;
 import erne.mutation.rules.MutateParameter;
-import use.processing.multiobjective.RDArcNumberObjective;
-import use.processing.multiobjective.RDFullPatternObjective;
 import use.processing.multiobjective.RDInObjective;
 import use.processing.multiobjective.RDMultievaluationObjective;
 import use.processing.multiobjective.RDMultievaluationStabilityObjective;
@@ -28,35 +25,34 @@ import use.processing.mutation.rules.AddInhibitionWithGradients;
 import use.processing.mutation.rules.AddNodeWithGradients;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
-import use.processing.rd.RDFitnessFunctionIbuki;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-public class RDMultiobjectiveBottom {
+public class RDTestMemoryLeaks {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
 		RDPatternFitnessResultIbuki.width = 0.2;
-		boolean[][] target = RDPatternFitnessResultIbuki.getBottomLine();
-		RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-		RDConstants.matchPenalty=-0.1;
+		erne.Constants.debug = true;
+		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		
 		  RDConstants.evalRandomDistance = false;
 		   RDConstants.populationSize=50;
 		RDConstants.maxGeneration = 200;
 		RDConstants.maxTimeEval = 10;
 		RDConstants.hardTrim = false;
-		RDConstants.maxNodes = 16;
+		RDConstants.maxNodes = 10;
 		RDConstants.maxBeads = 500;
 		
 		RDConstants.useMedian = false; //use median score of reevaluations
-		RDConstants.weightDisableTemplate = 1;
-		  RDConstants.weightMutateParameter = 90;
-		  RDConstants.weightAddActivationWithGradients = 3;
-		  RDConstants.weightAddInhibitionWithGradients = 3;
-		  RDConstants.weightAddNodeWithGradients = 3;
+		RDConstants.reEvaluation = 3;
+		RDConstants.weightDisableTemplate = 2;
+		  RDConstants.weightMutateParameter = 80;
+		  RDConstants.weightAddActivationWithGradients = 6;
+		  RDConstants.weightAddInhibitionWithGradients = 6;
+		  RDConstants.weightAddNodeWithGradients = 6;
 		
-		RDConstants.targetName = "ClusterBottomMultiobjective";
+		RDConstants.targetName = "ClusterMultiobjectiveCenterLine";
 		
-		RDConstants.reEvaluation = 2;
+RDConstants.reEvaluation = 1;
 		
 		
 		ArrayList<RDObjective> directObjs = new ArrayList<RDObjective>();
@@ -66,7 +62,7 @@ public class RDMultiobjectiveBottom {
 		directObjs.add(new RDOutObjective());
 		
 		ArrayList<RDMultievaluationObjective> multiObjs = new ArrayList<RDMultievaluationObjective>();
-		multiObjs.add(new RDMultievaluationStabilityObjective());
+		//multiObjs.add(new RDMultievaluationStabilityObjective());
 		//RDConstants.showBeads = true;
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDMultiobjectiveFitnessFunction fitnessFunction = new RDMultiobjectiveFitnessFunction(target,directObjs,multiObjs);

@@ -24,7 +24,7 @@ import utils.RDLibrary;
 
 public class RDLineNicolasGoodParams {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-	RDPatternFitnessResultIbuki.width = 0.3;
+	RDPatternFitnessResultIbuki.width = 0.2;
 	boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 	RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
 	  RDConstants.matchPenalty=-0.1;

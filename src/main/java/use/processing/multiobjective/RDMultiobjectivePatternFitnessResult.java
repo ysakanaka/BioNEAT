@@ -6,6 +6,7 @@ import java.util.List;
 
 
 import erne.MultiobjectiveAbstractFitnessResult;
+import reactionnetwork.ReactionNetwork;
 import use.processing.rd.PatternEvaluator;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessResult;
@@ -18,14 +19,15 @@ public class RDMultiobjectivePatternFitnessResult extends MultiobjectiveAbstract
 	protected boolean[][] pattern;
 	protected float[][][] conc;
 	protected boolean[][] positions;
-	protected transient RDSystem system;
+	protected transient ReactionNetwork network;
 	protected int patternSize = 0;
 	
 	public RDMultiobjectivePatternFitnessResult(RDSystem system, boolean[][] pattern, ArrayList<RDObjective> objectives) {
 		this.pattern = pattern;
-		this.conc = system.conc;
+		this.conc = new float[Math.min(system.conc.length, RDConstants.glueIndex+3)][][];
+	    for(int i = 0; i<this.conc.length; i++) this.conc[i] = system.conc[i];
 		this.objectives = objectives;
-		this.system = system;
+		this.network = system.network;
 		computePatternSize();
 		computePositions();
 		computeFits();
@@ -49,7 +51,7 @@ public class RDMultiobjectivePatternFitnessResult extends MultiobjectiveAbstract
 	protected void computeFits(){
 		fits = new Double[objectives.size()];
 		for(int i = 0; i<objectives.size(); i++){
-			fits[i] = objectives.get(i).evaluateScore(system, pattern, positions);
+			fits[i] = objectives.get(i).evaluateScore(network, pattern, positions);
 		}
 	}
 	

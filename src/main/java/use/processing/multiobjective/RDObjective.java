@@ -1,7 +1,8 @@
 package use.processing.multiobjective;
 
 import java.io.Serializable;
-import use.processing.rd.RDSystem;
+
+import reactionnetwork.ReactionNetwork;
 
 public abstract class RDObjective implements Serializable {
 
@@ -18,6 +19,6 @@ public abstract class RDObjective implements Serializable {
 	}
 	
 	
-	public abstract double evaluateScore(RDSystem system, boolean[][] pattern, boolean[][] position);
+	public abstract double evaluateScore(ReactionNetwork network, boolean[][] pattern, boolean[][] position);
 
 }

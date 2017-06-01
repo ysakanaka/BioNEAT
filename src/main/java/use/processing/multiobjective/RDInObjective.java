@@ -1,6 +1,6 @@
 package use.processing.multiobjective;
 
-import use.processing.rd.RDSystem;
+import reactionnetwork.ReactionNetwork;
 
 public class RDInObjective extends RDObjective{
 
@@ -12,7 +12,7 @@ public class RDInObjective extends RDObjective{
 	private static final long serialVersionUID = -1276715684260855245L;
 
 	@Override
-	public double evaluateScore(RDSystem system, boolean[][] pattern, boolean[][] positions) {
+	public double evaluateScore(ReactionNetwork network, boolean[][] pattern, boolean[][] positions) {
 		double in = 0.0;
 		double patternSize = 0.0;
 		

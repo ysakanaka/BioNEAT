@@ -166,9 +166,11 @@ public class Evolver implements Serializable {
 		});
 		}
 		Population population;
+		double time0 = System.currentTimeMillis();
 		if (readerMode) {
 			population = (Population) Serializer.deserialize(resultDirectory + "/population");
 		} else {
+			
 			population = popFactory.createPopulation(popSize, startingNetwork);
 			population.setFitnessFunction(fitnessFunction);
 			if (mutator == null) {
@@ -176,16 +178,23 @@ public class Evolver implements Serializable {
 			}
 			population.setMutator(mutator);
 		}
+		double time1 = System.currentTimeMillis();
+		System.out.println("Population init time: "+(time1-time0));
 
 		for (int i = 0; i < (readerMode ? population.getTotalGeneration() : maxGenerations); i++) {
-			System.out.println("Processing generation " + i);
+			if(Constants.debug) System.out.println("Processing generation " + i);
+			time0 = System.currentTimeMillis();
 			if (!readerMode) {
 				if (i == 0) {
 					population.resetPopulation();
 				} else {
 					population.evolve();
 				}
+				time1 = System.currentTimeMillis();
 				Serializer.serialize(resultDirectory + "/population", population);
+				double time2 = System.currentTimeMillis();
+				if(Constants.debug)System.out.println("Population evaluation time: "+(time1-time0));
+				if(Constants.debug)System.out.println("Population serialization time: "+(time2-time1));
 			}
 
 			if (!noGUI) displayPopulation(i, population);
