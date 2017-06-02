@@ -11,6 +11,7 @@ import model.chemicals.SequenceVertex;
 import reactionnetwork.ReactionNetwork;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
+import utils.RDLibrary;
 
 public class RDLexicographicFitnessFunction extends RDFitnessFunction{
 	
@@ -37,7 +38,8 @@ public class RDLexicographicFitnessFunction extends RDFitnessFunction{
 		  g.polConc = RDConstants.polConc;
 		  g.nickConc = RDConstants.nickConc;
 		 
-		  syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+		  syst.setNetwork(network);
+			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 		  syst.init(false); //no GUI
 		  
 		  for(int step=0; step<RDConstants.maxTimeEval; step++){

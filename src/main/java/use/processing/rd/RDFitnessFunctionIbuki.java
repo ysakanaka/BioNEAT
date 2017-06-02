@@ -31,7 +31,8 @@ public class RDFitnessFunctionIbuki extends RDFitnessFunction{
   g.exoConc=RDConstants.exoConc;
   g.polConc=RDConstants.polConc;
   g.nickConc=RDConstants.nickConc;
-  syst.os=new OligoSystem<String>(g,new PadiracTemplateFactory(g));
+  syst.setNetwork(network);
+	syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
   syst.init(false); // no GUI
   for(int step=0;step<RDConstants.maxTimeEval;step++){
    syst.update();

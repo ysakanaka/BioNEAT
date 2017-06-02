@@ -27,7 +27,7 @@ public class RDMultiobjectivePatternFitnessResult extends MultiobjectiveAbstract
 		this.conc = new float[Math.min(system.conc.length, RDConstants.glueIndex+3)][][];
 	    for(int i = 0; i<this.conc.length; i++) this.conc[i] = system.conc[i];
 		this.objectives = objectives;
-		this.network = system.network;
+		this.network = system.getReactionNetwork();
 		computePatternSize();
 		computePositions();
 		computeFits();

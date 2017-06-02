@@ -139,13 +139,18 @@ public class PatternEvaluator {
 		return res;
 	}
 	
+	//TODO: bad copy/pastes. I should use a generic interface "DistanceFunction" and just plug it in
+	//TODO: main issue: Hellinger has a different signature than the rest... All are wrong
+	//TODO: best would be float[][] float[][]
+	
 	public static double distanceRandomDistribution(boolean[][] pattern){
 		System.out.println("Evaluating distance of random bead distribution");
 		double avgdist = 0.0;
 		OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(RDLibrary.rdstart);
 		for (int i = 0; i<RDConstants.trials; i++){
 			RDSystem syst = new RDSystem();
-			syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+			syst.setNetwork(RDLibrary.rdstart);
+			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 			syst.init(false);
 			avgdist += distance(pattern,detectBeads(syst.conc[0].length, syst.conc[0][0].length,syst.beadsOnSpot));
 		}
@@ -158,7 +163,8 @@ public class PatternEvaluator {
 		OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(RDLibrary.rdstart);
 		for (int i = 0; i<RDConstants.trials; i++){
 			RDSystem syst = new RDSystem();
-			syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+			syst.setNetwork(RDLibrary.rdstart);
+			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 			syst.init(false);
 			for(int j=0; j<RDConstants.maxTimeEval; j++) syst.update();
 			avgdist += hellingerDistance(syst.conc[RDConstants.glueIndex],pattern);
@@ -173,7 +179,8 @@ public class PatternEvaluator {
 		OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(RDLibrary.rdstart);
 		for (int i = 0; i<RDConstants.trials; i++){
 			RDSystem syst = new RDSystem();
-			syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+			syst.setNetwork(RDLibrary.rdstart);
+			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 			syst.init(false);
 			for(int j=0; j<RDConstants.maxTimeEval; j++) syst.update();
 			boolean[][] positions = (RDConstants.useGlueAsTarget?PatternEvaluator.detectGlue(syst.conc[RDConstants.glueIndex])

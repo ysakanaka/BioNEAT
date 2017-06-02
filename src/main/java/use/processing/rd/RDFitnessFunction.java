@@ -72,7 +72,8 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 		  g.polConc = RDConstants.polConc;
 		  g.nickConc = RDConstants.nickConc;
 		 
-		  syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+		  syst.setNetwork(network);
+			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 		  syst.init(false); //no GUI
 		  
 		  for(int step=0; step<RDConstants.maxTimeEval; step++){
@@ -92,7 +93,8 @@ public class RDFitnessFunction extends AbstractFitnessFunction {
 	public AbstractFitnessResult evaluate(OligoGraph<SequenceVertex,String> g){
 		long startTime = System.currentTimeMillis();
 		RDSystem syst = new RDSystem();
-		syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+		syst.setNetwork(null); //TODO: should have a reverse engineering function
+		syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 		  syst.init(false); //no GUI
 		  
 		  for(int step=0; step<RDConstants.maxTimeEval; step++){

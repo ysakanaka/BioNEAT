@@ -25,6 +25,7 @@ import reactionnetwork.visual.RNVisualizationViewerFactory;
 import use.processing.bead.Bead;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
+import utils.RDLibrary;
 
 /**
  * This class is used to perform a GUI simulation of specific OligoGraph.
@@ -209,22 +210,20 @@ public class RDApplet extends PApplet{
 		public void setTestGraph(){
 		  OligoGraph<SequenceVertex,String> g;
 		  if(reac == null){
-			  g = GraphMaker.bottomLine();
-		   // g = GraphMaker.line();
-			//g = GraphMaker.makeAutocatalyst();
-		  
-		  } else {
+			 reac = RDLibrary.rdstart;
+		  }
+		  system.setNetwork(reac);
 			g = GraphMaker.fromReactionNetwork(reac);
 			//For debug
 			JFrame frame = new JFrame("Graph");
 			frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
 			frame.pack();
 			frame.setVisible(true);
-		  }
+		  
 		  g.exoConc = RDConstants.exoConc;
 		  g.polConc = RDConstants.polConc;
 		  g.nickConc = RDConstants.nickConc;
-		  system.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+		  system.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 		  
 		}
 

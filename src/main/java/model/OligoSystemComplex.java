@@ -13,11 +13,12 @@ import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
+import reactionnetwork.ReactionNetworkContainer;
 import utils.EdgeFactory;
 import utils.PseudoTemplateCapableTemplateFactory;
 import utils.VertexFactory;
 
-public class OligoSystemComplex {
+public class OligoSystemComplex implements ReactionNetworkContainer {
 	
 	public static boolean selfStart = false; //transmitted to the embedded graph.
 	
@@ -240,5 +241,9 @@ public class OligoSystemComplex {
 	
 	public HashMap<String, SequenceVertex> getEquiv(){
 		return equiv;
+	}
+	
+	public ReactionNetwork getReactionNetwork(){
+		return network;
 	}
 }

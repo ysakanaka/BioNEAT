@@ -33,7 +33,8 @@ public class RDAgencyFitnessFunction extends AbstractFitnessFunction {
 		  g.polConc = RDConstants.polConc;
 		  g.nickConc = RDConstants.nickConc;
 		 
-		  syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+		  syst.setNetwork(network);
+			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 		  syst.init(false); //no GUI or yes
 		  
 		  float concHistory[][][][] = new float[RDConstants.maxTimeEval/RDConstants.bigTimeStep][syst.chemicalSpecies][(int) (RDConstants.wsize/RDConstants.spaceStep)][(int) (RDConstants.hsize/RDConstants.spaceStep)];
@@ -63,7 +64,8 @@ public class RDAgencyFitnessFunction extends AbstractFitnessFunction {
 	public AbstractFitnessResult evaluate(OligoGraph<SequenceVertex,String> g){
 		long startTime = System.currentTimeMillis();
 		RDSystem syst = new RDSystem();
-		syst.os = new OligoSystem<String>(g, new PadiracTemplateFactory(g));
+		syst.setNetwork(null); //TODO: dummy; repeated code with RDFitnessFunction
+		syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 		  syst.init(false); //no GUI
 
 		float concHistory[][][][] = new float[RDConstants.maxTimeEval

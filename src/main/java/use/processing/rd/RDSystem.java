@@ -9,6 +9,8 @@ import com.google.common.collect.HashBasedTable;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
 import model.chemicals.Template;
+import reactionnetwork.ReactionNetwork;
+import reactionnetwork.ReactionNetworkContainer;
 import use.processing.bead.Aggregate;
 import use.processing.bead.Bead;
 import use.processing.parallel.DiffusionDispatcher;
@@ -18,7 +20,7 @@ import use.processing.parallel.DiffusionDispatcher;
  * @author naubertkato
  *
  */
-public class RDSystem{
+public class RDSystem implements ReactionNetworkContainer{
 	
 
 	public long totalBeads = 0; //for timing
@@ -49,9 +51,43 @@ public class RDSystem{
 
 	public ArrayList<Aggregate> aggregates = new ArrayList<Aggregate>();
 
-	transient public OligoSystem<String> os;
+	transient private OligoSystem<String> os;
+	protected ReactionNetwork network;
+	
+	public void setOS(OligoSystem<String> os){
+		this.os = os;
+	}
+	
+	public OligoSystem<String> getOS(){
+		return this.os;
+	}
+	
+	public ReactionNetwork getReactionNetwork(){
+		return network;
+	}
+	
+	protected void initNetwork(){
+		if(network != null) return;
+		if(ReactionNetworkContainer.class.isAssignableFrom(os.getClass())){
+			network= ((ReactionNetworkContainer) os).getReactionNetwork();
+		}
+		
+		//we have a plain old os, TODO we need to make a reaction network out of him
+		System.out.println("WARNING: RDSystem init Network: no reaction network provided");
+		network = null;
+	}
+	
+	public void setNetwork(ReactionNetwork network){
+		if(this.network != null) System.out.println("WARNING: RDSystem network setting: network already exist; replacing.");
+		
+		this.network = network;
+	}
 	
 	public void init(boolean GUI){
+		if(os == null){
+			System.err.println("ERROR: RDSystem init: no OligoSystem specified");
+		}
+		initNetwork();
 		  chemicalSpecies = os.getDimension();
 		  setSeqAddress();
 		  

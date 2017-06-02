@@ -80,7 +80,8 @@ public class PrintBatchNetworks {
 			gr.exoConc = RDConstants.exoConc;
 			gr.polConc = RDConstants.polConc;
 			gr.nickConc = RDConstants.nickConc;
-			syst.os = new OligoSystem<String>(gr, new PadiracTemplateFactory(gr));
+			syst.setNetwork(bestLastGen[i]); //TODO: repeated code with printlastgenerationbests
+			syst.setOS(new OligoSystem<String>(gr, new PadiracTemplateFactory(gr)));
 			syst.init(false);
 			for(int step = 0; step<reevaluationLenght; step++)syst.update();
 			

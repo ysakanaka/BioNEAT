@@ -48,8 +48,8 @@ public class Bead implements Serializable{
     this.temps = temps;
     connect = Constants.Kduplex;
     //Ok, os should have always the same 3 first species
-    model.chemicals.SequenceVertex glu = system.os.getSequences().get(RDConstants.glueIndex);
-    detach = Constants.Kduplex*system.os.getGraph().getK(glu);
+    model.chemicals.SequenceVertex glu = system.getOS().getSequences().get(RDConstants.glueIndex);
+    detach = Constants.Kduplex*system.getOS().getGraph().getK(glu);
     
     realx = (int) (x/RDConstants.spaceStep);
 	realy = (int) (y/RDConstants.spaceStep);

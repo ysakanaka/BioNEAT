@@ -27,7 +27,7 @@ public class DiffusingMechanism extends GenericThreadComputation<Boolean>{
   
   //Computing derivatives: for each template, add its local contribution
   if(system.beadsOnSpot.get(x, y)!=null){ //Beads have templates
-    for(Template<String> t : system.os.getTemplates()){
+    for(Template<String> t : system.getOS().getTemplates()){
       if (PadiracTemplate.class.isAssignableFrom(t.getClass())){
         PadiracTemplate pt = (PadiracTemplate) t;
         double conctemp = system.beadsOnSpot.get(x, y).size()*pt.totalConcentration;//system.conc[system.tempAddress.get(t)][x][y];
@@ -40,10 +40,10 @@ public class DiffusingMechanism extends GenericThreadComputation<Boolean>{
   }
   
   //Then add the contribution from exonuclease
-  for(SequenceVertex s: system.os.getSequences()){
+  for(SequenceVertex s: system.getOS().getSequences()){
     double exoKm = s.isInhib()?Constants.exoKmInhib:Constants.exoKmSimple;
     if (!RDSystem.isProtected(system.seqAddress.get(s))) concTemp[system.seqAddress.get(s)][x][y] -= RDConstants.timePerStep*system.conc[system.seqAddress.get(s)][x][y]
-    		*system.os.getGraph().exoConc*Constants.exoVm/exoKm;
+    		*system.getOS().getGraph().exoConc*Constants.exoVm/exoKm;
   }
   
   }
