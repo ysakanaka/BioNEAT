@@ -1,5 +1,6 @@
 package erne.visual;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.swing.JPanel;
@@ -35,6 +36,12 @@ public class BioNEATPopulationDisplayer implements PopulationDisplayer, Serializ
 			fitnessVisualPanel = speciesFactory.createSpeciesFitnessPanel(((BioNEATPopulation)population).getSpeciesByGenerations(),speciesFactory.getSpeciesColors(populationPanel));
 		}
 		return fitnessVisualPanel;
+	}
+	
+	private void readObject(java.io.ObjectInputStream in)
+		     throws IOException, ClassNotFoundException{
+		in.defaultReadObject();
+		this.speciesFactory = new SpeciesPlotFactory();
 	}
 
 }

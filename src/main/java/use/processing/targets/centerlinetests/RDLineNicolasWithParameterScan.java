@@ -53,11 +53,12 @@ public class RDLineNicolasWithParameterScan {
 	public static void main(String[] args)
 			throws InterruptedException, ExecutionException, IOException, ClassNotFoundException {
 		RDPatternFitnessResultIbuki.width = 0.2;
+		boolean debug = false;
 		boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		RDPatternFitnessResultIbuki.weightExponential = 0.1; // good candidate
 																// so far: 0.1
 																// 0.1
-		RDConstants.matchPenalty = -0.1;
+		RDConstants.matchPenalty = -0.06;
 
 		RDConstants.reEvaluation = 2;
 
@@ -67,15 +68,17 @@ public class RDLineNicolasWithParameterScan {
 		// RDBeadPositionFitnessFunction fitnessFunction = new
 		// RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
+		double ratio = 0.0;
 		boolean[][] fullMap = new boolean[target.length][target[0].length];
-		for (int i = 0; i < fullMap.length; i++) {
-			for (int j = 0; j < fullMap[0].length; j++) {
+		for (int i = (int) ratio*fullMap.length; i <  (1.0-ratio)* (double)fullMap.length; i++) {
+			for (int j = 0; j <fullMap[0].length; j++) {
 				fullMap[i][j] = true;
 			}
 		}
 		RDConstants.defaultRandomFitness = Math.max(0.0,
 				RDPatternFitnessResultIbuki.distanceNicolasExponential(target, fullMap));
 		System.out.println("Default fitness: " + RDConstants.defaultRandomFitness);
+		if (debug) return;
 		RDConstants.populationSize = 50;
 		RDConstants.maxGeneration = 200;//200;
 		RDConstants.maxTimeEval = 4000;//4000;
