@@ -114,6 +114,25 @@ public class RDConstants {
 		return sb.toString();
 	}
 	
+	public static String configsToString(Class<?> subConfigClass){
+		StringBuilder sb = new StringBuilder();
+		sb.append(new Date(System.currentTimeMillis()).toString()+"\n");
+		
+		Field[] f = subConfigClass.getFields();
+		
+		
+		for(int i=0; i<f.length; i++){
+			try {
+				sb.append(f[i].getName()+"="+f[i].get(null)+"\n"); //Only valid for static methods
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return sb.toString();
+	}
+	
 	public static void main(String[] args){
 		System.out.println(configsToString());
 	}

@@ -126,4 +126,8 @@ public class Individual implements Serializable {
 //		}
 		//network.nodes.removeAll(toRemove);
 	}
+
+	public void setReactionNetwork(ReactionNetwork network) {
+		this.network = network;
+	}
 }

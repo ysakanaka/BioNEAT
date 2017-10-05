@@ -62,6 +62,10 @@ public abstract class Population implements Serializable {
 	public void setFitnessFunction(AbstractFitnessFunction fitnessFunction) {
 		this.fitnessFunction = fitnessFunction;
 	}
+	
+	public AbstractFitnessFunction getFitnessFunction(){
+		return fitnessFunction;
+	}
 
 	public void setMutator(Mutator mutator) {
 		this.mutator = mutator;
@@ -123,7 +127,7 @@ public abstract class Population implements Serializable {
 		return new Individual[] { parent1, parent2 };
 	}
 
-	private void evaluateFitness() throws InterruptedException, ExecutionException {
+	protected void evaluateFitness() throws InterruptedException, ExecutionException {
 		Individual[] individuals = populations.get(populations.size() - 1);
 		System.out.println("Evaluating fitness");
 		List<ReactionNetwork> networks = new LinkedList<ReactionNetwork>();

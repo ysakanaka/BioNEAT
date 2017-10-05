@@ -3,6 +3,7 @@ package use.processing.cmaes;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +18,10 @@ import com.google.gson.GsonBuilder;
 import cluster.Cluster;
 import erne.AbstractFitnessFunction;
 import erne.AbstractFitnessResult;
+import erne.Evolver;
 import erne.Population;
+import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.cmaes.CMAESBuilder;
 import optimizers.cmaes.CMAEvolutionStrategy;
 import optimizers.cmaes.fitness.IObjectiveFunction;
 import reactionnetwork.Connection;
@@ -26,6 +30,7 @@ import reactionnetwork.Node;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import use.processing.rd.RDConstants;
+import use.processing.rd.RDFitnessDisplayer;
 import use.processing.rd.RDFitnessFunctionIbuki;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 
@@ -34,6 +39,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	public int popSize = 50;
 	public CMAEvolutionStrategy cma;
 	public String properties = System.getProperty("user.dir")+"/CMAES.config";
+	public boolean outputFiles = true;
 	
 	protected double[] baseGenome; // values of the parameters in structure: stability + concentration, i.e. the same as in BioNEAT
 	protected ReactionNetwork structure;
@@ -50,7 +56,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException, ExecutionException {
 		
 		ReactionNetwork reac = null;
 		
@@ -73,8 +79,16 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 			RDPatternFitnessResultIbuki.width = 0.2; //Only for center line
 			boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 			AbstractFitnessFunction fit = generateFitnessFunction(target);
-			RDCMAES rdcmaes = new RDCMAES(reac, fit);
-			rdcmaes.run();
+			//Legacy
+			//RDCMAES rdcmaes = new RDCMAES(reac, fit);
+			//rdcmaes.run();
+			//With new interface
+			EvolutionaryAlgorithm algorithm = new CMAESBuilder().buildAlgorithm();
+			Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, reac,
+					fit, new RDFitnessDisplayer(), algorithm);
+			evolver.setGUI(true);
+			evolver.setExtraConfig(RDConstants.configsToString());
+			evolver.evolve();
 		}
 	}
 	
@@ -82,7 +96,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
 		  RDConstants.matchPenalty=-0.1;
 		
-		  RDConstants.reEvaluation = 10;
+		  RDConstants.reEvaluation = 2; //10
 		  RDConstants.evalRandomDistance = false;
 		  RDConstants.defaultRandomFitness = 0.0;
 		  RDConstants.maxTimeEval = 4000;
@@ -154,7 +168,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
-		cma.writeToDefaultFilesHeaders(0);
+		if (outputFiles) cma.writeToDefaultFilesHeaders(0);
 		double[] fitness = this.cma.init();
 		Cluster.start();
 		 while (this.cma.stopConditions.getNumber() == 0)
@@ -191,7 +205,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
  
         this.cma.updateDistribution(fitness);
  
-        this.cma.writeToDefaultFiles();
+        if (outputFiles) this.cma.writeToDefaultFiles();
        int outmod = 5;
        if (this.cma.getCountIter() % (15 * outmod) == 1L) {
          String output = this.cma.getPrintAnnotation();
@@ -213,7 +227,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
        output = output + "  " + s + "\n";
     output = output + "best function value " + this.cma.getBestFunctionValue() + " at evaluation " + this.cma.getBestEvaluationNumber();
     System.out.println(output);
-    this.cma.writeToDefaultFiles(1);
+    if (outputFiles) this.cma.writeToDefaultFiles(1);
 	Cluster.stop();
 	}
 

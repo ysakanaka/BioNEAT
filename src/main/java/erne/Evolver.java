@@ -60,6 +60,8 @@ public class Evolver implements Serializable {
 	private PopulationDisplayer popDisplayer;
 	private transient String resultDirectory;
 	private transient PopulationFactory popFactory;
+	private transient Population population;
+	private transient boolean saveEvo = true; 
 
 	public static final int DEFAULT_POP_SIZE = 50;
 	public static final int MAX_GENERATIONS = 200;
@@ -90,6 +92,10 @@ public class Evolver implements Serializable {
 	// In case we want to save an extra file
 	public void setExtraConfig(String conf){
 		extraConfig = conf;
+	}
+	
+	public void setSaveEvo(boolean bool){
+		saveEvo = bool;
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction) throws IOException {
@@ -133,7 +139,8 @@ public class Evolver implements Serializable {
 			System.out.println("ERNe version: " + Serializer.deserialize(resultDirectory + "/version"));
 			Evolver savedEvolver = (Evolver) Serializer.deserialize(resultDirectory + "/evolver");
 			System.out.println("Inspect this object for evolution details: " + savedEvolver);
-		} else {
+		} else if(saveEvo) {
+			
 			if ((resultDirectory = createResultDirectory()) == null) {
 				System.out.println("Cannot create result directory");
 				return;
@@ -145,6 +152,7 @@ public class Evolver implements Serializable {
 				fileOut.write(extraConfig);
 				fileOut.close();
 			}
+			
 		}
 		if (!noGUI){
 
@@ -165,7 +173,6 @@ public class Evolver implements Serializable {
 			
 		});
 		}
-		Population population;
 		double time0 = System.currentTimeMillis();
 		if (readerMode) {
 			population = (Population) Serializer.deserialize(resultDirectory + "/population");
@@ -191,7 +198,7 @@ public class Evolver implements Serializable {
 					population.evolve();
 				}
 				time1 = System.currentTimeMillis();
-				Serializer.serialize(resultDirectory + "/population", population);
+				if (saveEvo) Serializer.serialize(resultDirectory + "/population", population);
 				double time2 = System.currentTimeMillis();
 				if(Constants.debug)System.out.println("Population evaluation time: "+(time1-time0));
 				if(Constants.debug)System.out.println("Population serialization time: "+(time2-time1));
@@ -268,7 +275,8 @@ public class Evolver implements Serializable {
 			
 					population.evolve();
 				
-				Serializer.serialize(resultDirectory + "/population", population);
+					//We may not want to override
+				    if(saveEvo) Serializer.serialize(resultDirectory + "/population", population);
 			
 
 			if (!noGUI) displayPopulation(i, population); //pop size just increased
@@ -329,10 +337,6 @@ public class Evolver implements Serializable {
 
 	}
 	
-	protected void windowDisplay(){
-		
-	}
-	
 	public static boolean hasGUI(){
 		File config = new File("global.config");
 		System.out.println(config.getAbsolutePath());
@@ -376,11 +380,8 @@ public class Evolver implements Serializable {
 		return ret;
 	}
 	
-	public static Individual getBestEver(String resultDirectory) throws ClassNotFoundException, IOException{
+	public static Individual getBestEver(Population population){
 		Individual ret = null;
-		Population population;
-		
-		population = (Population) Serializer.deserialize(resultDirectory + "/population");
 		for(int i = 0; i<population.getTotalGeneration(); i++){
 			PopulationInfo info = population.getPopulationInfo(i);
 			Individual temp = info.getBestIndividual();
@@ -388,6 +389,25 @@ public class Evolver implements Serializable {
 		}
 		return ret;
 	}
+	
+	public static Individual getBestEver(String resultDirectory) throws ClassNotFoundException, IOException{
+		
+		Population population;
+		
+		population = (Population) Serializer.deserialize(resultDirectory + "/population");
+		return getBestEver(population);
+	}
+	
+	public Individual getBestEver() {
+		Individual ret = null;
+		for(int i = 0; i<population.getTotalGeneration(); i++){
+			PopulationInfo info = population.getPopulationInfo(i);
+			Individual temp = info.getBestIndividual();
+			if(ret == null || ret.getFitnessResult().getFitness() < temp.getFitnessResult().getFitness()) ret = temp;
+		}
+		return ret;
+	}
+	
 	
 	public static Individual[] getBestOverTime(String resultDirectory) throws ClassNotFoundException, IOException{
 		

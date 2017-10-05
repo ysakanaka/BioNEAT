@@ -25,6 +25,7 @@ public class RDFitnessFunctionIbuki extends RDFitnessFunction{
  @Override public AbstractFitnessResult evaluate(ReactionNetwork network){
   long startTime=System.currentTimeMillis();
   AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
+  //System.out.println(network);
   for(int i= 0; i<RDConstants.reEvaluation; i++){
   RDSystem syst=new RDSystem();
   OligoGraph<SequenceVertex,String> g=GraphMaker.fromReactionNetwork(network);
@@ -37,6 +38,7 @@ public class RDFitnessFunctionIbuki extends RDFitnessFunction{
   for(int step=0;step<RDConstants.maxTimeEval;step++){
    syst.update();
   }
+  //System.out.println(Arrays.toString(syst.conc[3][10]));
   if(RDConstants.timing){
    System.out.println("total time: "+(System.currentTimeMillis()-startTime));
    System.out.println("total bead update:"+syst.totalBeads);

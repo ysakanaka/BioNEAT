@@ -58,7 +58,7 @@ public class RDLineNicolasWithParameterScan {
 		RDPatternFitnessResultIbuki.weightExponential = 0.1; // good candidate
 																// so far: 0.1
 																// 0.1
-		RDConstants.matchPenalty = -0.06;
+		RDConstants.matchPenalty = -0.05;
 
 		RDConstants.reEvaluation = 2;
 
