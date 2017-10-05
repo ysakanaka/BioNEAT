@@ -14,7 +14,7 @@ public class RunGaussian {
         erne.Constants.maxEvalClockTime = -1;
         
 		Evolver evolver = new Evolver(Library.startingMath, fitnessFunction, new GaussianFitnessDisplayer());
-		evolver.setGUI(true);
+		//evolver.setGUI(true);
 		evolver.evolve();
         System.out.println("Evolution completed.");
         //System.exit(0);
