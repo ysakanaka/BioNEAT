@@ -37,7 +37,7 @@ Version info
 
 ::
 
-  ./gradlew version
+  ./gradlew -v
 
 Create Eclipse project
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -57,7 +57,7 @@ Create IntelliJ project
 Run the Demo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-main class of use.processing.target.RDLine
+main class of use.processing.targets.RDBottomNicolas
 
 
 Production
@@ -79,4 +79,19 @@ Version info
 
 ::
 
-  ./gradlew version
+  ./gradlew -v
+  
+
+Compiling
+~~~~~~~~~
+
+::
+
+  ./gradlew dist
+  
+Run the Demo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+  
+  ./build/dist/start.sh use.processing.targets.RDBottomNicolas
