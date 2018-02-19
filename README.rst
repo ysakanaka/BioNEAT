@@ -37,7 +37,7 @@ Version info
 
 ::
 
-  ./gradlew version
+  ./gradlew -v
 
 Create Eclipse project
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -79,7 +79,7 @@ Version info
 
 ::
 
-  ./gradlew version
+  ./gradlew -v
   
 
 Compiling
