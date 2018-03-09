@@ -13,4 +13,5 @@ public class Constants {
 	public static int maxEvalClockTime = 30; //in seconds; -1 means no time out
 	public static double comparisonThreshold = 0.0; //for multiobjective and lexicographic fitnesses.
 	public static boolean debug = false;
+	public static boolean stabilityCheck = false;
 }

@@ -36,7 +36,7 @@ public class StopableStepHandler implements StepHandler {
 			}
 			timeSerie.add(expression);
 
-			if (time > minTimeStable - timeToCheckStability) {
+			if (erne.Constants.stabilityCheck && time > minTimeStable - timeToCheckStability) {
 				boolean stable = true;
 				for (int i = 0; i < expression.length; i++) {
 					if (Math.abs(expression[i] - timeSerie.get(time - 1)[i]) > changeThresholdStable) {
@@ -60,7 +60,7 @@ public class StopableStepHandler implements StepHandler {
 				}
 			}
 		}
-		
+
 
 	}
 
