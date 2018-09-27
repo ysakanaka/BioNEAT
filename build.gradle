@@ -109,7 +109,7 @@ task dist(type: Copy) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
+    gradleVersion = '4.5'
 }
 
 test {
