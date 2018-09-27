@@ -15,7 +15,7 @@ public class ReactionNetworkDeserializer implements
 
 	public ReactionNetwork deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
-		JsonObject jobject = (JsonObject) json;
+		JsonObject jobject = json.getAsJsonObject();
 		ReactionNetwork network = new ReactionNetwork();
 
 		JsonArray nodes = jobject.getAsJsonArray("nodes");

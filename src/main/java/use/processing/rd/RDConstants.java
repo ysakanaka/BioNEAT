@@ -1,7 +1,10 @@
 package use.processing.rd;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Date;
+
+import com.google.common.base.Strings;
 
 public class RDConstants {
 	
@@ -62,7 +65,7 @@ public class RDConstants {
 	public static int coverageVBins = 7;
 	public static boolean evalRandomDistance = true; //before starting, check the distance between a random dist and the pattern.
 	public static double defaultRandomFitness = 2.0; //if not, use this one
-	public static int trials = 10; //Average over how many attempts?
+	//public static int trials = 10; //Average over how many attempts?
 	
 	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?
 	public static int maxNodes = 6;
@@ -96,22 +99,7 @@ public class RDConstants {
 	//TODO add a function to read parameters from outside
 	
 	public static String configsToString(){
-		StringBuilder sb = new StringBuilder();
-		sb.append(new Date(System.currentTimeMillis()).toString()+"\n");
-		
-		Field[] f = RDConstants.class.getFields();
-		
-		
-		for(int i=0; i<f.length; i++){
-			try {
-				sb.append(f[i].getName()+"="+f[i].get(null)+"\n"); //Only valid for static methods
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		return sb.toString();
+		return configsToString(RDConstants.class);
 	}
 	
 	public static String configsToString(Class<?> subConfigClass){
@@ -123,7 +111,11 @@ public class RDConstants {
 		
 		for(int i=0; i<f.length; i++){
 			try {
-				sb.append(f[i].getName()+"="+f[i].get(null)+"\n"); //Only valid for static methods
+				if(f[i].getType().isArray()){
+					sb.append(f[i].getName()+"="+Arrays.deepToString((Object[]) f[i].get(null))+"\n");
+				} else {
+					sb.append(f[i].getName()+"="+f[i].get(null)+"\n"); //Only valid for static methods
+				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -131,6 +123,67 @@ public class RDConstants {
 		}
 		
 		return sb.toString();
+	}
+	
+	/**
+	 * A parameter setting is formated as parameterName = parameterValue
+	 * @param subConfigClass the class to update
+	 * @param parameterName
+	 * @param parameterValue
+	 */
+	public static void readConfigFromString(Class<?> subConfigClass, String parameterName, String parameterValue){
+		Field[] fields = subConfigClass.getFields();
+			
+			
+			for(int j = 0; j<fields.length; j++){
+				if(fields[j].getName().trim().equals(parameterName.trim())){
+					//We found the field, update the parameter
+					//Now we need to parse correctly the parameter's value
+					try {
+						switch(fields[j].getType().toString()){
+							case "Integer":
+							case "int":
+						
+								fields[j].setInt(null, Integer.parseInt(parameterValue.trim()));
+								break;
+							case "Float":
+							case "float":
+						
+								fields[j].setFloat(null, Float.parseFloat(parameterValue.trim()));
+								break;
+							case "Double":
+							case "double":
+						
+								fields[j].setDouble(null, Double.parseDouble(parameterValue.trim()));
+								break;
+							case "Boolean":
+							case "boolean":
+						
+								fields[j].setBoolean(null, Boolean.parseBoolean(parameterValue.trim()));
+								break;
+							case "String":
+							case "class java.lang.String":
+								fields[j].set(null, parameterValue.trim());
+								break;
+							case "String[]":
+							case "class [Ljava.lang.String;":
+								String base = parameterValue.trim(); // format: [ , ... , ]
+								base = base.substring(1, base.length()-1); //removed surrounding brackets
+								String[] vals = base.split("\\s*,\\s*");
+								fields[j].set(null, vals);
+								break;
+							default:
+								System.out.println(fields[j].getType().toString());
+						
+						}
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//fields[j].set(null, );
+				}
+			}
+		
 	}
 	
 	public static void main(String[] args){
