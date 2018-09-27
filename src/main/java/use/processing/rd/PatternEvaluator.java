@@ -147,21 +147,21 @@ public class PatternEvaluator {
 		System.out.println("Evaluating distance of random bead distribution");
 		double avgdist = 0.0;
 		OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(RDLibrary.rdstart);
-		for (int i = 0; i<RDConstants.trials; i++){
+		for (int i = 0; i<RDConstants.reEvaluation; i++){
 			RDSystem syst = new RDSystem();
 			syst.setNetwork(RDLibrary.rdstart);
 			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 			syst.init(false);
 			avgdist += distance(pattern,detectBeads(syst.conc[0].length, syst.conc[0][0].length,syst.beadsOnSpot));
 		}
-		return avgdist/(double)RDConstants.trials;
+		return avgdist/(double)RDConstants.reEvaluation;
 	}
 	
 	public static double hellingerDistanceRandomDistribution(boolean[][] pattern){
 		System.out.println("Evaluating distance of random bead distribution");
 		double avgdist = 0.0;
 		OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(RDLibrary.rdstart);
-		for (int i = 0; i<RDConstants.trials; i++){
+		for (int i = 0; i<RDConstants.reEvaluation; i++){
 			RDSystem syst = new RDSystem();
 			syst.setNetwork(RDLibrary.rdstart);
 			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
@@ -169,7 +169,7 @@ public class PatternEvaluator {
 			for(int j=0; j<RDConstants.maxTimeEval; j++) syst.update();
 			avgdist += hellingerDistance(syst.conc[RDConstants.glueIndex],pattern);
 		}
-		return avgdist/(double)RDConstants.trials;
+		return avgdist/(double)RDConstants.reEvaluation;
 	}
 	
 		
@@ -177,7 +177,7 @@ public class PatternEvaluator {
 		System.out.println("Evaluating distance of random bead distribution");
 		double avgdist = 0.0;
 		OligoGraph<SequenceVertex,String> g = GraphMaker.fromReactionNetwork(RDLibrary.rdstart);
-		for (int i = 0; i<RDConstants.trials; i++){
+		for (int i = 0; i<RDConstants.reEvaluation; i++){
 			RDSystem syst = new RDSystem();
 			syst.setNetwork(RDLibrary.rdstart);
 			syst.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
@@ -187,7 +187,7 @@ public class PatternEvaluator {
 					:PatternEvaluator.detectBeads(pattern.length, pattern[0].length,syst.beadsOnSpot));
 			avgdist += matchOnPattern(pattern,positions);
 		}
-		return avgdist/(double)RDConstants.trials;
+		return avgdist/(double)RDConstants.reEvaluation;
 	}
 	
 	public static int[][] getDistanceMatrix(boolean[][] pattern){
