@@ -38,6 +38,7 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
+	public static boolean showGraph = true;
 	//public static ArrayList<RDObjective> features = new ArrayList<RDObjective>(); TODO
 
 	public static void main(String[] args) {
@@ -94,7 +95,7 @@ public class EvaluateIndividualWithDescriptors {
 		  RDFitnessResult fitness;
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
-		  
+		  if (showGraph) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
 		  boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		  for(int i = 0; i<RDConstants.reEvaluation;i++){
 			  RDSystem system = new RDSystem();
@@ -102,21 +103,13 @@ public class EvaluateIndividualWithDescriptors {
 			  system.init(false); //with full power, because we are doing parallel eval (maybe)
 		  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
 		  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
-		  sb.append("fitness"+i+" = "+fitness+"\n");
-		  sb.append("in"+i+" = "+inObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]))+"\n");
-		  sb.append("out"+i+" = "+(1.0-outObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex])))+"\n");
+		  sb.append("fitness"+i+": "+fitness+"\n");
+		  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]))+"\n");
+		  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex])))+"\n");
 		  }
-		  sb.append("nTemplate = "+reac.getNEnabledConnections()+"\n");
+		  sb.append("nTemplate: "+reac.getNEnabledConnections()+"\n");
 		  
-		  PrintWriter fileOut;
-		try {
-			fileOut = new PrintWriter(outputfilename);
-			fileOut.write(sb.toString());
-			fileOut.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		  System.out.println(sb.toString());
 			
 	}
 
@@ -128,10 +121,12 @@ public static void setTestGraph(RDSystem system){
 	  system.setNetwork(reac);
 		g = GraphMaker.fromReactionNetwork(reac);
 		//For debug
-		JFrame frame = new JFrame("Graph");
-		frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
-		frame.pack();
-		frame.setVisible(true);
+		if(showGraph) {
+		  JFrame frame = new JFrame("Graph");
+		  frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
+		  frame.pack();
+		  frame.setVisible(true);
+		}
 	  
 	  g.exoConc = RDConstants.exoConc;
 	  g.polConc = RDConstants.polConc;
