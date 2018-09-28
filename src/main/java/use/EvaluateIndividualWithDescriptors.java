@@ -38,7 +38,6 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
-	public static boolean showGraph = true;
 	//public static ArrayList<RDObjective> features = new ArrayList<RDObjective>(); TODO
 
 	public static void main(String[] args) {
@@ -95,7 +94,7 @@ public class EvaluateIndividualWithDescriptors {
 		  RDFitnessResult fitness;
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
-		  if (showGraph) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
+		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
 		  boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 		  for(int i = 0; i<RDConstants.reEvaluation;i++){
 			  RDSystem system = new RDSystem();
@@ -121,7 +120,7 @@ public static void setTestGraph(RDSystem system){
 	  system.setNetwork(reac);
 		g = GraphMaker.fromReactionNetwork(reac);
 		//For debug
-		if(showGraph) {
+		if(RDConstants.displayGraph) {
 		  JFrame frame = new JFrame("Graph");
 		  frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
 		  frame.pack();
