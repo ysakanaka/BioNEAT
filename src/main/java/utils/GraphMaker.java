@@ -407,7 +407,7 @@ public class GraphMaker {
 				}
 				if (from == null || to == null) continue;
 				Connection inhibited = network.getConnectionByEnds(from, to);
-				if (!inhibited.enabled) continue; // we ignore the species
+				if (inhibited != null && !inhibited.enabled) continue; // we ignore the species
 			}
 			SequenceVertex s = graph.getVertexFactory().create();
 			s.initialConcentration = n.initialConcentration;
