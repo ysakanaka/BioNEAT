@@ -38,6 +38,7 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
+	public static boolean[][] target = null;
 	//public static ArrayList<RDObjective> features = new ArrayList<RDObjective>(); TODO
 
 	public static void main(String[] args) {
@@ -59,15 +60,18 @@ public class EvaluateIndividualWithDescriptors {
 					String[] paramPair = line.split("\\s*=\\s*");
 					String trimmedParamName = paramPair[0].trim();
 					if(trimmedParamName.startsWith("#") || paramPair.length != 2) continue; //Incorrect format or comment
-						
-					RDConstants.readConfigFromString(Constants.class,trimmedParamName, paramPair[1]);
-					RDConstants.readConfigFromString(RDConstants.class,trimmedParamName, paramPair[1]);
+					
+					if(trimmedParamName.equals("target")) {
+						target = setTarget(paramPair[1].trim().toLowerCase());
+					} else {
+						RDConstants.readConfigFromString(Constants.class,trimmedParamName, paramPair[1]);
+						RDConstants.readConfigFromString(RDConstants.class,trimmedParamName, paramPair[1]);
+					}
 					
 				}
 				br.close();
 				
-				br = new BufferedReader(new FileReader(args[1]));
-				reac = gson.fromJson(br, ReactionNetwork.class);
+				
 
 			} catch (FileNotFoundException e) {
 
@@ -75,6 +79,22 @@ public class EvaluateIndividualWithDescriptors {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			
+			 
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(args[1]));
+				reac = gson.fromJson(br, ReactionNetwork.class);
+				br.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 			
 			evaluateIndividual(reac,outputfilename);
 			
@@ -95,7 +115,10 @@ public class EvaluateIndividualWithDescriptors {
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
 		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
-		  boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
+		  if (target == null) {
+			  System.out.println("warning: TargetUndefined");
+			  target = RDPatternFitnessResultIbuki.getCenterLine();
+		  }
 		  for(int i = 0; i<RDConstants.reEvaluation;i++){
 			  RDSystem system = new RDSystem();
 			  setTestGraph(system);
@@ -146,6 +169,34 @@ public static void setTestGraph(RDSystem system){
 		}
 
 		return object;
+	}
+	
+	public static boolean[][] setTarget(String name){
+		switch(name) {
+		case "top":
+			return RDPatternFitnessResultIbuki.getTopLine();
+		case "bottom":
+			return RDPatternFitnessResultIbuki.getBottomLine();
+		case "left":
+			return RDPatternFitnessResultIbuki.getLeftLine();
+		case "right":
+			return RDPatternFitnessResultIbuki.getRightLine();
+		case "center":
+			return RDPatternFitnessResultIbuki.getCenterLine();
+		case "center-top":
+			return RDPatternFitnessResultIbuki.getTopCenterLine();
+		case "center-bottom":
+			return RDPatternFitnessResultIbuki.getBottomCenterLine();
+		case "smiley":
+			return RDPatternFitnessResultIbuki.getSmileyFace();
+		case "disk":
+			return RDPatternFitnessResultIbuki.getDisk();
+		case "circle":
+			return RDPatternFitnessResultIbuki.getCircle();
+			
+		}
+		
+		return null;
 	}
 
 }
