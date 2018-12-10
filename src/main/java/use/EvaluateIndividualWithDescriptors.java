@@ -28,11 +28,13 @@ import use.processing.multiobjective.RDOutObjective;
 import use.processing.rd.PatternEvaluator;
 import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessResult;
+import use.processing.rd.RDPatternFitnessResult;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import use.processing.rd.RDSystem;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 import utils.RDLibrary;
+import utils.RunningStatsAnalysis;
 
 public class EvaluateIndividualWithDescriptors {
 
@@ -111,7 +113,7 @@ public class EvaluateIndividualWithDescriptors {
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		//RDConstants.matchPenalty=-0.1;
 		  StringBuilder sb = new StringBuilder("");
-		  RDFitnessResult fitness;
+		  RDPatternFitnessResult fitness;
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
 		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
@@ -119,16 +121,31 @@ public class EvaluateIndividualWithDescriptors {
 			  System.out.println("warning: TargetUndefined");
 			  target = RDPatternFitnessResultIbuki.getCenterLine();
 		  }
-		  for(int i = 0; i<RDConstants.reEvaluation;i++){
+		  int realEvaluations = RDConstants.reEvaluation;
+		  RunningStatsAnalysis rsa = new RunningStatsAnalysis();
+		  for(int i = 0; i<realEvaluations;i++){
 			  RDSystem system = new RDSystem();
 			  setTestGraph(system);
 			  system.init(false); //with full power, because we are doing parallel eval (maybe)
-		  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
-		  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
-		  sb.append("fitness"+i+": "+fitness+"\n");
-		  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]))+"\n");
-		  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex])))+"\n");
+			  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
+			  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
+			  rsa.addData(fitness.getFitness());
+			  
+			  sb.append("fitness"+i+": "+fitness+"\n");
+			  sb.append("meansofar"+i+": "+rsa.getMean()+"\n");
+			  sb.append("sdsofar"+i+": "+rsa.getStandardDeviation()+"\n");
+			  sb.append("sesofar"+i+": "+rsa.getStandardError()+"\n");
+			  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]))+"\n");
+			  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex])))+"\n");
+		      //moving goal post
+			  if(i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
+					  && realEvaluations < RDConstants.maxReEvaluation && rsa.getStandardError() > RDConstants.standardErrorThreshold) {
+				  realEvaluations++;
+			  }
 		  }
+		  sb.append("nEvaluations: "+realEvaluations+"\n");
+		  sb.append("standardDeviation: "+rsa.getStandardDeviation()+"\n");
+		  sb.append("standardError: "+rsa.getStandardError()+"\n");
 		  sb.append("nTemplate: "+reac.getNEnabledConnections()+"\n");
 		  
 		  System.out.println(sb.toString());
@@ -156,6 +173,8 @@ public static void setTestGraph(RDSystem system){
 	  system.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
 	  
 	}
+
+
 	
 	protected static <T> T loadNewInstance(String className){
 		T object = null;

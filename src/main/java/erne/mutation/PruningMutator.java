@@ -2,6 +2,7 @@ package erne.mutation;
 
 import java.util.ArrayList;
 
+import erne.Constants;
 import erne.Individual;
 import reactionnetwork.Connection;
 import reactionnetwork.Node;
@@ -62,7 +63,7 @@ public class PruningMutator extends Mutator {
 								continue;
 							}
 							Connection inhibited = rn.getConnectionByEnds(from, to);
-							if (!inhibited.enabled){
+							if (inhibited == null || !inhibited.enabled){
 								toRemove.add(n);
 								continue;
 							}
@@ -83,7 +84,7 @@ public class PruningMutator extends Mutator {
 					if(!toRemove.isEmpty()){
 						if(!doingIt){
 							doingIt = true;
-							System.out.println("before prunning: "+mut);
+							if(Constants.debug) System.out.println("before prunning: "+mut);
 						}
 		              for (Connection c : rn.connections){
 						  if (toRemove.contains(c.from) || toRemove.contains(c.to)) toRemoveConnection.add(c);
@@ -93,7 +94,7 @@ public class PruningMutator extends Mutator {
 					  rn.connections.removeAll(toRemoveConnection);
 					}
 				}while(!toRemove.isEmpty()); //we removed some stuff
-				if(doingIt) System.out.println("after prunning: "+mut);
+				if(doingIt && Constants.debug) System.out.println("after prunning: "+mut);
 				return mut;
 	}
 	

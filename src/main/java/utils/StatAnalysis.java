@@ -72,6 +72,14 @@ public class StatAnalysis {
 		return new Pair<Double>(mean,sd);
 	}
 	
+	public static double getStandardError(int sampleSize, double sd) {
+		if (sampleSize <1) {
+			System.err.println("getStandardErrod: Incorrect sample size "+sampleSize);
+			return -1.0;
+		}
+		return sd/Math.sqrt((double)sampleSize);
+	}
+	
 	public static double getU(double[] vals1, double[] vals2){
 		double u = 0.0;
 		
