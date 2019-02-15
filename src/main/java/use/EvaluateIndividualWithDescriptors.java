@@ -22,6 +22,7 @@ import reactionnetwork.ConnectionSerializer;
 import reactionnetwork.ReactionNetwork;
 import reactionnetwork.ReactionNetworkDeserializer;
 import reactionnetwork.visual.RNVisualizationViewerFactory;
+import use.processing.features.RDFeature;
 import use.processing.multiobjective.RDInObjective;
 import use.processing.multiobjective.RDObjective;
 import use.processing.multiobjective.RDOutObjective;
@@ -40,8 +41,9 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
-	public static boolean[][] target = null;
-	//public static ArrayList<RDObjective> features = new ArrayList<RDObjective>(); TODO
+	public static boolean[][] target = null; //TODO should be moved into a general fitness class
+	public static double width = 0.3; //TODO should be moved into a general fitness class
+	public static ArrayList<RDFeature> features = new ArrayList<RDFeature>();
 
 	public static void main(String[] args) {
 
@@ -65,7 +67,10 @@ public class EvaluateIndividualWithDescriptors {
 					
 					if(trimmedParamName.equals("target")) {
 						target = setTarget(paramPair[1].trim().toLowerCase());
-					} else {
+					} else if(trimmedParamName.equals("width")) {
+					    width = Double.parseDouble(paramPair[1].trim());
+					}
+					else {
 						RDConstants.readConfigFromString(Constants.class,trimmedParamName, paramPair[1]);
 						RDConstants.readConfigFromString(RDConstants.class,trimmedParamName, paramPair[1]);
 					}
@@ -109,7 +114,7 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static void evaluateIndividual(ReactionNetwork r, String outputfilename) {
 		//RDConstants.maxBeads = 500;
-		RDPatternFitnessResultIbuki.width = 0.3;
+		RDPatternFitnessResultIbuki.width = width;
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		//RDConstants.matchPenalty=-0.1;
 		  StringBuilder sb = new StringBuilder("");
