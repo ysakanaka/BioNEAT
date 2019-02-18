@@ -13,6 +13,8 @@ import javax.swing.JFrame;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import erne.Individual;
+import erne.mutation.PruningMutator;
 import model.OligoGraph;
 import model.OligoSystem;
 import model.chemicals.SequenceVertex;
@@ -32,7 +34,7 @@ public class RDAppletMore extends PApplet{
 	static float maxTime = 0;
 	static String name;
 	
-	static boolean selfRepair = true; //Do we remove a bunch of beads?
+	static boolean selfRepair = false; //Do we remove a bunch of beads? //TODO
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
 	static int fullRun = 300000000;
 	
@@ -64,6 +66,13 @@ public class RDAppletMore extends PApplet{
 		}
 		}
 		
+		
+		//int temps = reac.getNEnabledConnections();
+		//System.out.println("Connections "+temps);
+		//reac = PruningMutator.prune(new Individual(reac)).getNetwork();
+		//temps = reac.getNEnabledConnections();
+		//System.out.println("Connections "+temps);
+		
 		//RDConstants.hsize = 250;
 		//RDConstants.wsize = 250;
 		//RDConstants.spaceStep = 2.0f;
@@ -76,13 +85,13 @@ public class RDAppletMore extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 1000/bigTimeStep;
+		maxTime = 400000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
-		 RDPatternFitnessResultIbuki.width = 0.2;
+		 RDPatternFitnessResultIbuki.width = 0.3;
 		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 
