@@ -29,7 +29,7 @@ public class RDLineNicolasGoodParams {
 	RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
 	  RDConstants.matchPenalty=-0.1;
 	
-	  RDConstants.reEvaluation = 1; //TODO ws 10
+	  RDConstants.reEvaluation = 5; //TODO ws 10
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
@@ -43,7 +43,7 @@ public class RDLineNicolasGoodParams {
 		   System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
 		   RDConstants.populationSize=50;
 		RDConstants.maxGeneration = 200;
-		RDConstants.maxTimeEval = 4; //TODO was 4000
+		RDConstants.maxTimeEval = 4000; //TODO was 4000
 		RDConstants.hardTrim = false;
 		RDConstants.maxNodes = 16;
 		RDConstants.maxBeads = 500;
