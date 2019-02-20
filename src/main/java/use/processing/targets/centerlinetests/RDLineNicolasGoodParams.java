@@ -52,7 +52,7 @@ public class RDLineNicolasGoodParams {
 		RDConstants.weightDisableTemplate = 1;
 		  RDConstants.weightMutateParameter = 96;
 		  RDConstants.weightAddActivationWithGradients = 1;
-		  RDConstants.weightAddInhibitionWithGradients = 10000;
+		  RDConstants.weightAddInhibitionWithGradients = 1;
 		  RDConstants.weightAddNodeWithGradients = 1;
 	  //RDConstants.cutOff = 10.0f;
 	
