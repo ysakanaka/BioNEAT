@@ -337,8 +337,12 @@ public class Evolver implements Serializable {
 
 	}
 	
-	public static boolean hasGUI(){
-		File config = new File("global.config");
+	public static boolean hasGUI() {
+		return hasGUI("global.config");
+	}
+	
+	public static boolean hasGUI(String file){
+		File config = new File(file);
 		System.out.println(config.getAbsolutePath());
 		if(!config.exists()){
 			System.out.println("Couldn't find a configuration file");
