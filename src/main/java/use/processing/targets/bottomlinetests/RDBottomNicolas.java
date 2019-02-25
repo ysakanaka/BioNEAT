@@ -24,12 +24,12 @@ import utils.RDLibrary;
 
 public class RDBottomNicolas {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-		RDPatternFitnessResultIbuki.width = 0.2;
+		RDPatternFitnessResultIbuki.width = 0.3;
 		boolean[][] target = RDPatternFitnessResultIbuki.getBottomLine();
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 		
-		RDConstants.reEvaluation = 10;
+		RDConstants.reEvaluation = 5;
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
