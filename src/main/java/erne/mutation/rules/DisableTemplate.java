@@ -20,7 +20,7 @@ public class DisableTemplate extends MutationRule {
 	public Individual mutate(Individual indiv) {
 		for (Connection conn : indiv.getNetwork().connections) {
 			if (conn.enabled && rand.nextDouble() < probGeneMutation) {
-				if (rand.nextDouble() < Math.min(1, Math.max(0, probConnectionDisabling - Math.log(conn.parameter)))
+                if (rand.nextDouble() < Math.min(1, Math.max(0, probConnectionDisabling - Math.log10(conn.parameter / 10.0)))
 						&& indiv.getNetwork().getNEnabledConnections() > 1) {
 					conn.enabled = false;
 					
