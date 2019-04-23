@@ -18,7 +18,7 @@ public class RDConstants {
 	public static int hsize = 160;
 	public static int wsize = 160;
 	
-	public static int maxBeads = 300;
+	public static int maxBeads = 500;
 	public static double beadScale = 1e0;
     public static float beadRadius = 10.0f;
     public static boolean beadExclusion = true;

@@ -113,7 +113,7 @@ public class EvaluateIndividualWithDescriptors {
 	}
 
 	public static void evaluateIndividual(ReactionNetwork r, String outputfilename) {
-		//RDConstants.maxBeads = 500;
+		RDConstants.maxBeads = 500;
 		RDPatternFitnessResultIbuki.width = width;
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		//RDConstants.matchPenalty=-0.1;
