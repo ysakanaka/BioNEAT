@@ -41,6 +41,7 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
+	public static String targetName = "center";
 	public static boolean[][] target = null; //TODO should be moved into a general fitness class
 	public static double width = 0.3; //TODO should be moved into a general fitness class
 	public static ArrayList<RDFeature> features = new ArrayList<RDFeature>();
@@ -66,7 +67,8 @@ public class EvaluateIndividualWithDescriptors {
 					if(trimmedParamName.startsWith("#") || paramPair.length != 2) continue; //Incorrect format or comment
 					
 					if(trimmedParamName.equals("target")) {
-						target = setTarget(paramPair[1].trim().toLowerCase());
+						//target = setTarget(paramPair[1].trim().toLowerCase());
+						targetName = paramPair[1].trim().toLowerCase();
 					} else if(trimmedParamName.equals("width")) {
 					    width = Double.parseDouble(paramPair[1].trim());
 					}
@@ -115,6 +117,7 @@ public class EvaluateIndividualWithDescriptors {
 	public static void evaluateIndividual(ReactionNetwork r, String outputfilename) {
 		//RDConstants.maxBeads = 500;
 		RDPatternFitnessResultIbuki.width = width;
+		target = setTarget(targetName);
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		//RDConstants.matchPenalty=-0.1;
 		  StringBuilder sb = new StringBuilder("");
@@ -122,10 +125,6 @@ public class EvaluateIndividualWithDescriptors {
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
 		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
-		  if (target == null) {
-			  System.out.println("warning: TargetUndefined");
-			  target = RDPatternFitnessResultIbuki.getCenterLine();
-		  }
 		  int realEvaluations = RDConstants.reEvaluation;
 		  RunningStatsAnalysis rsa = new RunningStatsAnalysis();
 		  for(int i = 0; i<realEvaluations;i++){
@@ -217,10 +216,12 @@ public static void setTestGraph(RDSystem system){
 			return RDPatternFitnessResultIbuki.getDisk();
 		case "circle":
 			return RDPatternFitnessResultIbuki.getCircle();
+		default:
+			System.err.println("WARNING: incorrect pattern name");
+			return RDPatternFitnessResultIbuki.getCenterLine();
 			
 		}
 		
-		return null;
 	}
 
 }
