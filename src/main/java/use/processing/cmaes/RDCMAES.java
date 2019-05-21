@@ -36,7 +36,7 @@ import use.processing.rd.RDPatternFitnessResultIbuki;
 
 public class RDCMAES  implements IObjectiveFunction, Runnable{
 	
-	public int popSize = 50;
+	public int popSize = 25;
 	public CMAEvolutionStrategy cma;
 	public String properties = System.getProperty("user.dir")+"/CMAES.config";
 	public boolean outputFiles = true;
@@ -76,7 +76,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		
 		if(reac != null){
 			initGlobalParams();
-			RDPatternFitnessResultIbuki.width = 0.2; //Only for center line
+			RDPatternFitnessResultIbuki.width = 0.3; //Only for center line
 			boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 			AbstractFitnessFunction fit = generateFitnessFunction(target);
 			//Legacy
@@ -96,7 +96,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
 		  RDConstants.matchPenalty=-0.1;
 		
-		  RDConstants.reEvaluation = 2; //10
+		  RDConstants.reEvaluation = 5; //10
 		  RDConstants.evalRandomDistance = false;
 		  RDConstants.defaultRandomFitness = 0.0;
 		  RDConstants.maxTimeEval = 4000;

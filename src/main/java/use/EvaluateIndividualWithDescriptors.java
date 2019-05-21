@@ -134,14 +134,15 @@ public class EvaluateIndividualWithDescriptors {
 			  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
 			  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
 			  rsa.addData(fitness.getFitness());
-			  
+			  boolean[][] glue = PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]);
 			  sb.append("fitness"+i+": "+fitness+"\n");
 			  sb.append("meansofar"+i+": "+rsa.getMean()+"\n");
 			  sb.append("sdsofar"+i+": "+rsa.getStandardDeviation()+"\n");
 			  sb.append("sesofar"+i+": "+rsa.getStandardError()+"\n");
-			  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]))+"\n");
-			  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex])))+"\n");
-		      //moving goal post
+			  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, glue)+"\n");
+			  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, glue))+"\n");
+		      sb.append("hellinger"+i+":"+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], target)+"\n");
+			  //moving goal post
 			  if(i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
 					  && realEvaluations < RDConstants.maxReEvaluation && rsa.getStandardError() > RDConstants.standardErrorThreshold) {
 				  realEvaluations++;
