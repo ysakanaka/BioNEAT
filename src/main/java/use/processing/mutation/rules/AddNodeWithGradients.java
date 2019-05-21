@@ -25,7 +25,8 @@ public class AddNodeWithGradients extends AddNode {
 	@Override
 	public Individual mutate(Individual indiv) {
 		if (rand.nextDouble() < 1.0f / (indiv.getNetwork().getNSimpleSequences() + 1)) {
-			if (rand.nextBoolean()) {
+			if ((RDConstants.ceilingTemplates && indiv.getNetwork().getNEnabledConnections() >= RDConstants.maxTemplates - 1) ||
+					rand.nextBoolean()) {
 				// new node connect to a simple sequence node
 
 				Node to = null;
@@ -132,6 +133,9 @@ public class AddNodeWithGradients extends AddNode {
 	public boolean isApplicable(Individual indiv) {
 		//It's always possible to add a connection.
 		//This should be modified if we want to implement a maximum system size.
+		if (RDConstants.ceilingTemplates && indiv.getNetwork().getNEnabledConnections() >= RDConstants.maxTemplates)
+			return false;
+		
 		if (RDConstants.useMaxTotalNodes)
 			return !RDConstants.ceilingNodes || indiv.getNetwork().nodes.size() < RDConstants.maxNodes;
 		

@@ -28,14 +28,22 @@ public class AddInhibitionWithGradients extends MutationRule {
 
 	@Override
 	public Individual mutate(Individual indiv) {
-		if (rand.nextBoolean()) {
+		if ((RDConstants.ceilingTemplates && indiv.getNetwork().getNEnabledConnections() >= RDConstants.maxTemplates -2) || rand.nextBoolean()) {
 			// add single inhibition
 			ArrayList<Node> possibleNodesfrom = new ArrayList<Node>();
 			ArrayList<Node> possibleNodesto = new ArrayList<Node>();
 			for (Node node : indiv.getNetwork().nodes) {
 				if (node.type == Node.SIMPLE_SEQUENCE) {
 					possibleNodesfrom.add(node);
-					if(!isGradient(node)) possibleNodesto.add(node);
+					if(!isGradient(node)) {
+						if(RDConstants.ceilingTemplates && indiv.getNetwork().getNEnabledConnections() >= RDConstants.maxTemplates -1) {
+							ArrayList<Connection> possible = getConnectionFromNode(indiv, node);
+							if (possible.size() > 0) possibleNodesto.add(node); //we won't go beyond max size
+						}
+						else  {
+							possibleNodesto.add(node);
+						}
+					}
 				}
 			}
 			if (possibleNodesto.size()>0) {
@@ -98,6 +106,16 @@ public class AddInhibitionWithGradients extends MutationRule {
 		return indiv;
 	}
 
+	protected ArrayList<Connection> getConnectionFromNode(Individual indiv, Node nodeFrom){
+		ArrayList<Connection> possibleConnections = new ArrayList<Connection>();
+		for (Connection conn : indiv.getNetwork().connections) {
+			if (conn.to.name.equals(nodeFrom.name) && conn.enabled) {
+				possibleConnections.add(conn);
+			}
+		}
+		return possibleConnections;
+	}
+	
 	protected boolean isGradient(Node node){
 		for(int i = 0; i<RDConstants.gradientsName.length; i++){
 			if(RDConstants.gradientsName[i].equals(node.name)) return true;
@@ -108,6 +126,10 @@ public class AddInhibitionWithGradients extends MutationRule {
 	@Override
 	public boolean isApplicable(Individual indiv) {
 		
-		return !RDConstants.ceilingNodes || indiv.getNetwork().nodes.size() < RDConstants.maxNodes;
+		if (RDConstants.ceilingTemplates && indiv.getNetwork().getNEnabledConnections() >= RDConstants.maxTemplates) {
+			return false;
+		}
+		
+		return !(RDConstants.ceilingNodes && RDConstants.useMaxTotalNodes)|| indiv.getNetwork().nodes.size() < RDConstants.maxNodes;
 	}
 }

@@ -68,8 +68,10 @@ public class RDConstants {
 	//public static int trials = 10; //Average over how many attempts?
 	
 	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?
+	public static boolean ceilingTemplates = false; // Do we enforce a maximum number of templates?
 	public static boolean useMaxTotalNodes = true; // Do we then check the total number of nodes or just activator nodes
 	public static int maxNodes = 6;
+	public static int maxTemplates = 12;
 	public static boolean hardTrim = true; //If true, any species that is not produced by the system is removed from the
 	//individual. This is may prevent some specific patterns that affect a system's "initialization" phase, but will also
 	//greatly prevent bloating
@@ -100,6 +102,7 @@ public class RDConstants {
 	
 	//gui for outside interface
 	public static boolean displayGraph = true;
+	
 	
 	
 	//TODO add a function to read parameters from outside
