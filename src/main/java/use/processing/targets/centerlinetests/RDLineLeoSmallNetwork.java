@@ -42,7 +42,7 @@ public class RDLineLeoSmallNetwork {
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 200;
+        RDConstants.maxGeneration = 50;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         RDConstants.maxNodes = 7;
