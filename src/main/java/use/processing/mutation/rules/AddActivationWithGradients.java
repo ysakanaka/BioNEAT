@@ -69,6 +69,7 @@ public class AddActivationWithGradients extends MutationRule {
 	@Override
 	public boolean isApplicable(Individual indiv) {
 		
-		return (getPossibleActivations(indiv).size()>0);
+		return (RDConstants.ceilingTemplates && indiv.getNetwork().getNEnabledConnections() < RDConstants.maxTemplates) 
+				|| (getPossibleActivations(indiv).size()>0);
 	}
 }

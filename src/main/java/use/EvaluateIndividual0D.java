@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -16,6 +17,7 @@ import erne.Constants;
 import erne.Individual;
 import model.OligoGraph;
 import model.OligoSystem;
+import model.OligoSystemComplex;
 import model.chemicals.SequenceVertex;
 import reactionnetwork.Connection;
 import reactionnetwork.ConnectionSerializer;
@@ -37,14 +39,10 @@ import utils.PadiracTemplateFactory;
 import utils.RDLibrary;
 import utils.RunningStatsAnalysis;
 
-public class EvaluateIndividualWithDescriptors {
+public class EvaluateIndividual0D {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
-	public static String targetName = "center";
-	public static boolean[][] target = null; //TODO should be moved into a general fitness class
-	public static double width = 0.3; //TODO should be moved into a general fitness class
-	public static ArrayList<RDFeature> features = new ArrayList<RDFeature>();
 
 	public static void main(String[] args) {
 
@@ -65,13 +63,6 @@ public class EvaluateIndividualWithDescriptors {
 					String[] paramPair = line.split("\\s*=\\s*");
 					String trimmedParamName = paramPair[0].trim();
 					if(trimmedParamName.startsWith("#") || paramPair.length != 2) continue; //Incorrect format or comment
-					
-					if(trimmedParamName.equals("target")) {
-						//target = setTarget(paramPair[1].trim().toLowerCase());
-						targetName = paramPair[1].trim().toLowerCase();
-					} else if(trimmedParamName.equals("width")) {
-					    width = Double.parseDouble(paramPair[1].trim());
-					}
 					else {
 						RDConstants.readConfigFromString(Constants.class,trimmedParamName, paramPair[1]);
 						RDConstants.readConfigFromString(RDConstants.class,trimmedParamName, paramPair[1]);
@@ -108,76 +99,27 @@ public class EvaluateIndividualWithDescriptors {
 			evaluateIndividual(reac,outputfilename);
 			
 		} else {
-			System.out.println("USAGE: java [options] "+EvaluateIndividualWithDescriptors.class.getName()+" parameters");
+			System.out.println("USAGE: java [options] "+EvaluateIndividual0D.class.getName()+" parameters");
 		}
 		
 		System.exit(0);
 	}
 
 	public static void evaluateIndividual(ReactionNetwork r, String outputfilename) {
-		RDConstants.maxBeads = 500;
-		RDPatternFitnessResultIbuki.width = width;
-		target = setTarget(targetName);
-		RDPatternFitnessResultIbuki.weightExponential = 0.1;
-		//RDConstants.matchPenalty=-0.1;
+		
 		  StringBuilder sb = new StringBuilder("");
-		  RDPatternFitnessResult fitness;
-		  RDInObjective inObjective = new RDInObjective();
-		  RDOutObjective outObjective = new RDOutObjective();
-		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
-		  int realEvaluations = RDConstants.reEvaluation;
-		  RunningStatsAnalysis rsa = new RunningStatsAnalysis();
-		  for(int i = 0; i<realEvaluations;i++){
-			  RDSystem system = new RDSystem();
-			  setTestGraph(system);
-			  system.init(false); //with full power, because we are doing parallel eval (maybe)
-			  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
-			  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
-			  rsa.addData(fitness.getFitness());
-			  boolean[][] glue = PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]);
-			  sb.append("fitness"+i+": "+fitness+"\n");
-			  sb.append("meansofar"+i+": "+rsa.getMean()+"\n");
-			  sb.append("sdsofar"+i+": "+rsa.getStandardDeviation()+"\n");
-			  sb.append("sesofar"+i+": "+rsa.getStandardError()+"\n");
-			  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, glue)+"\n");
-			  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, glue))+"\n");
-		      sb.append("hellinger"+i+":"+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], target)+"\n");
-			  //moving goal post
-			  if(i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
-					  && realEvaluations < RDConstants.maxReEvaluation && rsa.getStandardError() > RDConstants.standardErrorThreshold) {
-				  realEvaluations++;
-			  }
+		  model.Constants.numberOfPoints = RDConstants.maxTimeEval;
+		  OligoSystemComplex oc = new OligoSystemComplex(reac);
+		  Map<String, double[]> results = oc.calculateTimeSeries();
+		  String key = results.keySet().iterator().next(); //Take the first individual
+		  double[] vals = results.get(key);
+		  for (int i = 0; i< vals.length; i++) {
+			  sb.append(vals[i]+"\n");
 		  }
-		  sb.append("nEvaluations: "+realEvaluations+"\n");
-		  sb.append("standardDeviation: "+rsa.getStandardDeviation()+"\n");
-		  sb.append("standardError: "+rsa.getStandardError()+"\n");
-		  sb.append("nTemplate: "+reac.getNEnabledConnections()+"\n");
-		  
 		  System.out.println(sb.toString());
 			
 	}
 
-public static void setTestGraph(RDSystem system){
-	OligoGraph<SequenceVertex,String> g;
-	  if(reac == null){
-		 reac = RDLibrary.rdstart;
-	  }
-	  system.setNetwork(reac);
-		g = GraphMaker.fromReactionNetwork(reac);
-		//For debug
-		if(RDConstants.displayGraph) {
-		  JFrame frame = new JFrame("Graph");
-		  frame.add((new RNVisualizationViewerFactory()).createVisualizationViewer(reac));
-		  frame.pack();
-		  frame.setVisible(true);
-		}
-	  
-	  g.exoConc = RDConstants.exoConc;
-	  g.polConc = RDConstants.polConc;
-	  g.nickConc = RDConstants.nickConc;
-	  system.setOS(new OligoSystem<String>(g, new PadiracTemplateFactory(g)));
-	  
-	}
 
 
 	

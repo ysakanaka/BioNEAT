@@ -58,8 +58,8 @@ public class RDConstants {
 	public static double matchPenalty = -0.1; // we expect a lot more penalties
 	public static boolean useHellingerDistance = true; // false means hamming. Only used if not match fitness
 	public static boolean patternHellinger = false; // true means we care about the actual values rather than coverage
-	public static int horizontalBins = 1; //used to bin the Hellinger distance. Too little bins mean no pattern coverage. Too much means too much penalty for holes
-	public static int verticalBins = 1;
+	public static int horizontalBins = 3; //used to bin the Hellinger distance. Too little bins mean no pattern coverage. Too much means too much penalty for holes
+	public static int verticalBins = 3;
 	
 	public static int coverageHBins = 7; //used to bin the lexicographic fitness. Makes no sense to be the same as Hellinger
 	public static int coverageVBins = 7;
@@ -68,7 +68,10 @@ public class RDConstants {
 	//public static int trials = 10; //Average over how many attempts?
 	
 	public static boolean ceilingNodes = true; // Do we enforce a maximum graph size?
+	public static boolean ceilingTemplates = false; // Do we enforce a maximum number of templates?
+	public static boolean useMaxTotalNodes = true; // Do we then check the total number of nodes or just activator nodes
 	public static int maxNodes = 6;
+	public static int maxTemplates = 12;
 	public static boolean hardTrim = true; //If true, any species that is not produced by the system is removed from the
 	//individual. This is may prevent some specific patterns that affect a system's "initialization" phase, but will also
 	//greatly prevent bloating
@@ -99,6 +102,8 @@ public class RDConstants {
 	
 	//gui for outside interface
 	public static boolean displayGraph = true;
+	
+	
 	
 	//TODO add a function to read parameters from outside
 	
