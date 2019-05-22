@@ -49,6 +49,13 @@ public class RDLineLeoSmallNetwork {
         RDConstants.maxBeads = 500;
         RDConstants.showBeads = false;
         RDConstants.useMedian = true; //use median score of reevaluations
+
+        RDConstants.ceilingNodes = true;
+        RDConstants.ceilingTemplates = true;
+        RDConstants.useMaxTotalNodes = false;
+        RDConstants.maxNodes = 6;
+        RDConstants.maxTemplates = 12;
+
         RDConstants.weightDisableTemplate = 5;
         RDConstants.weightMutateParameter = 80;
         RDConstants.weightAddActivationWithGradients = 5;
