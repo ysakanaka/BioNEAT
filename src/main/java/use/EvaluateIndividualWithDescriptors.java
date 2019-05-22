@@ -141,7 +141,7 @@ public class EvaluateIndividualWithDescriptors {
 			  sb.append("sesofar"+i+": "+rsa.getStandardError()+"\n");
 			  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, glue)+"\n");
 			  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, glue))+"\n");
-		      sb.append("hellinger"+i+":"+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], target)+"\n");
+		      sb.append("hellinger"+i+": "+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], target)+"\n");
 			  //moving goal post
 			  if(i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
 					  && realEvaluations < RDConstants.maxReEvaluation && rsa.getStandardError() > RDConstants.standardErrorThreshold) {
