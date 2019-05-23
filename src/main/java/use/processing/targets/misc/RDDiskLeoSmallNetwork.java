@@ -24,7 +24,7 @@ import utils.RDLibrary;
 
 public class RDDiskLeoSmallNetwork {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-        RDPatternFitnessResultIbuki.width = 0.3;
+        RDPatternFitnessResultIbuki.width = 0.5;
 		boolean[][] target = RDPatternFitnessResultIbuki.getDisk();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
         RDConstants.matchPenalty=-0.1;
