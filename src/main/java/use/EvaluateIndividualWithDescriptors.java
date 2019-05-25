@@ -217,6 +217,10 @@ public static void setTestGraph(RDSystem system){
 			return RDPatternFitnessResultIbuki.getDisk();
 		case "circle":
 			return RDPatternFitnessResultIbuki.getCircle();
+		case "T":
+			return RDPatternFitnessResultIbuki.getTPattern();
+		case "Ko":
+			return RDPatternFitnessResultIbuki.getKoKanji();
 		default:
 			System.err.println("WARNING: incorrect pattern name");
 			return RDPatternFitnessResultIbuki.getCenterLine();
