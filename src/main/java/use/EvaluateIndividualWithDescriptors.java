@@ -41,8 +41,8 @@ public class EvaluateIndividualWithDescriptors {
 
 	public static String outputSuffix = "test.txt";
 	public static ReactionNetwork reac = null; 
-	public static String targetName = "center";
-	public static boolean[][] target = null; //TODO should be moved into a general fitness class
+	public static String[] targetNames = {"center"};
+	public static boolean[][][] targets = null; //TODO should be moved into a general fitness class
 	public static double width = 0.3; //TODO should be moved into a general fitness class
 	public static ArrayList<RDFeature> features = new ArrayList<RDFeature>();
 
@@ -68,7 +68,7 @@ public class EvaluateIndividualWithDescriptors {
 					
 					if(trimmedParamName.equals("target")) {
 						//target = setTarget(paramPair[1].trim().toLowerCase());
-						targetName = paramPair[1].trim().toLowerCase();
+						targetNames = paramPair[1].trim().toLowerCase().split(",");
 					} else if(trimmedParamName.equals("width")) {
 					    width = Double.parseDouble(paramPair[1].trim());
 					}
@@ -117,40 +117,51 @@ public class EvaluateIndividualWithDescriptors {
 	public static void evaluateIndividual(ReactionNetwork r, String outputfilename) {
 		//RDConstants.maxBeads = 500;
 		RDPatternFitnessResultIbuki.width = width;
-		target = setTarget(targetName);
+		targets = new boolean[targetNames.length][][];
+		RunningStatsAnalysis[] rsa = new RunningStatsAnalysis[targets.length];
+		for(int i = 0; i< targets.length; i++ ) {
+			targets[i] = setTarget(targetNames[i].trim());
+			rsa[i] = new RunningStatsAnalysis();
+		}
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		//RDConstants.matchPenalty=-0.1;
 		  StringBuilder sb = new StringBuilder("");
-		  RDPatternFitnessResult fitness;
+		  RDPatternFitnessResult[] fitness = new RDPatternFitnessResult[targets.length];
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
 		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
 		  int realEvaluations = RDConstants.reEvaluation;
-		  RunningStatsAnalysis rsa = new RunningStatsAnalysis();
 		  for(int i = 0; i<realEvaluations;i++){
 			  RDSystem system = new RDSystem();
 			  setTestGraph(system);
 			  system.init(false); //with full power, because we are doing parallel eval (maybe)
 			  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
-			  fitness = new RDPatternFitnessResultIbuki(system.conc,target,system.beadsOnSpot,0.0);
-			  rsa.addData(fitness.getFitness());
+			  
 			  boolean[][] glue = PatternEvaluator.detectGlue(system.conc[RDConstants.glueIndex]);
-			  sb.append("fitness"+i+": "+fitness+"\n");
-			  sb.append("meansofar"+i+": "+rsa.getMean()+"\n");
-			  sb.append("sdsofar"+i+": "+rsa.getStandardDeviation()+"\n");
-			  sb.append("sesofar"+i+": "+rsa.getStandardError()+"\n");
-			  sb.append("in"+i+": "+inObjective.evaluateScore(r, target, glue)+"\n");
-			  sb.append("out"+i+": "+(1.0-outObjective.evaluateScore(r, target, glue))+"\n");
-		      sb.append("hellinger"+i+":"+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], target)+"\n");
+			  
+			  for(int k = 0; k< targets.length; k++ ) {
+				  fitness[k] = new RDPatternFitnessResultIbuki(system.conc,targets[k],system.beadsOnSpot,0.0);
+				  rsa[k].addData(fitness[k].getFitness());
+			  
+				  sb.append("fitness"+i+"_"+k+": "+fitness[k]+"\n");
+				  sb.append("meansofar"+i+"_"+k+": "+rsa[k].getMean()+"\n");
+				  sb.append("sdsofar"+i+"_"+k+": "+rsa[k].getStandardDeviation()+"\n");
+				  sb.append("sesofar"+i+"_"+k+": "+rsa[k].getStandardError()+"\n");
+				  sb.append("in"+i+"_"+k+": "+inObjective.evaluateScore(r, targets[k], glue)+"\n");
+				  sb.append("out"+i+"_"+k+": "+(1.0-outObjective.evaluateScore(r, targets[k], glue))+"\n");
+				  sb.append("hellinger"+i+"_"+k+": "+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], targets[k])+"\n");
+			  }
 			  //moving goal post
 			  if(i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
-					  && realEvaluations < RDConstants.maxReEvaluation && rsa.getStandardError() > RDConstants.standardErrorThreshold) {
+					  && realEvaluations < RDConstants.maxReEvaluation && rsa[0].getStandardError() > RDConstants.standardErrorThreshold) {
 				  realEvaluations++;
 			  }
 		  }
 		  sb.append("nEvaluations: "+realEvaluations+"\n");
-		  sb.append("standardDeviation: "+rsa.getStandardDeviation()+"\n");
-		  sb.append("standardError: "+rsa.getStandardError()+"\n");
+		  for(int k = 0; k< targets.length; k++ ) {
+		    sb.append("standardDeviation"+k+": "+rsa[k].getStandardDeviation()+"\n");
+		    sb.append("standardError"+k+": "+rsa[k].getStandardError()+"\n");
+		  }
 		  sb.append("nTemplate: "+reac.getNEnabledConnections()+"\n");
 		  
 		  System.out.println(sb.toString());
