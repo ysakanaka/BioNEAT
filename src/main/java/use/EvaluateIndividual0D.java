@@ -108,6 +108,7 @@ public class EvaluateIndividual0D {
 	public static void evaluateIndividual(ReactionNetwork r, String outputfilename) {
 		
 		  StringBuilder sb = new StringBuilder("");
+		  Constants.maxEvalTime = RDConstants.maxTimeEval;
 		  model.Constants.numberOfPoints = RDConstants.maxTimeEval;
 		  OligoSystemComplex oc = new OligoSystemComplex(reac);
 		  Map<String, double[]> results = oc.calculateTimeSeries();
@@ -116,7 +117,7 @@ public class EvaluateIndividual0D {
 		  for (int i = 0; i< vals.length; i++) {
 			  sb.append(vals[i]+"\n");
 		  }
-		  System.out.println(sb.toString());
+		  System.out.println(sb.toString().substring(0, sb.length()-2));
 			
 	}
 
