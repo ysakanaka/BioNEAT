@@ -376,6 +376,26 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   return pattern;
  }
 
+ public static boolean[][] getReversedTPattern(){ // Centerline + bottomline
+  boolean[][] pattern=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  for(int i=0;i<pattern.length;i++){
+   for(int j=0;j<pattern[i].length;j++){
+    pattern[i][j]=(i>=pattern.length*(0.5f-width/2.0f)&&i<=pattern.length*(0.5f+width/2.0f)) | (j>=pattern[0].length*(1.-width));
+   }
+  }
+  return pattern;
+ }
+
+ public static boolean[][] getTopBottomLines(){ // topline + bottomline
+  boolean[][] pattern=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  for(int i=0;i<pattern.length;i++){
+   for(int j=0;j<pattern[i].length;j++){
+    pattern[i][j]=(j<=pattern[0].length*width) | (j>=pattern[0].length*(1.-width));
+   }
+  }
+  return pattern;
+ }
+
  public static boolean[][] getKoKanji(){ // Centerline + topline + Bottomline
   boolean[][] pattern=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   for(int i=0;i<pattern.length;i++){

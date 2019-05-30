@@ -230,6 +230,10 @@ public static void setTestGraph(RDSystem system){
 			return RDPatternFitnessResultIbuki.getCircle();
 		case "T":
 			return RDPatternFitnessResultIbuki.getTPattern();
+		case "reversed-T":
+			return RDPatternFitnessResultIbuki.getReversedTPattern();
+		case "top-bottom":
+			return RDPatternFitnessResultIbuki.getTopBottomLines();
 		case "Ko":
 			return RDPatternFitnessResultIbuki.getKoKanji();
 		default:
