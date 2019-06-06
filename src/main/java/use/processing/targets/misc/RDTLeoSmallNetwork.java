@@ -24,7 +24,7 @@ import utils.RDLibrary;
 
 public class RDTLeoSmallNetwork {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-        RDPatternFitnessResultIbuki.width = 0.5;
+        RDPatternFitnessResultIbuki.width = 0.2;
 		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
         RDConstants.matchPenalty=-0.1;
@@ -42,7 +42,7 @@ public class RDTLeoSmallNetwork {
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         //RDConstants.maxNodes = 7;
@@ -53,8 +53,8 @@ public class RDTLeoSmallNetwork {
         RDConstants.ceilingNodes = true;
         RDConstants.ceilingTemplates = true;
         RDConstants.useMaxTotalNodes = false;
-        RDConstants.maxNodes = 5;
-        RDConstants.maxTemplates = 12;
+        RDConstants.maxNodes = 6;
+        RDConstants.maxTemplates = 13;
 
         RDConstants.weightDisableTemplate = 5;
         RDConstants.weightMutateParameter = 80;
