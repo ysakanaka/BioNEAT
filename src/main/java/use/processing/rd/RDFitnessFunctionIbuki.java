@@ -27,7 +27,7 @@ public class RDFitnessFunctionIbuki extends RDFitnessFunction{
   AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
   //System.out.println(network);
   for(int i= 0; i<RDConstants.reEvaluation; i++){
-  RDSystem syst= RDConstants.useApprox?new RDSystemApprox():new RDSystem();
+  RDSystem syst= RDConstants.useApprox?new RDSystemApprox() : new RDSystem();
   OligoGraph<SequenceVertex,String> g=GraphMaker.fromReactionNetwork(network);
   g.exoConc=RDConstants.exoConc;
   g.polConc=RDConstants.polConc;

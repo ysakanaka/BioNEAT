@@ -107,7 +107,7 @@ public class RDConstants {
 	
 	
 	
-	//TODO add a function to read parameters from outside
+	//TODO add a function to read parameters from outside \
 	
 	public static String configsToString(){
 		return configsToString(RDConstants.class);
