@@ -51,7 +51,7 @@ public class RDSystem implements ReactionNetworkContainer{
 
 	public ArrayList<Aggregate> aggregates = new ArrayList<Aggregate>();
 
-	transient private OligoSystem<String> os;
+	protected transient OligoSystem<String> os;
 	protected ReactionNetwork network;
 	
 	public void setOS(OligoSystem<String> os){
@@ -96,7 +96,7 @@ public class RDSystem implements ReactionNetworkContainer{
 		  beadsOnSpot = HashBasedTable.create((int) (RDConstants.wsize/RDConstants.spaceStep),(int) (RDConstants.hsize/RDConstants.spaceStep));
 		  diffRate = new float[chemicalSpecies];
 		  defaultDiff();
-		  for(int i = RDConstants.glueIndex; i<(os.total+os.inhTotal); i++) diffRate[i] = RDConstants.fastDiff; //gradients are processed independently 
+		  for(int i = RDConstants.glueIndex; i<(os.total+os.inhTotal); i++) diffRate[i] = RDConstants.fastDiff/(RDConstants.spaceStep*RDConstants.spaceStep); //gradients are processed independently 
 		  if(RDConstants.timing) realTime = System.currentTimeMillis();
 		  initBeads(RDConstants.maxBeads);
 		  if(RDConstants.timing) totalBeads+=System.currentTimeMillis() - realTime;
