@@ -34,7 +34,7 @@ public class RDAppletMore extends PApplet{
 	static float maxTime = 0;
 	static String name;
 	
-	static boolean selfRepair = false; //Do we remove a bunch of beads? //TODO
+	static boolean selfRepair = true; //Do we remove a bunch of beads? //TODO
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
 	static int fullRun = 300000000;
 	
@@ -46,10 +46,14 @@ public class RDAppletMore extends PApplet{
 	long realTime = startTime;
 	long totalRender = 0;
 	
-	boolean[][] target=RDPatternFitnessResultIbuki.getTopLine(); //TODO change fitness target
+	boolean[][] target=RDPatternFitnessResultIbuki.getTPattern(); //TODO change fitness target
 	
-	RDSystem system = new RDSystem();
+	static boolean useApproxSystem = false;
+	
+	RDSystem system;
 	static ReactionNetwork reac = null; 
+	
+	
 
 	public static void main(String[] args) {
 		if(args.length >= 1){
@@ -65,6 +69,8 @@ public class RDAppletMore extends PApplet{
 			e.printStackTrace();
 		}
 		}
+		
+		
 		
 		
 		//int temps = reac.getNEnabledConnections();
@@ -85,15 +91,16 @@ public class RDAppletMore extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 400000/bigTimeStep;
+		maxTime = 3000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
-		 RDPatternFitnessResultIbuki.width = 0.3;
-		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
-		  RDConstants.matchPenalty=-0.1;
+		RDPatternFitnessResultIbuki.width = 0.3;
+		RDPatternFitnessResultIbuki.weightExponential = 0.1;
+		RDConstants.matchPenalty=-0.1;
+		useApproxSystem = false;
 
 		offset = 2;
 		name = (selfRepair?"self-######.png":"screen-######.png");
@@ -107,7 +114,13 @@ public class RDAppletMore extends PApplet{
 	 
 	 public void setup(){
 		  frameRate(10000);
+		  if (useApproxSystem) {
+			  system = new RDSystemApprox();
+		  } else {
+			  system = new RDSystem();
+		  }
 		  setTestGraph(); //We are not being called from somewhere else
+		  
 		  system.init(true);
 		  System.out.println("Params: "+system.conc.length+" "+system.conc[0].length+" "+system.conc[0][0].length);
 		  if(RDConstants.timing){
