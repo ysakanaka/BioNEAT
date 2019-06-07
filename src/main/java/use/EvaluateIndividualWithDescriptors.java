@@ -32,6 +32,7 @@ import use.processing.rd.RDFitnessResult;
 import use.processing.rd.RDPatternFitnessResult;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import use.processing.rd.RDSystem;
+import use.processing.rd.RDSystemApprox;
 import utils.GraphMaker;
 import utils.PadiracTemplateFactory;
 import utils.RDLibrary;
@@ -45,6 +46,7 @@ public class EvaluateIndividualWithDescriptors {
 	public static boolean[][][] targets = null; //TODO should be moved into a general fitness class
 	public static double width = 0.3; //TODO should be moved into a general fitness class
 	public static ArrayList<RDFeature> features = new ArrayList<RDFeature>();
+	public static boolean useApprox = false;
 
 	public static void main(String[] args) {
 
@@ -71,6 +73,8 @@ public class EvaluateIndividualWithDescriptors {
 						targetNames = paramPair[1].trim().toLowerCase().split(",");
 					} else if(trimmedParamName.equals("width")) {
 					    width = Double.parseDouble(paramPair[1].trim());
+					}else if(trimmedParamName.equals("useApprox")) {
+						useApprox = Boolean.parseBoolean(paramPair[1].trim());
 					}
 					else {
 						RDConstants.readConfigFromString(Constants.class,trimmedParamName, paramPair[1]);
@@ -130,9 +134,9 @@ public class EvaluateIndividualWithDescriptors {
 		  RDInObjective inObjective = new RDInObjective();
 		  RDOutObjective outObjective = new RDOutObjective();
 		  if (RDConstants.debug) System.out.println("GradientNames: ['"+RDConstants.gradientsName[0]+"', '"+RDConstants.gradientsName[1]+"']");
-		  int realEvaluations = RDConstants.reEvaluation;
+		  int realEvaluations = useApprox?1:RDConstants.reEvaluation;
 		  for(int i = 0; i<realEvaluations;i++){
-			  RDSystem system = new RDSystem();
+			  RDSystem system = useApprox? new RDSystemApprox(): new RDSystem();
 			  setTestGraph(system);
 			  system.init(false); //with full power, because we are doing parallel eval (maybe)
 			  for(int j = 0; j<RDConstants.maxTimeEval; j++) system.update();
@@ -152,7 +156,7 @@ public class EvaluateIndividualWithDescriptors {
 				  sb.append("hellinger"+i+"_"+k+": "+PatternEvaluator.hellingerDistance(system.conc[RDConstants.glueIndex], targets[k])+"\n");
 			  }
 			  //moving goal post
-			  if(i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
+			  if(!useApprox && i == realEvaluations -1 && RDConstants.sampleUntilMeanConvergence 
 					  && realEvaluations < RDConstants.maxReEvaluation && rsa[0].getStandardError() > RDConstants.standardErrorThreshold) {
 				  realEvaluations++;
 			  }
