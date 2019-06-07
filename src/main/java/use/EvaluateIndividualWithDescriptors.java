@@ -228,16 +228,16 @@ public static void setTestGraph(RDSystem system){
 			return RDPatternFitnessResultIbuki.getDisk();
 		case "circle":
 			return RDPatternFitnessResultIbuki.getCircle();
-		case "T":
+		case "t":
 			return RDPatternFitnessResultIbuki.getTPattern();
-		case "reversed-T":
+		case "reversed-t":
 			return RDPatternFitnessResultIbuki.getReversedTPattern();
 		case "top-bottom":
 			return RDPatternFitnessResultIbuki.getTopBottomLines();
-		case "Ko":
+		case "ko":
 			return RDPatternFitnessResultIbuki.getKoKanji();
 		default:
-			System.err.println("WARNING: incorrect pattern name");
+			System.err.println("WARNING: incorrect pattern name: " + name);
 			return RDPatternFitnessResultIbuki.getCenterLine();
 			
 		}
