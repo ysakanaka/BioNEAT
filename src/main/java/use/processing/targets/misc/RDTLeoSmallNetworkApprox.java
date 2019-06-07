@@ -25,6 +25,8 @@ import utils.RDLibrary;
 public class RDTLeoSmallNetworkApprox {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
         RDPatternFitnessResultIbuki.width = 0.2;
+        RDConstants.spaceStep = 8;
+        RDConstants.useApprox = true;
 		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
         RDConstants.matchPenalty=-0.1;
@@ -55,8 +57,6 @@ public class RDTLeoSmallNetworkApprox {
         RDConstants.useMaxTotalNodes = false;
         RDConstants.maxNodes = 6;
         RDConstants.maxTemplates = 13;
-        RDConstants.spaceStep = 8;
-        RDConstants.useApprox = true;
 
         RDConstants.weightDisableTemplate = 5;
         RDConstants.weightMutateParameter = 80;
