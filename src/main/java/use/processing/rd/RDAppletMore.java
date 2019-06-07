@@ -73,7 +73,7 @@ public class RDAppletMore extends PApplet{
 		
 		
 		
-		//int temps = reac.getNEnabledConnections();
+		
 		//System.out.println("Connections "+temps);
 		//reac = PruningMutator.prune(new Individual(reac)).getNetwork();
 		//temps = reac.getNEnabledConnections();

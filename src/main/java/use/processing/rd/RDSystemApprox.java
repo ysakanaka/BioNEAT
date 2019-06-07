@@ -10,7 +10,7 @@ import use.processing.bead.Bead;
 import use.processing.parallel.DiffusionDispatcher;
 
 /**
- * Class designed to estimate the theoretical concentration in different spots
+ * Class designed to estimate the theoretical concentration in different spots.
  * @author naubertkato
  *
  */
