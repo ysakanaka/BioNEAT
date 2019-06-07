@@ -40,9 +40,9 @@ public class RDApplet extends PApplet{
 	static float maxTime = 4000;
 	static String name;
 	
-	static boolean selfRepair = true; //Do we remove a bunch of beads?
+	static boolean selfRepair = false; //Do we remove a bunch of beads?
 	static double removePatternSize = 0.2; //how much do we remove? (Square)
-	static int fullRun = -1000;
+	static int fullRun = 4000;
 	
 	static int bigTimeStep = 10; //How many step do we do between two call of draw.
 	static int offset = RDConstants.speciesOffset; //for display
@@ -52,7 +52,10 @@ public class RDApplet extends PApplet{
 	long realTime = startTime;
 	long totalRender = 0;
 	
-	boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine(); //TODO change fitness target
+	//boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine(); //TODO change fitness target
+	//boolean[][] target=RDPatternFitnessResultIbuki.getBottomLine();
+	boolean[][] target=RDPatternFitnessResultIbuki.getTPattern();
+	//boolean[][] target=RDPatternFitnessResultIbuki.getReversedTPattern();
 	
 	RDSystem system = new RDSystem();
 	static ReactionNetwork reac = null; 
@@ -84,13 +87,14 @@ public class RDApplet extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 300000000/bigTimeStep;
+		//maxTime = 300000000/bigTimeStep;
+		maxTime = 4000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
-		 RDPatternFitnessResultIbuki.width = 0.25;
+		 RDPatternFitnessResultIbuki.width = 0.20;
 		  RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		  RDConstants.matchPenalty=-0.1;
 		RDConstants.showBeads = false;
