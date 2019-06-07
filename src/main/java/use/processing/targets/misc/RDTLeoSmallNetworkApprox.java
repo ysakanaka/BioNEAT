@@ -56,7 +56,7 @@ public class RDTLeoSmallNetworkApprox {
         RDConstants.maxNodes = 6;
         RDConstants.maxTemplates = 13;
         RDConstants.spaceStep = 8;
-        //RDConstants.useApprox = true;
+        RDConstants.useApprox = true;
 
         RDConstants.weightDisableTemplate = 5;
         RDConstants.weightMutateParameter = 80;
