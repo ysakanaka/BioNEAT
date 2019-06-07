@@ -25,11 +25,13 @@ import utils.RDLibrary;
 public class RDLineNicolasGoodParams {
 	public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
 	RDPatternFitnessResultIbuki.width = 0.3;
+	RDConstants.useApprox = true;
+	RDConstants.spaceStep = 8;
 	boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
 	RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
 	  RDConstants.matchPenalty=-0.1;
 	
-	  RDConstants.reEvaluation = 5; //TODO ws 10
+	  RDConstants.reEvaluation = 1; //TODO ws 10
 		
 		//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
 		RDConstants.evalRandomDistance = false;
@@ -54,9 +56,12 @@ public class RDLineNicolasGoodParams {
 		  RDConstants.weightAddActivationWithGradients = 1;
 		  RDConstants.weightAddInhibitionWithGradients = 1;
 		  RDConstants.weightAddNodeWithGradients = 1;
+		  
 	  //RDConstants.cutOff = 10.0f;
 	
 	RDConstants.targetName = "ClusterLineNicolas";
+	
+	
 	
 	//RDConstants.showBeads = true;
 	//RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
@@ -83,7 +88,7 @@ Mutator mutator;
     
 	Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
 			fitnessFunction, new RDFitnessDisplayer(), algorithm);
-	//evolver.setGUI(false);
+	evolver.setGUI(true);
 	evolver.setExtraConfig(RDConstants.configsToString());
 	evolver.evolve();
     System.out.println("Evolution completed.");
