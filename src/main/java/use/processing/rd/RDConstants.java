@@ -103,6 +103,8 @@ public class RDConstants {
 	//gui for outside interface
 	public static boolean displayGraph = true;
 	
+	public static boolean useApprox = false; // Use the activity reaction-diffusion as an approximation for the behavior.
+	
 	
 	
 	//TODO add a function to read parameters from outside
