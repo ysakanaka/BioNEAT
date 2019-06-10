@@ -29,7 +29,7 @@ public class RDTLeoSmallNetworkApprox {
         RDConstants.useApprox = true;
 		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-        RDConstants.matchPenalty=-0.1;
+        RDConstants.matchPenalty=-0.5;
 
         RDConstants.reEvaluation = 5;
 
