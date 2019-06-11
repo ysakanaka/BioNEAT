@@ -1,4 +1,4 @@
-package use.processing.targets.t;
+package use.processing.targets.centerlinetests;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,17 +20,14 @@ import use.processing.rd.RDConstants;
 import use.processing.rd.RDFitnessDisplayer;
 import use.processing.rd.RDFitnessFunctionIbuki;
 import use.processing.rd.RDPatternFitnessResultIbuki;
-import use.processing.rd.RDFitnessTransfert;
 import utils.RDLibrary;
 
-public class TBioneatTransfer {
+public class RDLineLeo {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
         RDPatternFitnessResultIbuki.width = 0.2;
-        //RDConstants.spaceStep = 8;
-        RDConstants.useApprox = false;
-		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
+        boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-        RDConstants.matchPenalty=-0.2;
+        RDConstants.matchPenalty=-0.1;
 
         RDConstants.reEvaluation = 5;
 
@@ -66,12 +63,11 @@ public class TBioneatTransfer {
         RDConstants.weightAddNodeWithGradients = 5;
         //RDConstants.cutOff = 10.0f;
 
-        RDConstants.targetName = "TBioneatTransfer";
+        RDConstants.targetName = "CenterLineLeo";
 
         //RDConstants.showBeads = true;
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-        //RDFitnessFunctionIbuki fitnessFunction = new RDFitnessFunctionIbuki(target);
-        RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target, 50 * 80);
+        RDFitnessFunctionIbuki fitnessFunction = new RDFitnessFunctionIbuki(target);
 
         Mutator mutator;
 

@@ -1,4 +1,4 @@
-package use.processing.targets.t;
+package use.processing.targets.centerlinetests;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,16 +23,16 @@ import use.processing.rd.RDPatternFitnessResultIbuki;
 import use.processing.rd.RDFitnessTransfert;
 import utils.RDLibrary;
 
-public class TBioneatTransfer {
+public class RDLineLeoTransfer {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
         RDPatternFitnessResultIbuki.width = 0.2;
         //RDConstants.spaceStep = 8;
-        RDConstants.useApprox = false;
-		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
+        //RDConstants.useApprox = true;
+        boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-        RDConstants.matchPenalty=-0.2;
+        RDConstants.matchPenalty=-0.5;
 
-        RDConstants.reEvaluation = 5;
+        RDConstants.reEvaluation = 1; //TODO 5
 
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
         RDConstants.evalRandomDistance = false;
@@ -44,11 +44,11 @@ public class TBioneatTransfer {
         }
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
+
         RDConstants.populationSize=50;
         RDConstants.maxGeneration = 100;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
-        //RDConstants.maxNodes = 7;
         RDConstants.maxBeads = 500;
         RDConstants.showBeads = false;
         RDConstants.useMedian = true; //use median score of reevaluations
@@ -66,7 +66,7 @@ public class TBioneatTransfer {
         RDConstants.weightAddNodeWithGradients = 5;
         //RDConstants.cutOff = 10.0f;
 
-        RDConstants.targetName = "TBioneatTransfer";
+        RDConstants.targetName = "CenterLineLeoTransfer";
 
         //RDConstants.showBeads = true;
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
