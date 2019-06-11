@@ -53,6 +53,7 @@ public class Evolver implements Serializable {
 	public static transient Main window;
 	private int popSize;
 	private int maxGenerations;
+	private int warmStartGenerations = 0; //Add genetic drift for n generations at the very start
 	private ReactionNetwork startingNetwork;
 	private AbstractFitnessFunction fitnessFunction;
 	private Mutator mutator;
@@ -96,6 +97,14 @@ public class Evolver implements Serializable {
 	
 	public void setSaveEvo(boolean bool){
 		saveEvo = bool;
+	}
+	
+	/**
+	 * Add an initial period of genetic drift to the evolution
+	 * @param nGenerations
+	 */
+	public void setWarmStartLength(int nGenerations) {
+		warmStartGenerations = nGenerations;
 	}
 
 	public Evolver(ReactionNetwork startingNetwork, AbstractFitnessFunction fitnessFunction) throws IOException {
@@ -194,6 +203,7 @@ public class Evolver implements Serializable {
 			if (!readerMode) {
 				if (i == 0) {
 					population.resetPopulation();
+					if(warmStartGenerations > 0) population.geneticDrift(warmStartGenerations);
 				} else {
 					population.evolve();
 				}
@@ -296,7 +306,7 @@ public class Evolver implements Serializable {
 		JPanel panelGeneration = new JPanel();
 		scrollPane.setViewportView(panelGeneration);
 		panelGeneration.setLayout(new BorderLayout(0, 0));
-		PopulationInfo populationInfo = population.getPopulationInfo(generation);
+		PopulationInfo populationInfo = population.getPopulationInfo(generation+warmStartGenerations); //we ignore the initial drift
 		panelGeneration.add(reflectionUI.createObjectForm(populationInfo), BorderLayout.SOUTH);
 
 		JPanel panelSpecies = new JPanel();

@@ -89,6 +89,19 @@ public abstract class Population implements Serializable {
 		evaluateFitness();
 		return individuals;
 	}
+	
+	/** Free wheeling for n generations.
+	 * 
+	 * @param nGenerations
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
+	 */
+	public void geneticDrift(int nGenerations) throws InterruptedException, ExecutionException {
+		AbstractFitnessFunction tmp = fitnessFunction;
+		fitnessFunction = new DummyFitnessFunction(); //Everybody gets max fitness
+		for (int i = 0; i<nGenerations; i++) evolve();
+		fitnessFunction = tmp;
+	}
 
 	
 	public abstract Individual[] reproduction();
