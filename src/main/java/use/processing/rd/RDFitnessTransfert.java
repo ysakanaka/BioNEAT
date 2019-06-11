@@ -64,6 +64,7 @@ public class RDFitnessTransfert extends RDFitnessFunction{
   
   Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
   if (RDConstants.useMedian) return results[(useApproximate?0:RDConstants.reEvaluation-1)/2];
+  currentEvalNumber++;
   return results[0];
  }
  
