@@ -51,10 +51,10 @@ public class RDApplet extends PApplet{
 	long startTime = System.currentTimeMillis();
 	long realTime = startTime;
 	long totalRender = 0;
-	
+
 	//boolean[][] target=RDPatternFitnessResultIbuki.getCenterLine(); //TODO change fitness target
 	//boolean[][] target=RDPatternFitnessResultIbuki.getBottomLine();
-	boolean[][] target=RDPatternFitnessResultIbuki.getTPattern();
+	static boolean[][] target=RDPatternFitnessResultIbuki.getTPattern();
 	//boolean[][] target=RDPatternFitnessResultIbuki.getReversedTPattern();
 	
 	RDSystem system = new RDSystem();
@@ -84,6 +84,12 @@ public class RDApplet extends PApplet{
 		//RDConstants.bounceRatePerBead = 1.4;
 		//RDConstants.concChemostat = 100.0f;
 		//RDConstants.gradientScale /= 1.6;
+
+        // XXX
+        //RDConstants.spaceStep = 8;
+        //RDConstants.useApprox = true;
+        target = RDPatternFitnessResultIbuki.getTPattern();
+	
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
@@ -148,8 +154,9 @@ public class RDApplet extends PApplet{
 		    	  
 		    	} else {
 		    		val = min(1.0f,system.conc[0+offset][x][y]/RDConstants.concScale)*255;
-		    		if (system.chemicalSpecies >= 2+offset) val2 = min(1.0f,system.conc[1+offset][x][y]/RDConstants.concScale)*255;
-		    		if (system.chemicalSpecies >= 3+offset) val3 = min(1.0f,system.conc[2+offset][x][y]/RDConstants.concScale)*255;
+                    // XXX
+		    		//if (system.chemicalSpecies >= 2+offset) val2 = min(1.0f,system.conc[1+offset][x][y]/RDConstants.concScale)*255;
+		    		//if (system.chemicalSpecies >= 3+offset) val3 = min(1.0f,system.conc[2+offset][x][y]/RDConstants.concScale)*255;
 		    	}
 		      //System.out.println(val);
 		      fill(color(val,val2,val3));
