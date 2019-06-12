@@ -71,7 +71,7 @@ public class TBioneatMixed {
         //RDConstants.showBeads = true;
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
         //RDFitnessFunctionIbuki fitnessFunction = new RDFitnessFunctionIbuki(target);
-        RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target, 500, true, 50);
+        RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target, target, 500, true, 50);
 
         Mutator mutator;
 
