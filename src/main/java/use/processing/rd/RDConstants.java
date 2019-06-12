@@ -15,6 +15,7 @@ public class RDConstants {
 	public static int bigTimeStep = 100; //Save concentrations every big time step for temporal fitness
 	public static double timePerStep = 0.1;
 	public static float spaceStep = 2.0f;
+	public static float approxSpaceStep = 8.0f; // spatial discretization used by the approximate evaluator
 	public static int hsize = 160;
 	public static int wsize = 160;
 	
@@ -56,6 +57,7 @@ public class RDConstants {
 	public static boolean useMatchFitness = true; // Check how good we cover the pattern, rather than using a distance based approach. Useful if we can barely cover the pattern.
 	public static double matchBonus = 1.0;
 	public static double matchPenalty = -0.1; // we expect a lot more penalties
+	public static double approxMatchPenalty = -0.2; // for approximate model
 	public static boolean useHellingerDistance = true; // false means hamming. Only used if not match fitness
 	public static boolean patternHellinger = true; // true means we care about the actual values rather than coverage
 	public static int horizontalBins = 80; //used to bin the Hellinger distance. Too little bins mean no pattern coverage. Too much means too much penalty for holes
@@ -104,6 +106,7 @@ public class RDConstants {
 	public static boolean displayGraph = true;
 	
 	public static boolean useApprox = false; // Use the activity reaction-diffusion as an approximation for the behavior.
+	
 	
 	
 	

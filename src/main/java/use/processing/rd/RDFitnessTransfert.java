@@ -2,6 +2,7 @@ package use.processing.rd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import erne.AbstractFitnessResult;
 import model.OligoGraph;
@@ -16,17 +17,25 @@ public class RDFitnessTransfert extends RDFitnessFunction{
  protected int nApproxEvals; //number of evals using an approximate evaluation
  protected boolean hybrid; //alternate between approximate and real evals?
  protected int nRealEvals; //number of real evals before going back to approximate if hybrid
- protected int currentEvalNumber = 0;
+ protected static AtomicInteger currentEvalNumber = new AtomicInteger(0);
  
- public RDFitnessTransfert(boolean[][] pattern, int nApproxEvals, boolean hybrid, int nRealEvals){
+ protected boolean[][] patternApprox; //may be of a different size or shape
+ 
+ protected float realSpaceStep = RDConstants.spaceStep;
+ protected float approxSpaceStep = RDConstants.approxSpaceStep;
+ protected double realMatchPenalty = RDConstants.matchPenalty;
+ protected double approxMatchPenalty = RDConstants.approxMatchPenalty;
+ 
+ public RDFitnessTransfert(boolean[][] pattern, boolean[][] patternApprox, int nApproxEvals, boolean hybrid, int nRealEvals){
   super(pattern);
   this.nApproxEvals = nApproxEvals;
   this.hybrid = hybrid;
   this.nRealEvals = nRealEvals;
+  this.patternApprox = patternApprox;
  }
  
  public RDFitnessTransfert(boolean[][] pattern, int nApproxEvals) {
-	 this(pattern, nApproxEvals, false, 0);
+	 this(pattern, pattern, nApproxEvals, false, 0);
  }
  
  
@@ -36,7 +45,15 @@ public class RDFitnessTransfert extends RDFitnessFunction{
   */
  @Override public AbstractFitnessResult evaluate(ReactionNetwork network){
   //First, decide if we will use an approximate evaluation or not
-  boolean useApproximate = currentEvalNumber < nApproxEvals || (hybrid && currentEvalNumber % (nApproxEvals+nRealEvals) < nApproxEvals);
+	 int currentVal = currentEvalNumber.getAndIncrement();
+  boolean useApproximate = currentVal < nApproxEvals || (hybrid && currentVal % (nApproxEvals+nRealEvals) < nApproxEvals);
+  if(useApproximate) {
+	  RDConstants.matchPenalty = approxMatchPenalty; //TODO:not thread safe!
+	  RDConstants.spaceStep = approxSpaceStep;
+  } else {
+	  RDConstants.matchPenalty = realMatchPenalty; //TODO:not thread safe! Fine, as long as we change per gen
+	  RDConstants.spaceStep = realSpaceStep;
+  }
   long startTime=System.currentTimeMillis();
   AbstractFitnessResult[] results = new AbstractFitnessResult[useApproximate?1:RDConstants.reEvaluation];
   //System.out.println(network);
@@ -58,13 +75,13 @@ public class RDFitnessTransfert extends RDFitnessFunction{
    System.out.println("total bead update:"+syst.totalBeads);
    System.out.println("total conc update:"+syst.totalConc);
   }
-  RDPatternFitnessResultIbuki temp = new RDPatternFitnessResultIbuki(syst.conc,pattern,syst.beadsOnSpot,randomFitness);
+  RDPatternFitnessResultIbuki temp = new RDPatternFitnessResultIbuki(syst.conc,useApproximate?patternApprox:pattern,syst.beadsOnSpot,randomFitness);
   results[i] = temp;
   }
   
   Arrays.sort(results, new AbstractFitnessResult.AbstractFitnessResultComparator());
   if (RDConstants.useMedian) return results[(useApproximate?0:RDConstants.reEvaluation-1)/2];
-  currentEvalNumber++;
+ 
   return results[0];
  }
  

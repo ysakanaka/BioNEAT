@@ -91,13 +91,13 @@ public class RDAppletMore extends PApplet{
 		
 		RDConstants.cutOff = 5.0f;
 		RDConstants.maxBeads = 500;
-		maxTime = 3000/bigTimeStep;
+		maxTime = 4000/bigTimeStep;
 		RDConstants.timing = false;
 		RDConstants.useMatchFitness = false;
 		RDConstants.useHellingerDistance = true;
 		RDConstants.horizontalBins = 1;
 		RDConstants.verticalBins = 3;
-		RDPatternFitnessResultIbuki.width = 0.3;
+		RDPatternFitnessResultIbuki.width = 0.2;
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
 		RDConstants.matchPenalty=-0.1;
 		useApproxSystem = false;

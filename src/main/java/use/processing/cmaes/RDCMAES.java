@@ -76,19 +76,19 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		
 		if(reac != null){
 			initGlobalParams();
-			RDPatternFitnessResultIbuki.width = 0.3; //Only for center line
-			boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
+			RDPatternFitnessResultIbuki.width = 0.2; //Only for center line
+			boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
 			AbstractFitnessFunction fit = generateFitnessFunction(target);
 			//Legacy
-			//RDCMAES rdcmaes = new RDCMAES(reac, fit);
-			//rdcmaes.run();
+			RDCMAES rdcmaes = new RDCMAES(reac, fit);
+			rdcmaes.run();
 			//With new interface
-			EvolutionaryAlgorithm algorithm = new CMAESBuilder().buildAlgorithm();
-			Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, reac,
-					fit, new RDFitnessDisplayer(), algorithm);
-			evolver.setGUI(true);
-			evolver.setExtraConfig(RDConstants.configsToString());
-			evolver.evolve();
+			//EvolutionaryAlgorithm algorithm = new CMAESBuilder().buildAlgorithm();
+			//Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, reac,
+			//		fit, new RDFitnessDisplayer(), algorithm);
+			//evolver.setGUI(true);
+			//evolver.setExtraConfig(RDConstants.configsToString());
+			//evolver.evolve();
 		}
 	}
 	
@@ -155,8 +155,8 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 		cma.setDimension(baseGenome.length);
 		
 		cma.parameters.setPopulationSize(popSize);
-		cma.setInitialStandardDeviation(optimizer.Constants.sigma);
-		cma.options.stopFitness = 0.01D; //Stops if reaches 99%
+		//cma.setInitialStandardDeviation(optimizer.Constants.sigma);
+		//cma.options.stopFitness = 0.01D; //Stops if reaches 99%
 		cma.setInitialX(baseGenome);
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
@@ -207,7 +207,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
  
         if (outputFiles) this.cma.writeToDefaultFiles();
        int outmod = 5;
-       if (this.cma.getCountIter() % (15 * outmod) == 1L) {
+       if (this.cma.getCountIter() % (15* outmod) == 1L) {
          String output = this.cma.getPrintAnnotation();
           System.out.println(output);
         }
