@@ -156,7 +156,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
 			   if(positions[i][j] && patt[i][j]) fitnessTemp++;
 		   }
 	   }
-	   fitness+=fitnessTemp*RDConstants.matchPenalty*Math.exp(weightExponential*distance); //matchPenalty < 0
+	   fitness+=fitnessTemp*RDConstants.matchPenalty*Math.exp(weightExponential*distance*RDConstants.spaceStep/2.0); //matchPenalty < 0
 	  }
 	  return fitness;
 }
