@@ -36,8 +36,8 @@ public class TBioneatTransfer {
         boolean[][] targetApprox = RDPatternFitnessResultIbuki.getTPattern(); //dirtyhack
         RDConstants.spaceStep = tmp;
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-        RDConstants.matchPenalty=-0.1;
-        RDConstants.approxMatchPenalty = -0.5;
+        RDConstants.matchPenalty=-0.2;
+        RDConstants.approxMatchPenalty = -0.2;
 
 
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);

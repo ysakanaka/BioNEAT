@@ -37,7 +37,7 @@ public class RDLineLeoTransfer {
         RDConstants.spaceStep = tmp;
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
         RDConstants.matchPenalty=-0.1;
-        RDConstants.approxMatchPenalty = -0.5;
+        RDConstants.approxMatchPenalty = -0.1;
 
 
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
