@@ -26,13 +26,19 @@ import utils.RDLibrary;
 public class TBioneatTransfer {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
         RDPatternFitnessResultIbuki.width = 0.2;
-        //RDConstants.spaceStep = 8;
-        RDConstants.useApprox = false;
-		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
+
+        RDConstants.spaceStep = 2;
+        RDConstants.approxSpaceStep = 8;
+        RDConstants.reEvaluation = 5; //TODO ws 10
+        boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
+        float tmp = RDConstants.spaceStep;
+        RDConstants.spaceStep = RDConstants.approxSpaceStep;
+        boolean[][] targetApprox = RDPatternFitnessResultIbuki.getTPattern(); //dirtyhack
+        RDConstants.spaceStep = tmp;
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
         RDConstants.matchPenalty=-0.2;
+        RDConstants.approxMatchPenalty = -0.2;
 
-        RDConstants.reEvaluation = 5;
 
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
         RDConstants.evalRandomDistance = false;
@@ -44,6 +50,7 @@ public class TBioneatTransfer {
         }
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
+
         RDConstants.populationSize=50;
         RDConstants.maxGeneration = 100;
         RDConstants.maxTimeEval = 4000;
@@ -70,8 +77,8 @@ public class TBioneatTransfer {
 
         //RDConstants.showBeads = true;
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
-        //RDFitnessFunctionIbuki fitnessFunction = new RDFitnessFunctionIbuki(target);
-        RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target, 50 * 80);
+        RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target,targetApprox,
+                (int)(RDConstants.populationSize*RDConstants.maxGeneration*0.8),false,0);
 
         Mutator mutator;
 
@@ -94,7 +101,7 @@ public class TBioneatTransfer {
 
         Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
                 fitnessFunction, new RDFitnessDisplayer(), algorithm);
-        //evolver.setGUI(false);
+        evolver.setGUI(false);
         evolver.setExtraConfig(RDConstants.configsToString());
         evolver.evolve();
         System.out.println("Evolution completed.");
