@@ -28,7 +28,7 @@ public class TBioneatTransfer {
         RDPatternFitnessResultIbuki.width = 0.2;
 
         RDConstants.spaceStep = 2;
-        RDConstants.approxSpaceStep = 8;
+        RDConstants.approxSpaceStep = 2; // 8
         RDConstants.reEvaluation = 5; //TODO ws 10
         boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
         float tmp = RDConstants.spaceStep;
@@ -52,7 +52,7 @@ public class TBioneatTransfer {
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
 
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60; //100;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         //RDConstants.maxNodes = 7;
@@ -78,7 +78,8 @@ public class TBioneatTransfer {
         //RDConstants.showBeads = true;
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
         RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target,targetApprox,
-                (int)(RDConstants.populationSize*RDConstants.maxGeneration*0.8),false,0);
+                //(int)(RDConstants.populationSize*RDConstants.maxGeneration*0.8),false,0);
+                (int)(RDConstants.populationSize*RDConstants.maxGeneration*0.5),false,0);
 
         Mutator mutator;
 

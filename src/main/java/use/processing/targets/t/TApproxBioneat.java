@@ -25,7 +25,7 @@ import utils.RDLibrary;
 public class TApproxBioneat {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
         RDPatternFitnessResultIbuki.width = 0.2;
-        RDConstants.spaceStep = 8;
+        RDConstants.spaceStep = 2; // 8;
         RDConstants.useApprox = true;
 		boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
@@ -44,7 +44,7 @@ public class TApproxBioneat {
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60; //100;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         //RDConstants.maxNodes = 7;
