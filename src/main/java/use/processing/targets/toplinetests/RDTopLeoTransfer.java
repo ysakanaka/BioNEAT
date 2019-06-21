@@ -29,7 +29,7 @@ public class RDTopLeoTransfer {
         RDPatternFitnessResultIbuki.width = 0.2;
 
         RDConstants.spaceStep = 2;
-        RDConstants.approxSpaceStep = 8;
+        RDConstants.approxSpaceStep = 2;
         RDConstants.reEvaluation = 5; //TODO ws 10
         boolean[][] target = RDPatternFitnessResultIbuki.getTopLine();
         float tmp = RDConstants.spaceStep;
@@ -53,7 +53,7 @@ public class RDTopLeoTransfer {
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
 
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60;
         RDConstants.maxTimeEval = 1000; // 4000;
         RDConstants.hardTrim = false;
         RDConstants.maxBeads = 500;

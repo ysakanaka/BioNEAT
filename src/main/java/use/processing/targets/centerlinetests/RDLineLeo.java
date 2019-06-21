@@ -24,7 +24,7 @@ import utils.RDLibrary;
 
 public class RDLineLeo {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-        RDPatternFitnessResultIbuki.width = 0.2;
+        RDPatternFitnessResultIbuki.width = 0.3;
         boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
         RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
         RDConstants.matchPenalty=-0.1;
@@ -42,7 +42,7 @@ public class RDLineLeo {
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         //RDConstants.maxNodes = 7;

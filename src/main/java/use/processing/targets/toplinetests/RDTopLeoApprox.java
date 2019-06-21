@@ -1,4 +1,4 @@
-package use.processing.targets.centerlinetests;
+package use.processing.targets.toplinetests;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,13 +22,13 @@ import use.processing.rd.RDFitnessFunctionIbuki;
 import use.processing.rd.RDPatternFitnessResultIbuki;
 import utils.RDLibrary;
 
-public class RDLineLeoApprox {
+public class RDTopLeoApprox {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-        RDPatternFitnessResultIbuki.width = 0.3;
+        RDPatternFitnessResultIbuki.width = 0.2;
         RDConstants.spaceStep = 2;
         RDConstants.useApprox = true;
-        boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
-        RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
+        boolean[][] target = RDPatternFitnessResultIbuki.getTopLine();
+        RDPatternFitnessResultIbuki.weightExponential = 0.1;
         RDConstants.matchPenalty=-0.1;
 
         RDConstants.reEvaluation = 1;
@@ -45,9 +45,9 @@ public class RDLineLeoApprox {
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
         RDConstants.populationSize=50;
         RDConstants.maxGeneration = 60;
-        RDConstants.maxTimeEval = 4000;
+        RDConstants.maxTimeEval = 1000;
+
         RDConstants.hardTrim = false;
-        //RDConstants.maxNodes = 7;
         RDConstants.maxBeads = 500;
         RDConstants.showBeads = false;
         RDConstants.useMedian = true; //use median score of reevaluations
@@ -63,9 +63,8 @@ public class RDLineLeoApprox {
         RDConstants.weightAddActivationWithGradients = 5;
         RDConstants.weightAddInhibitionWithGradients = 5;
         RDConstants.weightAddNodeWithGradients = 5;
-        //RDConstants.cutOff = 10.0f;
 
-        RDConstants.targetName = "CenterLineLeoApprox";
+        RDConstants.targetName = "ClusterTopLeoApprox";
 
         //RDConstants.showBeads = true;
         //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
