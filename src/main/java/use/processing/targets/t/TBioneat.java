@@ -44,7 +44,7 @@ public class TBioneat {
         RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60; //100;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         //RDConstants.maxNodes = 7;
