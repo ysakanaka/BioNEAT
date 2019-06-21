@@ -94,7 +94,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
 	
 	public static void initGlobalParams(){
 		RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-		  RDConstants.matchPenalty=-0.1;
+		  RDConstants.matchPenalty=-0.2;
 		
 		  RDConstants.reEvaluation = 5; //10
 		  RDConstants.evalRandomDistance = false;
