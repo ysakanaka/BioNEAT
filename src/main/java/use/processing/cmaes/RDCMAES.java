@@ -229,6 +229,7 @@ public class RDCMAES  implements IObjectiveFunction, Runnable{
     System.out.println(output);
     if (outputFiles) this.cma.writeToDefaultFiles(1);
 	Cluster.stop();
+	System.exit(0);
 	}
 
 	@Override
