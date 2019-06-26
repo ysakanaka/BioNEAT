@@ -1,0 +1,111 @@
+package use.processing.targets.t;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+
+import erne.Evolver;
+import erne.algorithm.EvolutionaryAlgorithm;
+import erne.algorithm.bioNEAT.BioNEATBuilder;
+import erne.mutation.MutationRule;
+import erne.mutation.Mutator;
+import erne.mutation.PruningMutator;
+import erne.mutation.rules.DisableTemplate;
+import erne.mutation.rules.MutateParameter;
+import use.processing.mutation.rules.AddActivationWithGradients;
+import use.processing.mutation.rules.AddInhibitionWithGradients;
+import use.processing.mutation.rules.AddNodeWithGradients;
+import use.processing.rd.RDConstants;
+import use.processing.rd.RDFitnessDisplayer;
+import use.processing.rd.RDFitnessFunctionIbuki;
+import use.processing.rd.RDPatternFitnessResultIbuki;
+import use.processing.rd.RDFitnessTransfert;
+import utils.RDLibrary;
+
+public class TBioneatTransfer2 {
+    public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
+        RDPatternFitnessResultIbuki.width = 0.2;
+
+        RDConstants.spaceStep = 2;
+        RDConstants.approxSpaceStep = 2; // 8
+        RDConstants.reEvaluation = 5; //TODO ws 10
+        boolean[][] target = RDPatternFitnessResultIbuki.getTPattern();
+        float tmp = RDConstants.spaceStep;
+        RDConstants.spaceStep = RDConstants.approxSpaceStep;
+        boolean[][] targetApprox = RDPatternFitnessResultIbuki.getTPattern(); //dirtyhack
+        RDConstants.spaceStep = tmp;
+        RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
+        RDConstants.matchPenalty=-0.5;
+        RDConstants.approxMatchPenalty = -0.5;
+
+
+        //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
+        RDConstants.evalRandomDistance = false;
+        boolean[][] fullMap = new boolean[target.length][target[0].length];
+        for(int i=0;i<fullMap.length; i++){
+            for(int j=0;j<fullMap[0].length; j++){
+                fullMap[i][j] = true;
+            }
+        }
+        RDConstants.defaultRandomFitness = Math.max(0.0, RDPatternFitnessResultIbuki.distanceNicolasExponential(target,fullMap));
+        System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
+
+        RDConstants.populationSize=50;
+        RDConstants.maxGeneration = 60; //100;
+        RDConstants.maxTimeEval = 4000;
+        RDConstants.hardTrim = false;
+        //RDConstants.maxNodes = 7;
+        RDConstants.maxBeads = 500;
+        RDConstants.showBeads = false;
+        RDConstants.useMedian = true; //use median score of reevaluations
+
+        RDConstants.ceilingNodes = true;
+        RDConstants.ceilingTemplates = true;
+        RDConstants.useMaxTotalNodes = false;
+        RDConstants.maxNodes = 6;
+        RDConstants.maxTemplates = 13;
+
+        RDConstants.weightDisableTemplate = 5;
+        RDConstants.weightMutateParameter = 80;
+        RDConstants.weightAddActivationWithGradients = 5;
+        RDConstants.weightAddInhibitionWithGradients = 5;
+        RDConstants.weightAddNodeWithGradients = 5;
+        //RDConstants.cutOff = 10.0f;
+
+        RDConstants.targetName = "TBioneatTransfer";
+
+        //RDConstants.showBeads = true;
+        //RDBeadPositionFitnessFunction fitnessFunction = new RDBeadPositionFitnessFunction(new BeadLineTarget(offset), target);
+        RDFitnessTransfert fitnessFunction = new RDFitnessTransfert(target,targetApprox,
+                //(int)(RDConstants.populationSize*RDConstants.maxGeneration*0.8),false,0);
+                (int)(RDConstants.populationSize*RDConstants.maxGeneration*0.5),false,0);
+
+        Mutator mutator;
+
+        if(RDConstants.hardTrim){
+            mutator = new PruningMutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
+                new DisableTemplate(RDConstants.weightDisableTemplate), 
+                    new MutateParameter(RDConstants.weightMutateParameter), 
+                    new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients), 
+                    new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
+                    new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
+        } else {
+            mutator = new Mutator(new ArrayList<MutationRule>(Arrays.asList(new MutationRule[] {
+                new DisableTemplate(RDConstants.weightDisableTemplate), 
+                    new MutateParameter(RDConstants.weightMutateParameter), 
+                    new AddNodeWithGradients(RDConstants.weightAddNodeWithGradients), 
+                    new AddActivationWithGradients(RDConstants.weightAddActivationWithGradients), 
+                    new AddInhibitionWithGradients(RDConstants.weightAddInhibitionWithGradients)})));
+        }
+        EvolutionaryAlgorithm algorithm = new BioNEATBuilder().mutator(mutator).buildAlgorithm();
+
+        Evolver evolver = new Evolver(RDConstants.populationSize, RDConstants.maxGeneration, RDLibrary.rdstart,
+                fitnessFunction, new RDFitnessDisplayer(), algorithm);
+        evolver.setGUI(false);
+        evolver.setExtraConfig(RDConstants.configsToString());
+        evolver.evolve();
+        System.out.println("Evolution completed.");
+        if(!Evolver.hasGUI()) System.exit(0);
+    }
+}
