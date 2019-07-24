@@ -2,8 +2,11 @@ package use.processing.rd;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
@@ -25,14 +28,17 @@ public class PrintLastGenerationBests {
 	public static int reevaluationLenght = 4000;//1000; //TODO: center-line is 4000
 	public static boolean[][] target; //TODO: change based on target 
 	public static boolean debug = false;
+	public static int generation = 59;
 	
 	public static void main (String[] args){
-		RDPatternFitnessResultIbuki.width = 0.3;
+		RDPatternFitnessResultIbuki.width = 0.2;
 		RDPatternFitnessResultIbuki.weightExponential = 0.1; //good candidate so far: 0.1 0.1
-		  RDConstants.matchPenalty=-0.1;
-		target = RDPatternFitnessResultIbuki.getCenterLine();
+		  RDConstants.matchPenalty=-0.2;
+		target = RDPatternFitnessResultIbuki.getTPattern();
+		
 		RDConstants.useMedian = true;
-		RDConstants.reEvaluation = 10;
+		RDConstants.reEvaluation = 5;
+		StringBuilder sb = new StringBuilder();
 		File folder = new File(args[0]);
 		ReactionNetwork[] bestLastGen;
 		File[] files;
@@ -48,10 +54,12 @@ public class PrintLastGenerationBests {
 				}
 				System.out.println("File "+files[i]);
 				try{
-					Individual indiv = Evolver.getBestLastGen(files[i].getAbsolutePath());
+					Individual[] indivs = Evolver.getBestOverTime(files[i].getAbsolutePath());
+					Individual indiv = indivs[generation];
 					bestLastGen[i] = indiv.getNetwork();
 					System.out.println(files[i].getName()+": "+indiv.getFitnessResult().getFitness());
 				} catch(Exception e){
+					e.printStackTrace();
 					System.err.println("Warning: could not read");
 					bestLastGen[i] = null;
 				}
@@ -84,12 +92,13 @@ public class PrintLastGenerationBests {
 		
 		RDConstants.showBeads = false;
 		for(int i= 0; i<bestLastGen.length; i++){
+			if(bestLastGen[i]==null) continue;
 			RDSystem syst = null;
 			AbstractFitnessResult[] results = new AbstractFitnessResult[RDConstants.reEvaluation];
 		for(int attempt = 0; attempt<RDConstants.reEvaluation;attempt++){
 			
 		    
-			if(bestLastGen[i]==null) continue;
+			
 			syst = new RDSystem();
 			OligoGraph<SequenceVertex,String> gr;
 			gr = GraphMaker.fromReactionNetwork(bestLastGen[i]);
@@ -112,6 +121,7 @@ public class PrintLastGenerationBests {
 			  conc = ((RDPatternFitnessResultIbuki)results[results.length-1]).conc;
 			  System.out.println("Fitness: "+results[results.length-1]);
 			  System.out.println("Other fitness: "+results[0]);
+			  sb.append(results[results.length/2]+"\n");
 		  } else {
 			  conc = ((RDPatternFitnessResultIbuki)results[0]).conc;
 		  }
@@ -139,6 +149,15 @@ public class PrintLastGenerationBests {
 			g.dispose();
 			
 			}
+		File toFile = new File(folder.getAbsolutePath()+"/allLastFitness"+".dat");
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(toFile));
+			bw.write(sb.toString());
+			bw.flush();
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		System.exit(0);
 	}
 }
