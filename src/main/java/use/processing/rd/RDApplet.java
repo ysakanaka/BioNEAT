@@ -57,7 +57,7 @@ public class RDApplet extends PApplet{
 	static boolean[][] target=RDPatternFitnessResultIbuki.getTPattern();
 	//boolean[][] target=RDPatternFitnessResultIbuki.getReversedTPattern();
 	
-	RDSystem system = new RDSystem();
+	static RDSystem system = new RDSystem();
 	static ReactionNetwork reac = null; 
 
 	public static void main(String[] args) {
@@ -87,8 +87,12 @@ public class RDApplet extends PApplet{
 
         // XXX
         //RDConstants.spaceStep = 8;
+        //RDConstants.spaceStep = 2;
         //RDConstants.useApprox = true;
         target = RDPatternFitnessResultIbuki.getTPattern();
+        //system = new RDSystemApprox();
+        system = new RDSystem();
+
 	
 		
 		RDConstants.cutOff = 5.0f;

@@ -25,11 +25,11 @@ import utils.RDLibrary;
 
 public class RDLineLeoTransfer {
     public static void main(String[] args) throws InterruptedException,ExecutionException,IOException,ClassNotFoundException{
-        RDPatternFitnessResultIbuki.width = 0.2;
+        RDPatternFitnessResultIbuki.width = 0.3;
 
         RDConstants.spaceStep = 2;
-        RDConstants.approxSpaceStep = 8;
-        RDConstants.reEvaluation = 5; //TODO ws 10
+        RDConstants.approxSpaceStep = 2;
+        RDConstants.reEvaluation = 5;
         boolean[][] target = RDPatternFitnessResultIbuki.getCenterLine();
         float tmp = RDConstants.spaceStep;
         RDConstants.spaceStep = RDConstants.approxSpaceStep;
@@ -52,7 +52,7 @@ public class RDLineLeoTransfer {
         System.out.println("Default fitness: "+RDConstants.defaultRandomFitness);
 
         RDConstants.populationSize=50;
-        RDConstants.maxGeneration = 100;
+        RDConstants.maxGeneration = 60;
         RDConstants.maxTimeEval = 4000;
         RDConstants.hardTrim = false;
         //RDConstants.maxNodes = 7;
