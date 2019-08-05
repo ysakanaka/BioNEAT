@@ -105,7 +105,7 @@ public class RDSystem implements ReactionNetworkContainer{
 		  neighbors = new int[conc[0].length][conc[0][0].length][4]; //Basic neighborhood.
 		  initNeighbors();
 		  setGradients();
-		  for(int i = RDConstants.gradients?2:0; i<(os.total+os.inhTotal); i++) initConc(i,0,0);//blob of species 0 at the origin
+		  for(int i = RDConstants.gradients?RDConstants.glueIndex:0; i<(os.total+os.inhTotal); i++) initConc(i,0,0);//blob of species 0 at the origin
 		  
 		  if(RDConstants.timing) realTime = System.currentTimeMillis();
 		  for(Bead bead : beads) updateConcFromBead(bead);
@@ -142,8 +142,10 @@ public class RDSystem implements ReactionNetworkContainer{
 	    		//I could make this parallel as well. hum
 			
     		    conc[0][x][y] =localVal;
-    		    conc[1][conc[1].length-1-x][y] =localVal;
-    	    	
+    		    if(RDConstants.glueIndex > 1) {
+    		        conc[1][conc[1].length-1-x][y] =localVal;
+    		    }
+    	    	//TODO: more gradient?
     		}
     	}
     	
