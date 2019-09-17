@@ -56,6 +56,7 @@ public class RDAppletMore extends PApplet{
 	
 
 	public static void main(String[] args) {
+		
 		if(args.length >= 1){
 		Gson gson = new GsonBuilder().registerTypeAdapter(ReactionNetwork.class, new ReactionNetworkDeserializer())
 				.registerTypeAdapter(Connection.class, new ConnectionSerializer()).create();
@@ -81,7 +82,7 @@ public class RDAppletMore extends PApplet{
 		
 		//RDConstants.hsize = 250;
 		//RDConstants.wsize = 250;
-		//RDConstants.spaceStep = 2.0f;
+		RDConstants.spaceStep = 2.0f;
 		//RDConstants.timePerStep = 0.1f;
 		//RDConstants.concScale = 10.0f;
 		//RDConstants.beadExclusion = true;
@@ -99,10 +100,12 @@ public class RDAppletMore extends PApplet{
 		RDConstants.verticalBins = 3;
 		RDPatternFitnessResultIbuki.width = 0.2;
 		RDPatternFitnessResultIbuki.weightExponential = 0.1;
-		RDConstants.matchPenalty=-0.1;
+		RDConstants.matchPenalty=-0.2;
 		useApproxSystem = false;
 
-		offset = 2;
+		
+		RDConstants.glueIndex = 4;
+		offset = RDConstants.glueIndex;
 		name = (selfRepair?"self-######.png":"screen-######.png");
         PApplet.main("use.processing.rd.RDAppletMore");
 
@@ -136,7 +139,7 @@ public class RDAppletMore extends PApplet{
 		  //background(255);
 		  realTime = System.currentTimeMillis();
 		  int base = g.fillColor;
-		  //int speciesOffset = 2;
+		 
 		  for (int x = 0; x < system.conc[0].length; x++){
 		    for (int y = 0; y < system.conc[0][x].length; y++){
 		      float val = min(1.0f,system.conc[0+offset][x][y]/RDConstants.concScale)*255;
@@ -228,7 +231,7 @@ public class RDAppletMore extends PApplet{
 			  for (int x = minPos; x <=maxPos ; x++){
 				    for (int y = (int) Math.round(system.conc[0].length*(1.0-removePatternSize))
 				    		; y < system.conc[0][x].length; y++){
-				    	for(int i =  RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
+				    	for(int i =  RDConstants.glueIndex; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
@@ -246,7 +249,7 @@ public class RDAppletMore extends PApplet{
 			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
 			  for (int x = minPos; x <=maxPos ; x++){
 				    for (int y = 0; y< (int) Math.round(system.conc[0].length*(removePatternSize)); y++){
-				    	for(int i =  RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
+				    	for(int i =  RDConstants.glueIndex; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
@@ -264,7 +267,7 @@ public class RDAppletMore extends PApplet{
 			  int maxPos = (int) Math.round(system.conc[0].length*(1.0+removePatternSize)/2.0);
 			  for (int x = minPos; x <=maxPos ; x++){
 				    for (int y = minPos; y< maxPos; y++){
-				    	for(int i =  RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
+				    	for(int i =  RDConstants.glueIndex; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);
@@ -283,7 +286,7 @@ public class RDAppletMore extends PApplet{
 			  for (int y = minPos; y <=maxPos ; y++){
 				    for (int x = (int) Math.round(system.conc[0].length*(1.0-1.1*removePatternSize))
 				    		; x < system.conc[0][y].length; x++){
-				    	for(int i = RDConstants.speciesOffset; i<system.conc.length; i++) system.conc[i][x][y] = 0;
+				    	for(int i = RDConstants.glueIndex; i<system.conc.length; i++) system.conc[i][x][y] = 0;
 				    	if(system.beadsOnSpot.get(x, y) != null){
 				    	  for(Bead b: system.beadsOnSpot.get(x, y)){
 				    		  b.setParent(null);

@@ -105,7 +105,7 @@ public class RDSystem implements ReactionNetworkContainer{
 		  neighbors = new int[conc[0].length][conc[0][0].length][4]; //Basic neighborhood.
 		  initNeighbors();
 		  setGradients();
-		  for(int i = RDConstants.gradients?2:0; i<(os.total+os.inhTotal); i++) initConc(i,0,0);//blob of species 0 at the origin
+		  for(int i = RDConstants.gradients?RDConstants.glueIndex:0; i<(os.total+os.inhTotal); i++) initConc(i,0,0);//blob of species 0 at the origin
 		  
 		  if(RDConstants.timing) realTime = System.currentTimeMillis();
 		  for(Bead bead : beads) updateConcFromBead(bead);
@@ -134,16 +134,24 @@ public class RDSystem implements ReactionNetworkContainer{
 	}
 	
 	public void setGradients(){
-    	
+    	System.out.println("Gradient number: "+RDConstants.glueIndex);
     	for(int x = 0; x<conc[0].length;x++){
     		for (int y = 0; y<conc[0][x].length; y++){
     			float localVal =  (float) (RDConstants.concChemostat*Math.exp(-RDConstants.gradientScale*Math.sqrt((x*x+y*y)*(RDConstants.spaceStep*RDConstants.spaceStep))));
 
-	    		//I could make this parallel as well. hum
-			
-    		    conc[0][x][y] =localVal;
-    		    conc[1][conc[1].length-1-x][y] =localVal;
-    	    	
+	    		//Adding up to 4 gradients. TODO: think about a general formula for N gradients
+			    if(RDConstants.glueIndex>0) {
+    		        conc[0][x][y] =localVal;
+			    }
+			    if(RDConstants.glueIndex>1) {
+    		        conc[1][conc[1].length-1-x][y] =localVal;
+    			}
+			    if(RDConstants.glueIndex>2) {
+    		        conc[2][x][conc[2][0].length-1-y] =localVal;
+			    }
+			    if(RDConstants.glueIndex>3) {
+    		        conc[3][conc[3].length-1-x][conc[3][0].length-1-y] =localVal;
+    			}
     		}
     	}
     	
@@ -282,7 +290,7 @@ public class RDSystem implements ReactionNetworkContainer{
 			}
 
 			public static boolean isProtected(Integer integer) {
-				if (RDConstants.gradients && integer < RDConstants.speciesOffset) return true;
+				if (RDConstants.gradients && integer < RDConstants.glueIndex) return true;
 				return false;
 			}
 		

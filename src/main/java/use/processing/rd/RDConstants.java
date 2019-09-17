@@ -40,7 +40,8 @@ public class RDConstants {
 	public static float concChemostat = 100.0f;//for gradients
 	public static double gradientScale = 4e-2; //to stabilize the gradient concentrations, equal to sqrt(exo/diff)
 	public static int glueIndex = 2; //which species is the glue?
-	public static int speciesOffset = 2; //to prevent seeing gradients or some basic species
+	@Deprecated
+	public static int speciesOffset = 2; //to prevent seeing gradients or some basic species TODO: should be merged with glueIndex? Deprecated.
 	
 	public static boolean useGlueAsTarget = true; //If true, then use concentration of glue (as defined by the glue index) instead of bead position
 	public static float cutOff = 5e0f; //Below this concentration, beads are unlikely to aggregate (although, K dependent...) so not taken into account
