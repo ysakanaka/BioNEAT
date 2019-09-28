@@ -228,6 +228,10 @@ public static void setTestGraph(RDSystem system){
 			return RDPatternFitnessResultIbuki.getBottomCenterLine();
 		case "smiley":
 			return RDPatternFitnessResultIbuki.getSmileyFace();
+		case "smiley-eyes":
+			return RDPatternFitnessResultIbuki.getSmileyEyes();
+		case "smiley-mouth":
+			return RDPatternFitnessResultIbuki.getSmileyMouth();
 		case "disk":
 			return RDPatternFitnessResultIbuki.getDisk();
 		case "circle":

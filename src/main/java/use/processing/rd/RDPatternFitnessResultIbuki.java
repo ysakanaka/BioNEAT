@@ -406,7 +406,7 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }
   return pattern;
  }
- 
+
  public static boolean[][] getSmileyFace(){
   boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
   double centerX=smileyFace.length/2.;
@@ -441,6 +441,43 @@ public class RDPatternFitnessResultIbuki extends RDPatternFitnessResult{
   }
   return smileyFace;
  }
+
+ public static boolean[][] getSmileyEyes(){
+  boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  int eyeLeft=(int)(smileyFace.length*0.4);
+  int eyeRight=(int)(smileyFace.length*0.6);
+  int eyeHeight=(int)(smileyFace[0].length*0.3);
+  int eyeSizeW=2;
+  int eyeSizeH=4;
+  for(int eyeX=-eyeSizeW;eyeX<=eyeSizeW;eyeX++){
+   for(int eyeY=-eyeSizeH;eyeY<=eyeSizeH;eyeY++){
+    smileyFace[eyeLeft+eyeX][eyeHeight+eyeY]=true;
+    smileyFace[eyeRight+eyeX][eyeHeight+eyeY]=true;
+   }
+  }
+  return smileyFace;
+ }
+
+ public static boolean[][] getSmileyMouth(){
+  boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
+  double centerX=smileyFace.length/2.;
+  double centerY=smileyFace[0].length/2.;
+  double min=Math.min(centerX,centerY);
+  double radiusSquareMouthMin=Math.pow(0.45*min,2);
+  double radiusSquareMouthMax=Math.pow(0.55*min,2);
+  double mouth=0.6*smileyFace[0].length;
+  for(int i=0;i<smileyFace.length;i++){
+   for(int j=0;j<smileyFace[i].length;j++){
+    double distanceSquare=Math.pow(i-centerX,2.)+Math.pow(j-centerY,2.);
+    if(distanceSquare>radiusSquareMouthMin&&distanceSquare<radiusSquareMouthMax&&j>mouth){
+     smileyFace[i][j]=true;
+    }
+   }
+  }
+  return smileyFace;
+ }
+
+
  
  public static boolean[][] getCircle(){
 	  boolean[][] smileyFace=new boolean[(int)(RDConstants.wsize/RDConstants.spaceStep)][(int)(RDConstants.hsize/RDConstants.spaceStep)];
